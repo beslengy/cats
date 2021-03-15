@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.molchanov.cats.network.CatsApi
+import com.molchanov.cats.network.NetworkCats
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -20,12 +21,12 @@ class HomeViewModel : ViewModel() {
 
     private fun getCats() {
         CatsApi.retrofitService.getCats().enqueue(
-            object: Callback<String> {
-                override fun onResponse(call: Call<String>, response: Response<String>) {
-                    _response.value = response.body()
+            object: Callback<List<NetworkCats>> {
+                override fun onResponse(call: Call<List<NetworkCats>>, response: Response<List<NetworkCats>>) {
+                    _response.value = "${response.body()?.size}"
                 }
 
-                override fun onFailure(call: Call<String>, t: Throwable) {
+                override fun onFailure(call: Call<List<NetworkCats>>, t: Throwable) {
                     _response.value = "Failure: ${t.message}"
                 }
             }

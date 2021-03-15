@@ -15,7 +15,7 @@ private val retrofit = Retrofit.Builder()
     .build()
 
 interface CatsApiService {
-    @Headers(API_KEY)
+    @Headers("x-api-key: 177e2034-b213-4178-834f-a3d237cc68ad")
     @GET("breeds")
     fun getCats(): Call<String>
 }

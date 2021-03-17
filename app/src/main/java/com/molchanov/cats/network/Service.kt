@@ -2,7 +2,6 @@ package com.molchanov.cats.network
 
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
-import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.http.GET
@@ -21,9 +20,14 @@ private val retrofit = Retrofit.Builder()
     .build()
 
 interface CatsApiService {
+//    @Headers(API_KEY)
+//    @GET("breeds")
+//    suspend fun getCats(): List<NetworkImages>
+
+
     @Headers(API_KEY)
-    @GET("breeds")
-    fun getCats(): Call<List<NetworkCats>>
+    @GET("images/search?limit=50&page=50")
+    suspend fun getImages() : List<NetworkImage>
 }
 
 object CatsApi {

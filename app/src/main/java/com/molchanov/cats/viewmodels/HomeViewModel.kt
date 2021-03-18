@@ -14,8 +14,8 @@ class HomeViewModel : ViewModel() {
     val response: LiveData<String>
         get() = _response
 
-    private val _catImage = MutableLiveData<NetworkImage>()
-    val catImage: LiveData<NetworkImage>
+    private val _catImage = MutableLiveData<List<NetworkImage>>()
+    val catImage: LiveData<List<NetworkImage>>
         get() = _catImage
 
     init {
@@ -25,9 +25,8 @@ class HomeViewModel : ViewModel() {
     private fun getCats() {
         viewModelScope.launch{
             try {
-                val listResult = CatsApi.retrofitService.getImages()
-                _response.value = "Success: ${listResult.size} cats available"
-                if(listResult.size > 0) _catImage.value = listResult[0]
+                _catImage.value = CatsApi.retrofitService.getImages()
+                _response.value = "Success: cat's images available"
             } catch (e: Exception) {
                 _response.value = "Failure: ${e.message}"
             }

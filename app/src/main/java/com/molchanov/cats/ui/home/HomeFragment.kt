@@ -33,10 +33,17 @@ class HomeFragment : Fragment() {
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
         binding.rvHome.adapter = HomeAdapter()
+        binding.rvHome.addItemDecoration(Decoration(resources.getDimensionPixelOffset(R.dimen.recycler_view_padding)))
+
 
         return binding.root
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+
+    }
 
     override fun onDestroyView() {
         super.onDestroyView()

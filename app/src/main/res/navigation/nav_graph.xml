@@ -1,10 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto" android:id="@+id/nav_graph"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
     app:startDestination="@id/homeFragment">
 
     <fragment
         android:id="@+id/homeFragment"
         android:name="com.molchanov.cats.ui.home.HomeFragment"
-        android:label="HomeFragment" />
+        android:label="HomeFragment"
+        tools:layout="@layout/fragment_home">
+        <action
+            android:id="@+id/action_homeFragment_to_catCardFragment"
+            app:destination="@id/catCardFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/favoritesFragment"
+        android:name="com.molchanov.cats.ui.favorites.FavoritesFragment"
+        android:label="FavoritesFragment" >
+        <action
+            android:id="@+id/action_favoritesFragment_to_catCardFragment"
+            app:destination="@id/catCardFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/uploadedFragment"
+        android:name="com.molchanov.cats.ui.uploaded.UploadedFragment"
+        android:label="UploadedFragment" >
+        <action
+            android:id="@+id/action_uploadedFragment_to_catCardFragment"
+            app:destination="@id/catCardFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/catCardFragment"
+        android:name="com.molchanov.cats.ui.catcard.CatCardFragment"
+        android:label="fragment_cat_card"
+        tools:layout="@layout/fragment_cat_card" >
+        <argument
+            android:name="imageId"
+            app:argType="string" />
+    </fragment>
 </navigation>

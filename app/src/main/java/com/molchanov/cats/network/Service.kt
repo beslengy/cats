@@ -6,6 +6,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.Headers
+import retrofit2.http.Path
 
 private const val API_KEY = "x-api-key: 177e2034-b213-4178-834f-a3d237cc68ad"
 private const val BASE_URL = "https://api.thecatapi.com/v1/"
@@ -27,7 +28,11 @@ interface CatsApiService {
 
     @Headers(API_KEY)
     @GET("images/search?limit=50&page=50")
-    suspend fun getImages() : List<NetworkImage>
+    suspend fun getAllImages() : List<NetworkImage>
+
+    @Headers(API_KEY)
+    @GET("images/{image_id}")
+    suspend fun getCatByImage(@Path("image_id") imageId: String) : NetworkCat
 }
 
 object CatsApi {

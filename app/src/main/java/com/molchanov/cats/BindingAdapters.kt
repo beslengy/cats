@@ -27,3 +27,4 @@ fun bindRecyclerView(recyclerView: RecyclerView, data: List<NetworkImage>?) {
     val adapter = recyclerView.adapter as HomeAdapter
     adapter.submitList(data)
 }
+

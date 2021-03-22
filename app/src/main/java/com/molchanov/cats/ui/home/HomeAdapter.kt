@@ -8,11 +8,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.molchanov.cats.databinding.ImageItemBinding
 import com.molchanov.cats.network.NetworkImage
 
-class HomeAdapter : ListAdapter<NetworkImage, HomeAdapter.ViewHolder>(NetworkImageDiffCallback()) {
+class HomeAdapter (val itemClickListener: ItemClickListener) : ListAdapter<NetworkImage, HomeAdapter.ViewHolder>(NetworkImageDiffCallback()) {
 
 
     class ViewHolder private constructor(private val binding : ImageItemBinding) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(image: NetworkImage) {
+        fun bind(image: NetworkImage, itemClickListener: ItemClickListener) {
+            binding.clicklistener = itemClickListener
             binding.image = image
             binding.executePendingBindings()
         }
@@ -32,7 +33,7 @@ class HomeAdapter : ListAdapter<NetworkImage, HomeAdapter.ViewHolder>(NetworkIma
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = getItem(position)
-        holder.bind(item)
+        holder.bind(item, itemClickListener)
 
     }
 
@@ -47,6 +48,10 @@ class NetworkImageDiffCallback : DiffUtil.ItemCallback<NetworkImage>() {
         return oldItem.id == newItem.id
     }
 
+}
+
+class ItemClickListener(val clicklistener : (selectedImage: NetworkImage) -> Unit) {
+    fun onItemClicked(selectedImage: NetworkImage) = clicklistener(selectedImage)
 }
 
 

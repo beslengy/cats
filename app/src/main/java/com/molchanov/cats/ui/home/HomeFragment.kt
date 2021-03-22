@@ -6,9 +6,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import com.molchanov.cats.R
 import com.molchanov.cats.databinding.FragmentHomeBinding
+import com.molchanov.cats.ui.Decoration
 import com.molchanov.cats.viewmodels.HomeViewModel
 
 
@@ -32,8 +35,19 @@ class HomeFragment : Fragment() {
 
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
-        binding.rvHome.adapter = HomeAdapter()
-        binding.rvHome.addItemDecoration(Decoration(resources.getDimensionPixelOffset(R.dimen.recycler_view_padding)))
+        val adapter = HomeAdapter(ItemClickListener {
+           viewModel.displayCatCard(it)
+        })
+        binding.rvHome.adapter = adapter
+        binding.rvHome.addItemDecoration(Decoration(resources.getDimensionPixelOffset(R.dimen.rv_item_margin)))
+
+        viewModel.navigateToCard.observe(viewLifecycleOwner, Observer {
+            if (it != null){
+                this.findNavController().navigate(
+                    HomeFragmentDirections.actionHomeFragmentToCatCardFragment(it.id))
+                    viewModel.displayCatCardComplete()
+            }
+        })
 
 
         return binding.root

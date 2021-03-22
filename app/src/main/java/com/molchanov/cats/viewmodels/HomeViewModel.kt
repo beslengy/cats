@@ -18,18 +18,29 @@ class HomeViewModel : ViewModel() {
     val catImage: LiveData<List<NetworkImage>>
         get() = _catImage
 
+    private val _navigateToCard = MutableLiveData<NetworkImage>()
+    val navigateToCard: LiveData<NetworkImage>
+        get() = _navigateToCard
+
     init {
-        getCats()
+        getImages()
     }
 
-    private fun getCats() {
+    private fun getImages() {
         viewModelScope.launch{
             try {
-                _catImage.value = CatsApi.retrofitService.getImages()
+                _catImage.value = CatsApi.retrofitService.getAllImages()
                 _response.value = "Success: cat's images available"
             } catch (e: Exception) {
                 _response.value = "Failure: ${e.message}"
             }
         }
+    }
+
+    fun displayCatCard(currentImage: NetworkImage) {
+        _navigateToCard.value = currentImage
+    }
+    fun displayCatCardComplete() {
+        _navigateToCard.value = null
     }
 }

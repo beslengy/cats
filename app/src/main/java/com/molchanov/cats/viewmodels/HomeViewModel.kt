@@ -36,6 +36,11 @@ class HomeViewModel : ViewModel() {
             }
         }
     }
+    fun addToFavorites(currentImage: NetworkImage) {
+        viewModelScope.launch {
+            CatsApi.retrofitService.postFavorite(currentImage.id)
+        }
+    }
 
     fun displayCatCard(currentImage: NetworkImage) {
         _navigateToCard.value = currentImage

@@ -38,6 +38,7 @@ class HomeFragment : Fragment() {
         val adapter = HomeAdapter(ItemClickListener {
            viewModel.displayCatCard(it)
         })
+
         binding.rvHome.adapter = adapter
         binding.rvHome.addItemDecoration(Decoration(resources.getDimensionPixelOffset(R.dimen.rv_item_margin)))
 

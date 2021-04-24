@@ -6,6 +6,7 @@ import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.http.*
+import java.io.File
 
 private const val USER_ID = "user-17"
 private const val API_KEY = "x-api-key: 177e2034-b213-4178-834f-a3d237cc68ad"
@@ -26,21 +27,68 @@ interface CatsApiService {
 //    suspend fun getCats(): List<NetworkImages>
 
 
+    /**
+     * Метод для получения всех картинок
+     */
     @Headers(API_KEY)
     @GET("images/search?limit=50&page=50&include_favourite=0")
     suspend fun getAllImages() : List<NetworkImage>
 
+    /**
+     * Метод для получения отдельного котика через его ID
+     */
     @Headers(API_KEY)
     @GET("images/{image_id}")
     suspend fun getCatByImage(@Path("image_id") imageId: String) : NetworkCat
 
-    @Headers(API_KEY)
-    @POST("favorites")
-    suspend fun postFavorite(@Body @Json(name = "image_id")imageId: String, @Json(name = "sub_id")username: String = USER_ID) : String
+    /**
+     * Метод для добавления картинки в избранное
+     */
 
     @Headers(API_KEY)
-    @GET("favourites")
-    suspend fun getAllFavorites() : List<NetworkFavorites>
+//    @FormUrlEncoded
+    @POST("favourites")
+    suspend fun postFavorite(
+        @Body postFavorite: PostFavorite
+//        @Field("image_id")imageId: String
+//        @Field("sub_id")username: String = USER_ID
+    ) : ResponseFavorite
+
+    /**
+     * Метод для получения списка всех избранных картинок по имени пользователя
+     */
+    @Headers(API_KEY)
+    @GET("favourites?limit=50&page=50")
+    suspend fun getAllFavorites(@Query("sub_id") username: String = USER_ID) : List<NetworkFavorite>
+
+    /**
+     * Метод для удаления картинки из избранного
+     */
+    @Headers(API_KEY)
+    @POST("favourites/{favourite_id}")
+    suspend fun deleteFavorite(@Path("favourite_id") favoriteId: String) : String
+
+    /**
+     * Метод для получения моих загруженных картинок
+     */
+    @Headers(API_KEY)
+    @GET("/images/upload")
+    suspend fun getAllUploaded(@Query("sub_id") username: String) : List<NetworkUploaded>
+
+    /**
+     * Метод для загрузки картинки на сервер
+     */
+    @Headers(API_KEY)
+    @POST("/images/upload")
+    suspend fun uploadImage(@Body file: File, @Json(name = "sub_id")username: String = USER_ID )
+
+    /**
+     * Метод для удаления моей загруженной картинки с сервера
+     */
+
+    /**
+     * Метод для получения анализа картинки
+     */
 }
 
 object CatsApi {

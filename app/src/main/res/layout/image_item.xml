@@ -47,6 +47,7 @@
                 android:id="@+id/btn_favorites"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:onClick="@{()->clicklistener.onFavoriteBtnClicked(image)}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:srcCompat="@drawable/ic_heart_border"

@@ -5,16 +5,16 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.molchanov.cats.network.CatsApi
-import com.molchanov.cats.network.NetworkFavorites
+import com.molchanov.cats.network.NetworkFavorite
 import kotlinx.coroutines.launch
 
 class FavoritesViewModel : ViewModel(){
 
-    private val _favoriteImages = MutableLiveData<List<NetworkFavorites>>()
-    val favoriteImages: LiveData<List<NetworkFavorites>> get() = _favoriteImages
+    private val _favoriteImages = MutableLiveData<List<NetworkFavorite>>()
+    val favoriteImages: LiveData<List<NetworkFavorite>> get() = _favoriteImages
 
-    private val _navigateToCard = MutableLiveData<NetworkFavorites>()
-    val navigateToCard: LiveData<NetworkFavorites>
+    private val _navigateToCard = MutableLiveData<NetworkFavorite>()
+    val navigateToCard: LiveData<NetworkFavorite>
         get() = _navigateToCard
 
     init {
@@ -31,7 +31,7 @@ class FavoritesViewModel : ViewModel(){
         }
     }
 
-    fun displayCatCard(currentImage: NetworkFavorites) {
+    fun displayCatCard(currentImage: NetworkFavorite) {
         _navigateToCard.value = currentImage
     }
     fun displayCatCardComplete() {

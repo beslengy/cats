@@ -6,7 +6,7 @@
     <data>
         <variable
             name="viewModel"
-            type="com.molchanov.cats.viewmodels.HomeViewModel" />
+            type="com.molchanov.cats.viewmodels.home.HomeViewModel" />
     </data>
 
     <FrameLayout

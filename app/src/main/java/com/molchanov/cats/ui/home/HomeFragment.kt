@@ -25,7 +25,6 @@ class HomeFragment : Fragment() {
         val activity = requireNotNull(this.activity)
             ViewModelProvider(this, HomeViewModelFactory(activity.application))
                 .get(HomeViewModel::class.java)
-
     }
 
 
@@ -48,6 +47,7 @@ class HomeFragment : Fragment() {
 
         binding.rvHome.adapter = adapter
         binding.rvHome.addItemDecoration(Decoration(resources.getDimensionPixelOffset(R.dimen.rv_item_margin)))
+        binding.rvHome.setHasFixedSize(true)
 
 
 
@@ -61,7 +61,7 @@ class HomeFragment : Fragment() {
         })
         //TODO: реализовать смену цвета при нажатии на сердечко через лайв дата
         //Добавляем возможность изменить цвет сердечка при нажатии через лайв дата
-        viewModel.checkFavorite.observe()
+        //viewModel.checkFavorite.observe()
 
 
         return binding.root
@@ -74,9 +74,9 @@ class HomeFragment : Fragment() {
 
     }
 
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
-
 }

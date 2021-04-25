@@ -9,8 +9,10 @@ import androidx.navigation.ui.NavigationUI
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class MainActivity : AppCompatActivity() {
+
     private lateinit var navController: NavController
     private lateinit var appBarConfiguration: AppBarConfiguration
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -20,8 +22,6 @@ class MainActivity : AppCompatActivity() {
             R.id.homeFragment, R.id.favoritesFragment, R.id.uploadedFragment))
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration)
         NavigationUI.setupWithNavController(bottomNavigation, navController)
-
-
     }
 
     override fun onSupportNavigateUp(): Boolean {

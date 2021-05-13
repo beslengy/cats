@@ -10,7 +10,7 @@
             type="com.molchanov.cats.network.NetworkImage" />
         <variable
             name="clicklistener"
-            type="com.molchanov.cats.ui.home.ItemClickListener" />
+            type="com.molchanov.cats.ui.ItemClickListener" />
     </data>
 
     <com.google.android.material.card.MaterialCardView

@@ -1,14 +1,13 @@
-package com.molchanov.cats.ui.home
+package com.molchanov.cats.ui
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.molchanov.cats.databinding.ImageItemBinding
 import com.molchanov.cats.network.NetworkImage
 
-class HomeAdapter (val itemClickListener: ItemClickListener) : ListAdapter<NetworkImage, HomeAdapter.ViewHolder>(NetworkImageDiffCallback()) {
+class ImageItemAdapter (val itemClickListener: ItemClickListener) : ListAdapter<NetworkImage, ImageItemAdapter.ViewHolder>(DiffCallback()) {
 
     class ViewHolder private constructor(private val binding : ImageItemBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(image: NetworkImage, itemClickListener: ItemClickListener) {
@@ -39,22 +38,8 @@ class HomeAdapter (val itemClickListener: ItemClickListener) : ListAdapter<Netwo
     }
 
 }
-class NetworkImageDiffCallback : DiffUtil.ItemCallback<NetworkImage>() {
-    override fun areItemsTheSame(oldItem: NetworkImage, newItem: NetworkImage): Boolean {
-        return oldItem === newItem
-    }
 
-    override fun areContentsTheSame(oldItem: NetworkImage, newItem: NetworkImage): Boolean {
-        return oldItem.id == newItem.id
-    }
 
-}
 
-class ItemClickListener(
-    val imageClicklistener : (selectedImage: NetworkImage) -> Unit,
-    val favoriteClicklistener : (selectedImage: NetworkImage) -> Unit) {
-    fun onItemClicked(selectedImage: NetworkImage) = imageClicklistener(selectedImage)
-    fun onFavoriteBtnClicked(selectedImage: NetworkImage) = favoriteClicklistener(selectedImage)
-}
 
 

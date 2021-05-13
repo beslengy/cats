@@ -12,8 +12,9 @@ import androidx.navigation.fragment.findNavController
 import com.molchanov.cats.R
 import com.molchanov.cats.databinding.FragmentHomeBinding
 import com.molchanov.cats.ui.Decoration
+import com.molchanov.cats.ui.ImageItemAdapter
+import com.molchanov.cats.ui.ItemClickListener
 import com.molchanov.cats.viewmodels.home.HomeViewModel
-import com.molchanov.cats.viewmodels.home.HomeViewModelFactory
 
 
 class HomeFragment : Fragment() {
@@ -22,8 +23,7 @@ class HomeFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val viewModel: HomeViewModel by lazy {
-        val activity = requireNotNull(this.activity)
-            ViewModelProvider(this, HomeViewModelFactory(activity.application))
+            ViewModelProvider(this)
                 .get(HomeViewModel::class.java)
     }
 
@@ -38,7 +38,7 @@ class HomeFragment : Fragment() {
 
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
-        val adapter = HomeAdapter(ItemClickListener({
+        val adapter = ImageItemAdapter(ItemClickListener({
             viewModel.displayCatCard(it)
         }, {
             viewModel.addToFavorites(it)
@@ -48,8 +48,6 @@ class HomeFragment : Fragment() {
         binding.rvHome.adapter = adapter
         binding.rvHome.addItemDecoration(Decoration(resources.getDimensionPixelOffset(R.dimen.rv_item_margin)))
         binding.rvHome.setHasFixedSize(true)
-
-
 
         viewModel.navigateToCard.observe(viewLifecycleOwner, Observer {
             if (it != null) {
@@ -63,17 +61,8 @@ class HomeFragment : Fragment() {
         //Добавляем возможность изменить цвет сердечка при нажатии через лайв дата
         //viewModel.checkFavorite.observe()
 
-
         return binding.root
     }
-
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-
-    }
-
 
     override fun onDestroyView() {
         super.onDestroyView()

@@ -5,12 +5,12 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.molchanov.cats.databinding.ImageItemBinding
-import com.molchanov.cats.network.NetworkImage
+import com.molchanov.cats.domain.Cat
 
-class ImageItemAdapter (val itemClickListener: ItemClickListener) : ListAdapter<NetworkImage, ImageItemAdapter.ViewHolder>(DiffCallback()) {
+class ImageItemAdapter (val itemClickListener: ItemClickListener) : ListAdapter<Cat, ImageItemAdapter.ViewHolder>(DiffCallback()) {
 
     class ViewHolder private constructor(private val binding : ImageItemBinding) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(image: NetworkImage, itemClickListener: ItemClickListener) {
+        fun bind(image: Cat, itemClickListener: ItemClickListener) {
             binding.clicklistener = itemClickListener
             binding.image = image
             //binding.btnFavorites.visibility = View.GONE

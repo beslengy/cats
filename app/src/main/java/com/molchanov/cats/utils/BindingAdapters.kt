@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
-import com.molchanov.cats.network.NetworkImage
+import com.molchanov.cats.domain.Cat
 import com.molchanov.cats.ui.ImageItemAdapter
 
 
@@ -32,7 +32,7 @@ fun ImageView.bindImage(imageUrl: String?) {
     }
 }
 @BindingAdapter("listData")
-fun bindRecyclerView(recyclerView: RecyclerView, data: List<NetworkImage>?) {
+fun bindRecyclerView(recyclerView: RecyclerView, data: List<Cat>?) {
     val adapter = recyclerView.adapter as ImageItemAdapter
     adapter.submitList(data)
 }

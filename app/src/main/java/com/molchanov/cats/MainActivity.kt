@@ -7,6 +7,9 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.molchanov.cats.repository.CatsRepository
+import com.molchanov.cats.utils.APP_ACTIVITY
+import com.molchanov.cats.utils.REPOSITORY
 
 class MainActivity : AppCompatActivity() {
 
@@ -15,7 +18,10 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        APP_ACTIVITY = this
+        REPOSITORY = CatsRepository()
         setContentView(R.layout.activity_main)
+
         val bottomNavigation: BottomNavigationView = findViewById(R.id.bottom_navigation)
         navController = findNavController(R.id.nav_host_fragment)
         appBarConfiguration = AppBarConfiguration(setOf(

@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.molchanov.cats.network.CatsApi
 import com.molchanov.cats.network.NetworkFavorite
+import com.molchanov.cats.utils.FAV_QUERY_OPTIONS
 import kotlinx.coroutines.launch
 
 class FavoritesViewModel : ViewModel(){
@@ -24,7 +25,7 @@ class FavoritesViewModel : ViewModel(){
     private fun getFavorites() {
         viewModelScope.launch {
             try {
-                _favoriteImages.value = CatsApi.retrofitService.getAllFavorites()
+                _favoriteImages.value = CatsApi.retrofitService.getAllFavorites(FAV_QUERY_OPTIONS)
             } catch (e: Exception) {
 
             }

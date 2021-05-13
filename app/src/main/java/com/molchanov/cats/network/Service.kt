@@ -31,7 +31,7 @@ interface CatsApiService {
      * Метод для получения всех картинок
      */
     @Headers(API_KEY)
-    @GET("images/search?limit=50&page=50&include_favourite=0")
+    @GET("images/search?limit=20&page=1&include_favourite=0")
     suspend fun getAllImages() : List<NetworkImage>
 
     /**
@@ -58,15 +58,15 @@ interface CatsApiService {
      * Метод для получения списка всех избранных картинок по имени пользователя
      */
     @Headers(API_KEY)
-    @GET("favourites?limit=50&page=50")
-    suspend fun getAllFavorites(@Query("sub_id") username: String = USER_ID) : List<NetworkFavorite>
+    @GET("favourites")
+    suspend fun getAllFavorites(@QueryMap options: Map<String, String>) : List<NetworkFavorite>
 
     /**
      * Метод для удаления картинки из избранного
      */
     @Headers(API_KEY)
     @POST("favourites/{favourite_id}")
-    suspend fun deleteFavorite(@Path("favourite_id") favoriteId: String) : String
+    suspend fun deleteFavorite(@Path("favourite_id") favoriteId: String) : ResponseFavorite
 
     /**
      * Метод для получения моих загруженных картинок

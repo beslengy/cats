@@ -1,4 +1,4 @@
-package com.molchanov.cats
+package com.molchanov.cats.utils
 
 import android.widget.ImageView
 import androidx.core.net.toUri
@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
+import com.molchanov.cats.R
 import com.molchanov.cats.domain.Cat
 import com.molchanov.cats.ui.ImageItemAdapter
 

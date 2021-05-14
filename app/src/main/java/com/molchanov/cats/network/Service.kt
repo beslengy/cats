@@ -1,5 +1,7 @@
 package com.molchanov.cats.network
 
+import com.molchanov.cats.utils.API_KEY
+import com.molchanov.cats.utils.BASE_URL
 import com.squareup.moshi.Json
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
@@ -7,10 +9,6 @@ import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.http.*
 import java.io.File
-
-private const val USER_ID = "user-17"
-private const val API_KEY = "x-api-key: 177e2034-b213-4178-834f-a3d237cc68ad"
-private const val BASE_URL = "https://api.thecatapi.com/v1/"
 
 private val moshi = Moshi.Builder()
     .addLast(KotlinJsonAdapterFactory())
@@ -80,7 +78,7 @@ interface CatsApiService {
      */
     @Headers(API_KEY)
     @POST("/images/upload")
-    suspend fun uploadImage(@Body file: File, @Json(name = "sub_id")username: String = USER_ID )
+    suspend fun uploadImage(@Body file: File, @Json(name = "sub_id")username: String = com.molchanov.cats.utils.USER_ID )
 
     /**
      * Метод для удаления моей загруженной картинки с сервера

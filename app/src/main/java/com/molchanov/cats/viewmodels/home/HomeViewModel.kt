@@ -7,9 +7,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.molchanov.cats.R
 import com.molchanov.cats.domain.Cat
-import com.molchanov.cats.network.CatsApi
-import com.molchanov.cats.network.PostFavorite
-import com.molchanov.cats.network.ResponseFavorite
 import com.molchanov.cats.utils.APP_ACTIVITY
 import com.molchanov.cats.utils.REPOSITORY
 import com.molchanov.cats.utils.showToast
@@ -17,8 +14,8 @@ import kotlinx.coroutines.launch
 
 class HomeViewModel : ViewModel() {
     //В эту переменную запишем ответ с сервера
-    private val _response = MutableLiveData<ResponseFavorite>()
-    private val response: LiveData<ResponseFavorite>
+    private val _response = MutableLiveData<String>()
+    private val response: LiveData<String>
         get() = _response
 
     private val _catImage = MutableLiveData<List<Cat>>()
@@ -54,10 +51,9 @@ class HomeViewModel : ViewModel() {
         Log.d("M_HomeViewModel", "addToFavorites метод запущен")
         viewModelScope.launch {
             try {
-                val postFavorite = PostFavorite(currentImage.imageId)
-                _response.value = CatsApi.retrofitService.postFavorite(postFavorite)
+                _response.value = REPOSITORY.addToFavoriteByImageId(currentImage.imageId)
                 showToast(APP_ACTIVITY.resources.getString(R.string.added_to_favorite_toast_text))
-              Log.d("M_HomeViewModel", "Добавлено в избранное успешно: ${response.value?.message}")
+              Log.d("M_HomeViewModel", "Добавлено в избранное успешно: ${response.value}")
             } catch (e: java.lang.Exception) {
                 showToast("Уже добавлено в избранное")
                 Log.d("M_HomeViewModel", "Ошибка при добавлении в избранное: ${e.message}")

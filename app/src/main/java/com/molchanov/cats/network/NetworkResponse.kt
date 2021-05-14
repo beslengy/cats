@@ -16,10 +16,20 @@ data class NetworkImage (
 )
 @JsonClass(generateAdapter = true)
 data class NetworkCat (
-    val id: String,
-    val url: String,
-    @Json(name = "sub_id") val username: String? = null
-)
+    @Json(name = "id")val imageId: String,
+    @Json(name = "url") val imageUrl: String,
+    @Json(name = "sub_id") val username: String = ""
+){
+    fun asDomainModel(): Cat{
+        return Cat(
+            imageId = this.imageId,
+            imageUrl = this.imageUrl,
+            username = this.username,
+            favoriteId = "",
+            filename = ""
+        )
+    }
+}
 
 @JsonClass(generateAdapter = true)
 data class NetworkFavorite (

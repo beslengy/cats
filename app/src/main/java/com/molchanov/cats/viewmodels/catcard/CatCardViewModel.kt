@@ -1,6 +1,7 @@
 package com.molchanov.cats.viewmodels.catcard
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -15,6 +16,7 @@ class CatCardViewModel(private val imageId: String, app: Application) : AndroidV
 
      init {
           getCat()
+          Log.d("M_CatCardViewModel", "getCat запущен")
      }
 
      private fun getCat() {

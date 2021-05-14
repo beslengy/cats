@@ -63,7 +63,7 @@ interface CatsApiService {
      * Метод для удаления картинки из избранного
      */
     @Headers(API_KEY)
-    @POST("favourites/{favourite_id}")
+    @DELETE("favourites/{favourite_id}")
     suspend fun deleteFavorite(@Path("favourite_id") favoriteId: String) : ResponseFavorite
 
     /**

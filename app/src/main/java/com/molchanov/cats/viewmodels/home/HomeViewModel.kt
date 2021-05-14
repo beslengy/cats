@@ -1,10 +1,9 @@
 package com.molchanov.cats.viewmodels.home
 
-import android.app.Application
 import android.util.Log
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.molchanov.cats.R
 import com.molchanov.cats.domain.Cat
@@ -16,10 +15,10 @@ import com.molchanov.cats.utils.REPOSITORY
 import com.molchanov.cats.utils.showToast
 import kotlinx.coroutines.launch
 
-class HomeViewModel(application: Application) : AndroidViewModel(application) {
+class HomeViewModel : ViewModel() {
     //В эту переменную запишем ответ с сервера
     private val _response = MutableLiveData<ResponseFavorite>()
-    val response: LiveData<ResponseFavorite>
+    private val response: LiveData<ResponseFavorite>
         get() = _response
 
     private val _catImage = MutableLiveData<List<Cat>>()

@@ -4,6 +4,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+        <variable
+            name="viewModel"
+            type="com.molchanov.cats.viewmodels.favorites.FavoritesViewModel" />
 
     </data>
 
@@ -17,12 +20,13 @@
             android:id="@+id/rv_favorite"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:paddingTop="@dimen/recycler_view_padding"
-            android:paddingStart="@dimen/recycler_view_padding"
-            android:paddingEnd="@dimen/recycler_view_padding"
+            android:paddingTop="@dimen/rv_item_margin"
+            android:paddingStart="@dimen/rv_item_margin"
+            android:paddingEnd="@dimen/rv_item_margin"
             app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
             app:spanCount="2"
             android:scrollbars="vertical"
+            app:listData="@{viewModel.favoriteImages}"
             tools:listitem="@layout/image_item"
              />
 

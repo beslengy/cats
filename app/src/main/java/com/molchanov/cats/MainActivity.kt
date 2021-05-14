@@ -9,7 +9,9 @@ import androidx.navigation.ui.NavigationUI
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.molchanov.cats.repository.CatsRepository
 import com.molchanov.cats.utils.APP_ACTIVITY
+import com.molchanov.cats.utils.FAV_QUERY_OPTIONS
 import com.molchanov.cats.utils.REPOSITORY
+import com.molchanov.cats.utils.USER_ID
 
 class MainActivity : AppCompatActivity() {
 
@@ -20,6 +22,11 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         APP_ACTIVITY = this
         REPOSITORY = CatsRepository()
+        FAV_QUERY_OPTIONS = mapOf(
+            "user_id" to USER_ID,
+            "limit" to "10",
+            "page" to "1"
+        )
         setContentView(R.layout.activity_main)
 
         val bottomNavigation: BottomNavigationView = findViewById(R.id.bottom_navigation)

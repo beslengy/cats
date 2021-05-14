@@ -1,5 +1,6 @@
 package com.molchanov.cats.repository
 
+import android.util.Log
 import com.molchanov.cats.domain.Cat
 import com.molchanov.cats.network.CatsApi
 import com.molchanov.cats.utils.FAV_QUERY_OPTIONS
@@ -25,6 +26,7 @@ class CatsRepository {
         return cats
     }
     suspend fun removeFavoriteByFavId(favId: String) : String {
+        Log.d("M_CatsRepository", "removeFavoritesById запущен, favId: $favId")
         val message: String
         withContext(Dispatchers.IO) {
             message = CatsApi.retrofitService.deleteFavorite(favId).message

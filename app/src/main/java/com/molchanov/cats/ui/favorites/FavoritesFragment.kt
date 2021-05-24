@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.molchanov.cats.R
@@ -48,7 +47,7 @@ class FavoritesFragment : Fragment() {
         binding.rvFavorite.addItemDecoration(Decoration(resources.getDimensionPixelOffset(R.dimen.rv_item_margin)))
         binding.rvFavorite.setHasFixedSize(true)
 
-        viewModel.navigateToCard.observe(viewLifecycleOwner, Observer {
+        viewModel.navigateToCard.observe(viewLifecycleOwner, {
             if (it != null) {
                 this.findNavController().navigate(
                     FavoritesFragmentDirections.actionFavoritesFragmentToCatCardFragment(it.imageId)
@@ -56,6 +55,7 @@ class FavoritesFragment : Fragment() {
                 viewModel.displayCatCardComplete()
             }
         })
+
         //TODO: реализовать смену цвета при нажатии на сердечко через лайв дата
         //Добавляем возможность изменить цвет сердечка при нажатии через лайв дата
         //viewModel.checkFavorite.observe()

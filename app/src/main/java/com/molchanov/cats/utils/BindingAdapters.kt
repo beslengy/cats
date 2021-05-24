@@ -1,6 +1,9 @@
 package com.molchanov.cats.utils
 
+import android.util.Log
+import android.view.View
 import android.widget.ImageView
+import android.widget.TextView
 import androidx.core.net.toUri
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -33,8 +36,55 @@ fun ImageView.bindImage(imageUrl: String?) {
     }
 }
 @BindingAdapter("listData")
-fun bindRecyclerView(recyclerView: RecyclerView, data: List<Cat>?) {
+fun bindRecyclerView(recyclerView: RecyclerView, data: MutableList<Cat>?) {
+    Log.d("M_BindingAdapters", "bindRecyclerView вызван")
     val adapter = recyclerView.adapter as ImageItemAdapter
     adapter.submitList(data)
+    Log.d("M_BindingAdapters", "$data")
+    Log.d("M_BindingAdapters", "adapter.submitList вызван")
+    Log.d("M_BindingAdapters", "${adapter.itemCount}")
 }
+
+@BindingAdapter("ApiStatusImage")
+fun bindStatusImage(statusImageView: ImageView,
+                    status: ApiStatus) {
+    when(status) {
+        ApiStatus.LOADING -> {
+            statusImageView.visibility = View.VISIBLE
+            statusImageView.setImageResource(R.drawable.loading_animation)
+        }
+        ApiStatus.ERROR -> {
+            statusImageView.visibility = View.VISIBLE
+            statusImageView.setImageResource(R.drawable.ic_connection_error)
+        }
+        ApiStatus.DONE -> {
+            statusImageView.visibility = View.GONE
+        }
+        ApiStatus.EMPTY -> {
+            statusImageView.visibility = View.VISIBLE
+            statusImageView.setImageResource(R.drawable.ic_empty_list)
+        }
+    }
+}
+
+@BindingAdapter("ApiStatusText")
+fun bindStatusText(statusTextView: TextView, status: ApiStatus){
+    when(status) {
+        ApiStatus.EMPTY -> {
+            statusTextView.visibility = View.VISIBLE
+            statusTextView.text = "Список пуст"
+        }
+        ApiStatus.ERROR -> {
+            statusTextView.visibility = View.VISIBLE
+            statusTextView.text = "Ошибка соединения"
+        }
+        ApiStatus.LOADING -> {
+            statusTextView.visibility = View.GONE
+        }
+        ApiStatus.DONE -> {
+            statusTextView.visibility = View.GONE
+        }
+    }
+}
+
 

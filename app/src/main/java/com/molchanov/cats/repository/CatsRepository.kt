@@ -10,12 +10,13 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 class CatsRepository {
-    var cats: List<Cat> = listOf()
+//    var cats: List<Cat> = listOf()
+    var cats: MutableList<Cat> = mutableListOf()
     lateinit var cat: Cat
 
-    suspend fun refreshHome(): List<Cat> {
+    suspend fun refreshHome(): MutableList<Cat> {
         withContext(Dispatchers.IO) {
-            cats = CatsApi.retrofitService.getAllImages().asDomainModel()
+            cats = CatsApi.retrofitService.getAllImages().asDomainModel() as MutableList<Cat>
         }
         return cats
     }
@@ -28,12 +29,13 @@ class CatsRepository {
         return message
     }
 
-    suspend fun refreshFavorites(): List<Cat> {
+    suspend fun refreshFavorites(): MutableList<Cat> {
         withContext(Dispatchers.IO) {
             cats = CatsApi.retrofitService.getAllFavorites(FAV_QUERY_OPTIONS).map{
                 it.asDomainModel()
-            }
+            } as MutableList<Cat>
         }
+        Log.d("M_CatsRepository", "Избранные картинки обновлены")
         return cats
     }
 
@@ -51,5 +53,9 @@ class CatsRepository {
             message = CatsApi.retrofitService.deleteFavorite(favId).message
         }
         return message
+    }
+    suspend fun removeItem(cat: Cat) : MutableList<Cat> {
+        cats.remove(cat)
+        return cats
     }
 }

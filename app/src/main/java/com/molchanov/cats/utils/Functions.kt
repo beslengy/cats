@@ -7,7 +7,7 @@ import com.molchanov.cats.network.NetworkImage
 fun showToast(message:String) {
     Toast.makeText(APP_ACTIVITY, message, Toast.LENGTH_SHORT).show()
 }
-fun List<NetworkImage>.asDomainModel(): List<Cat>{
+fun List<NetworkImage>.asDomainModel(): List<Cat> {
     return map {
         Cat(
             imageId = it.imageId,

@@ -8,11 +8,17 @@ import androidx.lifecycle.viewModelScope
 import com.molchanov.cats.R
 import com.molchanov.cats.domain.Cat
 import com.molchanov.cats.utils.APP_ACTIVITY
+import com.molchanov.cats.utils.ApiStatus
 import com.molchanov.cats.utils.REPOSITORY
 import com.molchanov.cats.utils.showToast
 import kotlinx.coroutines.launch
 
 class HomeViewModel : ViewModel() {
+    //Переменная статуса загрузки/сети
+    private val _status = MutableLiveData<ApiStatus>()
+    val status: LiveData<ApiStatus>
+        get() = _status
+
     //В эту переменную запишем ответ с сервера
     private val _response = MutableLiveData<String>()
     private val response: LiveData<String>
@@ -38,11 +44,15 @@ class HomeViewModel : ViewModel() {
     }
 
     private fun getImages() {
+        _status.value = ApiStatus.LOADING
         viewModelScope.launch{
             try {
                 _catImage.value = REPOSITORY.refreshHome()
                 Log.d("M_HomeViewModel", "картинки успешно загружены: ${catImage.value?.size}")
+                _status.value = if (catImage.value.isNullOrEmpty()) {ApiStatus.EMPTY} else {ApiStatus.DONE}
             } catch (e: Exception) {
+                Log.d("M_HomeViewModel", "Ошибка при загрузке картинок: ${e.message}")
+                _status.value = ApiStatus.ERROR
                 _catImage.value = ArrayList()
             }
         }

@@ -16,3 +16,10 @@ lateinit var CIRCULAR_PROGRESS_DRAWABLE: CircularProgressDrawable
 const val USER_ID = "user-17"
 const val API_KEY = "x-api-key: 177e2034-b213-4178-834f-a3d237cc68ad"
 const val BASE_URL = "https://api.thecatapi.com/v1/"
+
+enum class ApiStatus {
+    LOADING,
+    ERROR,
+    DONE,
+    EMPTY
+}

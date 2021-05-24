@@ -9,19 +9,23 @@ import com.molchanov.cats.domain.Cat
 
 class ImageItemAdapter (val itemClickListener: ItemClickListener) : ListAdapter<Cat, ImageItemAdapter.ViewHolder>(DiffCallback()) {
 
-    class ViewHolder private constructor(private val binding : ImageItemBinding) : RecyclerView.ViewHolder(binding.root) {
+    class ViewHolder private constructor(private val binding: ImageItemBinding) :
+        RecyclerView.ViewHolder(binding.root) {
         fun bind(image: Cat, itemClickListener: ItemClickListener) {
             binding.clicklistener = itemClickListener
             binding.image = image
             //binding.btnFavorites.visibility = View.GONE
             binding.executePendingBindings()
         }
+
         companion object {
             fun from(parent: ViewGroup): ViewHolder {
 
-                return ViewHolder(ImageItemBinding.inflate(
-                    LayoutInflater.from(parent.context)
-                ))
+                return ViewHolder(
+                    ImageItemBinding.inflate(
+                        LayoutInflater.from(parent.context)
+                    )
+                )
             }
         }
     }
@@ -36,7 +40,6 @@ class ImageItemAdapter (val itemClickListener: ItemClickListener) : ListAdapter<
         holder.bind(item, itemClickListener)
 
     }
-
 }
 
 

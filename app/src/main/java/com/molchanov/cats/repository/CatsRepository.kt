@@ -54,8 +54,18 @@ class CatsRepository {
         }
         return message
     }
-    suspend fun removeItem(cat: Cat) : MutableList<Cat> {
+
+    fun removeItem(cat: Cat) : MutableList<Cat> {
         cats.remove(cat)
+        return cats
+    }
+
+    suspend fun refreshUploaded() : MutableList<Cat> {
+        withContext(Dispatchers.IO) {
+            cats = CatsApi.retrofitService.getAllUploaded(FAV_QUERY_OPTIONS).map{
+                it.asDomainModel()
+            } as MutableList<Cat>
+        }
         return cats
     }
 }

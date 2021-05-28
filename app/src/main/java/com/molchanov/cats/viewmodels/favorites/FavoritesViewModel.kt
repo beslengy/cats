@@ -11,7 +11,7 @@ import com.molchanov.cats.utils.REPOSITORY
 import com.molchanov.cats.utils.showToast
 import kotlinx.coroutines.launch
 
-class FavoritesViewModel : ViewModel(){
+class FavoritesViewModel : ViewModel() {
     private val _status = MutableLiveData<ApiStatus>()
     val status: LiveData<ApiStatus>
         get() = _status
@@ -41,21 +41,35 @@ class FavoritesViewModel : ViewModel(){
             _status.value = ApiStatus.LOADING
             try {
                 _favoriteImages.value = REPOSITORY.refreshFavorites()
-                Log.d("M_FavoritesViewModel", "Избранные картинки успешно загружены: ${favoriteImages.value?.size}")
-                _status.value = if(favoriteImages.value.isNullOrEmpty()) {ApiStatus.EMPTY} else {ApiStatus.DONE}
+                Log.d(
+                    "M_FavoritesViewModel",
+                    "Избранные картинки успешно загружены: ${favoriteImages.value?.size}"
+                )
+                _status.value = if (favoriteImages.value.isNullOrEmpty()) {
+                    ApiStatus.EMPTY
+                } else {
+                    ApiStatus.DONE
+                }
             } catch (e: Exception) {
-                Log.d("M_FavoritesViewModel", "Ошибка при загрузке избранных картинок: ${e.message}")
+                Log.d(
+                    "M_FavoritesViewModel",
+                    "Ошибка при загрузке избранных картинок: ${e.message}"
+                )
                 _status.value = ApiStatus.ERROR
             }
         }
     }
+
     fun deleteFromFavorites(cat: Cat) {
         Log.d("M_FavoritesViewModel", "deleteFromFavorites запущен. Cat: ${cat.favoriteId}")
         viewModelScope.launch {
             try {
                 _response.value = REPOSITORY.removeFavoriteByFavId(cat.favoriteId)
                 _favoriteImages.value = REPOSITORY.removeItem(cat)
-                Log.d("M_FavoritesViewModel", "Удалено из favorite images: ${cat.imageId}. Размер списка: ${favoriteImages.value?.size}")
+                Log.d(
+                    "M_FavoritesViewModel",
+                    "Удалено из favorite images: ${cat.imageId}. Размер списка: ${favoriteImages.value?.size}"
+                )
                 showToast("Удалено из избранного")
                 Log.d("M_FavoritesViewModel", "Удалено из избранного успешно: ${response.value}")
             } catch (e: Exception) {
@@ -68,6 +82,7 @@ class FavoritesViewModel : ViewModel(){
     fun displayCatCard(currentImage: Cat) {
         _navigateToCard.value = currentImage
     }
+
     fun displayCatCardComplete() {
         _navigateToCard.value = null
     }

@@ -70,8 +70,8 @@ interface CatsApiService {
      * Метод для получения моих загруженных картинок
      */
     @Headers(API_KEY)
-    @GET("/images/upload")
-    suspend fun getAllUploaded(@Query("sub_id") username: String) : List<NetworkUploaded>
+    @GET("images")
+    suspend fun getAllUploaded(@QueryMap options: Map<String, String>) : List<NetworkUploaded>
 
     /**
      * Метод для загрузки картинки на сервер

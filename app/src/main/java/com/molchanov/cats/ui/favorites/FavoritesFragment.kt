@@ -8,6 +8,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.molchanov.cats.R
 import com.molchanov.cats.databinding.FragmentFavoritesBinding
 import com.molchanov.cats.ui.Decoration
@@ -46,6 +47,11 @@ class FavoritesFragment : Fragment() {
         binding.rvFavorite.adapter = adapter
         binding.rvFavorite.addItemDecoration(Decoration(resources.getDimensionPixelOffset(R.dimen.rv_item_margin)))
         binding.rvFavorite.setHasFixedSize(true)
+
+        //Настраиваем видимость кнопки загрузки картинки
+        activity?.findViewById<FloatingActionButton>(R.id.fab)?.visibility = View.GONE
+
+
 
         viewModel.navigateToCard.observe(viewLifecycleOwner, {
             if (it != null) {

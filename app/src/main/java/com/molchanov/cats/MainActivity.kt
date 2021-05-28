@@ -8,10 +8,8 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.molchanov.cats.repository.CatsRepository
-import com.molchanov.cats.utils.APP_ACTIVITY
-import com.molchanov.cats.utils.FAV_QUERY_OPTIONS
-import com.molchanov.cats.utils.REPOSITORY
-import com.molchanov.cats.utils.USER_ID
+import com.molchanov.cats.ui.Decoration
+import com.molchanov.cats.utils.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -21,6 +19,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         APP_ACTIVITY = this
+        DECORATION = Decoration(R.dimen.rv_item_margin)
         REPOSITORY = CatsRepository()
         FAV_QUERY_OPTIONS = mapOf(
             "user_id" to USER_ID,

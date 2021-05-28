@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.molchanov.cats.R
 import com.molchanov.cats.databinding.FragmentHomeBinding
 import com.molchanov.cats.ui.Decoration
@@ -48,6 +49,11 @@ class HomeFragment : Fragment() {
         binding.rvHome.adapter = adapter
         binding.rvHome.addItemDecoration(Decoration(resources.getDimensionPixelOffset(R.dimen.rv_item_margin)))
         binding.rvHome.setHasFixedSize(true)
+
+        //Настраиваем видимость кнопки загрузки картинки
+        activity?.findViewById<FloatingActionButton>(R.id.fab)?.visibility = View.GONE
+
+
 
         viewModel.navigateToCard.observe(viewLifecycleOwner, Observer {
             if (it != null) {

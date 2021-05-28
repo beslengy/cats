@@ -6,4 +6,7 @@ data class Cat(
     val username: String,
     val favoriteId: String,
     val filename: String
-)
+){
+     var isUploaded: Boolean = filename != ""
+    var isFavorites: Boolean = favoriteId != ""
+}

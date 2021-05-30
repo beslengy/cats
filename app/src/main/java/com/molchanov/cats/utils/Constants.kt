@@ -1,6 +1,7 @@
 package com.molchanov.cats.utils
 
 import androidx.swiperefreshlayout.widget.CircularProgressDrawable
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.molchanov.cats.MainActivity
 import com.molchanov.cats.repository.CatsRepository
 import com.molchanov.cats.ui.Decoration
@@ -10,6 +11,7 @@ lateinit var REPOSITORY: CatsRepository
 //lateinit var DATABASE: CatsDatabase
 lateinit var DECORATION: Decoration
 lateinit var FAV_QUERY_OPTIONS: Map<String, String>
+lateinit var FAB: FloatingActionButton
 
 lateinit var CIRCULAR_PROGRESS_DRAWABLE: CircularProgressDrawable
 

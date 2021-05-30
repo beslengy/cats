@@ -17,7 +17,7 @@ import com.molchanov.cats.ui.ImageItemAdapter
 
 @BindingAdapter("imageUrl")
 fun ImageView.bindImage(imageUrl: String?) {
-    imageUrl?.let{
+    imageUrl?.let {
         val imgUri = it.toUri().buildUpon().scheme("https").build()
         val circularProgressDrawable = CircularProgressDrawable(this.context)
         circularProgressDrawable.apply {
@@ -28,13 +28,16 @@ fun ImageView.bindImage(imageUrl: String?) {
 
         Glide.with(this.context)
             .load(imgUri)
-            .apply(RequestOptions()
-                .placeholder(circularProgressDrawable)
-                //.placeholder(R.drawable.loading_animation)
-                .error(R.drawable.ic_broken_image))
+            .apply(
+                RequestOptions()
+                    .placeholder(circularProgressDrawable)
+                    //.placeholder(R.drawable.loading_animation)
+                    .error(R.drawable.ic_broken_image)
+            )
             .into(this)
     }
 }
+
 @BindingAdapter("listData")
 fun bindRecyclerView(recyclerView: RecyclerView, data: MutableList<Cat>?) {
     Log.d("M_BindingAdapters", "bindRecyclerView вызван")
@@ -46,9 +49,11 @@ fun bindRecyclerView(recyclerView: RecyclerView, data: MutableList<Cat>?) {
 }
 
 @BindingAdapter("ApiStatusImage")
-fun bindStatusImage(statusImageView: ImageView,
-                    status: ApiStatus) {
-    when(status) {
+fun bindStatusImage(
+    statusImageView: ImageView,
+    status: ApiStatus
+) {
+    when (status) {
         ApiStatus.LOADING -> {
             statusImageView.visibility = View.VISIBLE
             statusImageView.setImageResource(R.drawable.loading_animation)
@@ -68,8 +73,8 @@ fun bindStatusImage(statusImageView: ImageView,
 }
 
 @BindingAdapter("ApiStatusText")
-fun bindStatusText(statusTextView: TextView, status: ApiStatus){
-    when(status) {
+fun bindStatusText(statusTextView: TextView, status: ApiStatus) {
+    when (status) {
         ApiStatus.EMPTY -> {
             statusTextView.visibility = View.VISIBLE
             statusTextView.text = "Список пуст"

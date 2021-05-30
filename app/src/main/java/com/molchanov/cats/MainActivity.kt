@@ -11,7 +11,10 @@ import com.molchanov.cats.repository.CatsRepository
 import com.molchanov.cats.ui.Decoration
 import com.molchanov.cats.utils.*
 
+
+
 class MainActivity : AppCompatActivity() {
+
 
     private lateinit var navController: NavController
     private lateinit var appBarConfiguration: AppBarConfiguration
@@ -26,7 +29,10 @@ class MainActivity : AppCompatActivity() {
             "limit" to "10",
             "page" to "1"
         )
+
         setContentView(R.layout.activity_main)
+
+        FAB = this.findViewById(R.id.fab)
 
         val bottomNavigation: BottomNavigationView = findViewById(R.id.bottom_navigation)
         navController = findNavController(R.id.nav_host_fragment)

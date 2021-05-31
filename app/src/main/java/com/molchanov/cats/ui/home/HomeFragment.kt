@@ -49,6 +49,12 @@ class HomeFragment : Fragment() {
         binding.rvHome.addItemDecoration(Decoration(resources.getDimensionPixelOffset(R.dimen.rv_item_margin)))
         binding.rvHome.setHasFixedSize(true)
 
+        val refreshLayout = binding.srlHome
+        refreshLayout.setOnRefreshListener {
+            viewModel.getImages()
+            refreshLayout.isRefreshing = false
+        }
+
         //Настраиваем видимость кнопки загрузки картинки
         activity?.findViewById<FloatingActionButton>(R.id.fab)?.visibility = View.GONE
 

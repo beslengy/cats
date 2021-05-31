@@ -43,7 +43,7 @@ class HomeViewModel : ViewModel() {
         Log.d("M_HomeViewModel", "метод getImages отработал")
     }
 
-    private fun getImages() {
+    fun getImages() {
         _status.value = ApiStatus.LOADING
         viewModelScope.launch{
             try {

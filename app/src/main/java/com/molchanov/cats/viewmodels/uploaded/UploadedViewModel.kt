@@ -1,5 +1,6 @@
 package com.molchanov.cats.viewmodels.uploaded
 
+import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -8,7 +9,9 @@ import androidx.lifecycle.viewModelScope
 import com.molchanov.cats.domain.Cat
 import com.molchanov.cats.utils.ApiStatus
 import com.molchanov.cats.utils.REPOSITORY
+import com.molchanov.cats.utils.showToast
 import kotlinx.coroutines.launch
+import java.io.File
 
 class UploadedViewModel : ViewModel() {
     private val _status = MutableLiveData<ApiStatus>()
@@ -54,5 +57,21 @@ class UploadedViewModel : ViewModel() {
 
     fun displayCatCardComplete() {
         _navigateToCard.value = null
+    }
+    fun uploadFileByUri(uri: Uri?) {
+        Log.d("M_UploadedViewModel", "uploadFileByUri запущен")
+        if (uri != null) {
+            viewModelScope.launch {
+                try {
+                    _response.value = REPOSITORY.uploadImage(File(uri.path!!))
+                    Log.d("M_UploadedViewModel", "Картинка успешно загружена на сервер")
+                } catch (e: Exception) {
+                    Log.d("M_UploadedViewModel", "Ошибка при загрузке изображения на сервер")
+                }
+            }
+        } else {
+            showToast("uri is null")
+            Log.d("M_UploadedViewModel", "uploadFileByUri: uri is null")
+        }
     }
 }

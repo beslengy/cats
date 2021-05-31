@@ -5,9 +5,14 @@ import com.molchanov.cats.domain.Cat
 import com.molchanov.cats.network.CatsApi
 import com.molchanov.cats.network.PostFavorite
 import com.molchanov.cats.utils.FAV_QUERY_OPTIONS
+import com.molchanov.cats.utils.USER_ID
 import com.molchanov.cats.utils.asDomainModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import okhttp3.MediaType
+import okhttp3.RequestBody
+import java.io.File
+import java.io.IOException
 
 class CatsRepository {
 //    var cats: List<Cat> = listOf()
@@ -67,5 +72,21 @@ class CatsRepository {
             } as MutableList<Cat>
         }
         return cats
+    }
+    suspend fun uploadImage(file: File) : String {
+        Log.d("M_CatsRepository", "uploadImage запущен")
+        var message: String
+        val fileRequest = RequestBody.create(MediaType.parse("image/"), file)
+        val usernameRequest = RequestBody.create(MediaType.parse("text/plain"), USER_ID)
+
+        withContext(Dispatchers.IO) {
+            try{
+                message = CatsApi.retrofitService.uploadImage(fileRequest, usernameRequest).message
+            } catch (e: IOException) {
+                message = e.message.toString()
+                Log.d("M_CatsRepository", "Ошибка при загрузке изображения на сервер: ${e.message}")
+            }
+        }
+        return message
     }
 }

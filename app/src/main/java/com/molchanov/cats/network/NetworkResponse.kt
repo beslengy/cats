@@ -58,7 +58,7 @@ data class FavoriteImage (
 )
 
 @JsonClass(generateAdapter = true)
-data class ResponseFavorite (
+data class ResponseMessage (
     val message: String
 //    val id: Any = ""
 )

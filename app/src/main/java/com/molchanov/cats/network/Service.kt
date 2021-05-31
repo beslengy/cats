@@ -2,13 +2,12 @@ package com.molchanov.cats.network
 
 import com.molchanov.cats.utils.API_KEY
 import com.molchanov.cats.utils.BASE_URL
-import com.squareup.moshi.Json
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
+import okhttp3.RequestBody
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.http.*
-import java.io.File
 
 private val moshi = Moshi.Builder()
     .addLast(KotlinJsonAdapterFactory())
@@ -50,7 +49,7 @@ interface CatsApiService {
         @Body postFavorite: PostFavorite
 //        @Field("image_id")imageId: String
 //        @Field("sub_id")username: String = USER_ID
-    ) : ResponseFavorite
+    ) : ResponseMessage
 
     /**
      * Метод для получения списка всех избранных картинок по имени пользователя
@@ -64,7 +63,7 @@ interface CatsApiService {
      */
     @Headers(API_KEY)
     @DELETE("favourites/{favourite_id}")
-    suspend fun deleteFavorite(@Path("favourite_id") favoriteId: String) : ResponseFavorite
+    suspend fun deleteFavorite(@Path("favourite_id") favoriteId: String) : ResponseMessage
 
     /**
      * Метод для получения моих загруженных картинок
@@ -77,8 +76,12 @@ interface CatsApiService {
      * Метод для загрузки картинки на сервер
      */
     @Headers(API_KEY)
+    @Multipart
     @POST("/images/upload")
-    suspend fun uploadImage(@Body file: File, @Json(name = "sub_id")username: String = com.molchanov.cats.utils.USER_ID )
+    suspend fun uploadImage(
+        @Part("file") file: RequestBody,
+        @Part("sub_id") username: RequestBody
+    ): ResponseMessage
 
     /**
      * Метод для удаления моей загруженной картинки с сервера

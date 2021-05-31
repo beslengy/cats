@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.result.contract.ActivityResultContracts.*
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -20,8 +21,17 @@ class UploadedFragment : Fragment() {
     private var _binding: FragmentUploadedBinding? = null
     private val binding get() = _binding!!
 
+
     private val uploadedViewModel: UploadedViewModel by lazy {
         ViewModelProvider(this).get(UploadedViewModel::class.java)
+    }
+
+
+    private val cameraContract = registerForActivityResult(PhotoContract()) { uri ->
+        uploadedViewModel.uploadFileByUri(uri)
+    }
+    private val galleryContract = registerForActivityResult(GaleryContract()) { uri ->
+        uploadedViewModel.uploadFileByUri(uri)
     }
 
     override fun onCreateView(
@@ -55,26 +65,27 @@ class UploadedFragment : Fragment() {
         //Настраиваем видимость кнопки загрузки картинки
         FAB.visibility = View.VISIBLE
         FAB.setOnClickListener {
-//            selectImageInAlbum()
-            val items = arrayOf("Камера", "Галерея")
-            MaterialAlertDialogBuilder(APP_ACTIVITY)
-                .setTitle("Загрузить изображение")
-                .setNeutralButton("Cancel") {
-                        dialog, _ ->
-                    dialog.dismiss()
-                }
-                .setItems(items) { _, which ->
-                    when (items[which]) {
-                        "Камера" -> takePhoto()
-                        "Галерея" -> selectImageInAlbum()
-                    }
-                }
-                .show()
-
+            selectImage()
         }
-
         return binding.root
     }
+
+    private fun selectImage() {
+        val items = arrayOf("Камера", "Галерея")
+        MaterialAlertDialogBuilder(APP_ACTIVITY)
+            .setTitle("Загрузить изображение")
+            .setNeutralButton("Cancel") { dialog, _ ->
+                dialog.dismiss()
+            }
+            .setItems(items) { _, which ->
+                when (items[which]) {
+                    "Камера" -> cameraContract.launch(true)
+                    "Галерея" -> galleryContract.launch("image/*")
+                }
+            }
+            .show()
+    }
+
 
     override fun onDestroyView() {
         super.onDestroyView()

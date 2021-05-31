@@ -33,7 +33,6 @@ class FavoritesViewModel : ViewModel() {
     init {
         Log.d("M_FavoritesViewModel", "FavoritesViewModel инициализируется")
         getFavorites()
-        Log.d("M_FavoritesViewModel", "getFavorites отработал")
     }
 
     private fun getFavorites() {
@@ -58,6 +57,7 @@ class FavoritesViewModel : ViewModel() {
                 _status.value = ApiStatus.ERROR
             }
         }
+        Log.d("M_FavoritesViewModel", "getFavorites отработал")
     }
 
     fun deleteFromFavorites(cat: Cat) {
@@ -65,7 +65,9 @@ class FavoritesViewModel : ViewModel() {
         viewModelScope.launch {
             try {
                 _response.value = REPOSITORY.removeFavoriteByFavId(cat.favoriteId)
-                _favoriteImages.value = REPOSITORY.removeItem(cat)
+//                _favoriteImages.value = REPOSITORY.removeItem(cat)
+                _favoriteImages.value = REPOSITORY.refreshFavorites()
+
                 Log.d(
                     "M_FavoritesViewModel",
                     "Удалено из favorite images: ${cat.imageId}. Размер списка: ${favoriteImages.value?.size}"

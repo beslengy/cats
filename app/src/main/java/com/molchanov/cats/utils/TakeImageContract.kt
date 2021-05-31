@@ -48,8 +48,6 @@ class PhotoContract : ActivityResultContract<Boolean, Uri>() {
                 )
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
             }
-        }.also {
-            CURRENT_PHOTO_PATH = it.data?.path.toString()
         }
     }
 

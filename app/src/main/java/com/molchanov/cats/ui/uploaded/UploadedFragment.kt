@@ -27,11 +27,11 @@ class UploadedFragment : Fragment() {
     }
 
 
-    private val cameraContract = registerForActivityResult(PhotoContract()) { uri ->
-        uploadedViewModel.uploadFileByUri(uri)
+    private val cameraContract = registerForActivityResult(PhotoContract()) {
+        uploadedViewModel.uploadFileByUri(CURRENT_PHOTO_PATH)
     }
-    private val galleryContract = registerForActivityResult(GaleryContract()) { uri ->
-        uploadedViewModel.uploadFileByUri(uri)
+    private val galleryContract = registerForActivityResult(GaleryContract()) {
+        uploadedViewModel.uploadFileByUri(CURRENT_PHOTO_PATH)
     }
 
     override fun onCreateView(

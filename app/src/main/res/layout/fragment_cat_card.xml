@@ -9,13 +9,17 @@
             type="com.molchanov.cats.viewmodels.catcard.CatCardViewModel" />
 
     </data>
-
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".ui.catcard.CatCardFragment">
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
 
         <!-- TODO: Реализовать макет карточки котика -->
+
 
         <ImageView
             android:id="@+id/iv_cat_card_image"
@@ -32,13 +36,16 @@
         <TextView
             android:id="@+id/tv_cat_card_text"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
+            android:layout_height="wrap_content"
             app:layout_constraintVertical_weight="1"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/iv_cat_card_image"
+            app:cardTextContent="@{viewModel.cat}"
             tools:text="@string/hello_blank_fragment" />
 
+
     </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
 </layout>

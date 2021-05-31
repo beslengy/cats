@@ -1,8 +1,9 @@
 package com.molchanov.cats.utils
 
+
+import androidx.multidex.BuildConfig.APPLICATION_ID
 import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.molchanov.cats.BuildConfig
 import com.molchanov.cats.MainActivity
 import com.molchanov.cats.repository.CatsRepository
 import com.molchanov.cats.ui.Decoration
@@ -20,7 +21,7 @@ lateinit var CIRCULAR_PROGRESS_DRAWABLE: CircularProgressDrawable
 const val USER_ID = "user-17"
 const val API_KEY = "x-api-key: 177e2034-b213-4178-834f-a3d237cc68ad"
 const val BASE_URL = "https://api.thecatapi.com/v1/"
-const val FILE_AUTHORITY = BuildConfig.APPLICATION_ID + ".provider"
+const val FILE_AUTHORITY = "$APPLICATION_ID.provider"
 
 enum class ApiStatus {
     LOADING,

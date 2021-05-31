@@ -1,5 +1,6 @@
 package com.molchanov.cats.network
 
+import com.molchanov.cats.network.networkmodels.*
 import com.molchanov.cats.utils.API_KEY
 import com.molchanov.cats.utils.BASE_URL
 import com.squareup.moshi.Moshi
@@ -19,10 +20,6 @@ private val retrofit = Retrofit.Builder()
     .build()
 
 interface CatsApiService {
-//    @Headers(API_KEY)
-//    @GET("breeds")
-//    suspend fun getCats(): List<NetworkImages>
-
 
     /**
      * Метод для получения всех картинок
@@ -43,12 +40,9 @@ interface CatsApiService {
      */
 
     @Headers(API_KEY)
-//    @FormUrlEncoded
     @POST("favourites")
     suspend fun postFavorite(
         @Body postFavorite: PostFavorite
-//        @Field("image_id")imageId: String
-//        @Field("sub_id")username: String = USER_ID
     ) : ResponseMessage
 
     /**

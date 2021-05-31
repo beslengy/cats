@@ -1,6 +1,7 @@
 package com.molchanov.cats.utils
 
 import android.os.Environment
+import android.util.Log
 import java.io.File
 import java.io.IOException
 import java.text.SimpleDateFormat
@@ -25,6 +26,7 @@ import java.util.*
     ).apply {
         // Save a file: path for use with ACTION_VIEW intents
          CURRENT_PHOTO_PATH = absolutePath
+        Log.d("M_CatImagePicker", "Absolute path: $CURRENT_PHOTO_PATH")
     }
 }
 

@@ -3,7 +3,7 @@ package com.molchanov.cats.repository
 import android.util.Log
 import com.molchanov.cats.domain.Cat
 import com.molchanov.cats.network.CatsApi
-import com.molchanov.cats.network.PostFavorite
+import com.molchanov.cats.network.networkmodels.PostFavorite
 import com.molchanov.cats.utils.FAV_QUERY_OPTIONS
 import com.molchanov.cats.utils.USER_ID
 import com.molchanov.cats.utils.asDomainModel
@@ -46,7 +46,12 @@ class CatsRepository {
 
     suspend fun getCatById(imageId: String) : Cat {
         withContext(Dispatchers.IO) {
-            cat = CatsApi.retrofitService.getCatByImage(imageId).asDomainModel()
+            try{
+                cat = CatsApi.retrofitService.getCatByImage(imageId).asDomainModel()
+                Log.d("M_CatsRepository", "$cat")
+            } catch (e: IOException) {
+                Log.d("M_CatsRepository", "Ошибка при загрузке карточки котика: ${e.message}")
+            }
         }
         return cat
     }
@@ -82,6 +87,7 @@ class CatsRepository {
         withContext(Dispatchers.IO) {
             try{
                 message = CatsApi.retrofitService.uploadImage(fileRequest, usernameRequest).message
+                Log.d("M_CatsRepository", message)
             } catch (e: IOException) {
                 message = e.message.toString()
                 Log.d("M_CatsRepository", "Ошибка при загрузке изображения на сервер: ${e.message}")

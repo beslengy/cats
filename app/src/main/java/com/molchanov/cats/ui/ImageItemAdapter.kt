@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.molchanov.cats.databinding.ImageItemBinding
 import com.molchanov.cats.domain.Cat
 
-class ImageItemAdapter (val itemClickListener: ItemClickListener) : ListAdapter<Cat, ImageItemAdapter.ViewHolder>(DiffCallback()) {
+class ImageItemAdapter (private val itemClickListener: ItemClickListener) : ListAdapter<Cat, ImageItemAdapter.ViewHolder>(DiffCallback()) {
 
     class ViewHolder private constructor(private val binding: ImageItemBinding) :
         RecyclerView.ViewHolder(binding.root) {

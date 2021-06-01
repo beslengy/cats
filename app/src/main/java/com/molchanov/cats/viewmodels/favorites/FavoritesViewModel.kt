@@ -26,10 +26,6 @@ class FavoritesViewModel : ViewModel() {
     private val _response = MutableLiveData<String>()
     private val response: LiveData<String> get() = _response
 
-    private val _removeItem = MutableLiveData<Cat>()
-    val removeItem: LiveData<Cat>
-        get() = _removeItem
-
     init {
         Log.d("M_FavoritesViewModel", "FavoritesViewModel инициализируется")
         getFavorites()

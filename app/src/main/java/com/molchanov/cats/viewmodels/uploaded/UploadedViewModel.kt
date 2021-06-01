@@ -64,6 +64,7 @@ class UploadedViewModel : ViewModel() {
             viewModelScope.launch {
                 try {
                     _response.value = REPOSITORY.uploadImage(File(uri.toString()))
+                    Log.d("M_UploadedViewModel", "${response.value}")
                     Log.d("M_UploadedViewModel", "Картинка успешно загружена на сервер")
                 } catch (e: Exception) {
                     Log.d("M_UploadedViewModel", "Ошибка при загрузке изображения на сервер: ${e.message}")

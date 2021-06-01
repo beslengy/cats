@@ -32,11 +32,6 @@ class HomeViewModel : ViewModel() {
     val navigateToCard: LiveData<Cat>
         get() = _navigateToCard
 
-    //Переменная для того, чтобы отметить картинку, как избранное
-    private val _checkFavorite = MutableLiveData<Cat>()
-    val checkFavorite: LiveData<Cat>
-        get() = _checkFavorite
-
 
     init {
         getImages()

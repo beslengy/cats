@@ -2,10 +2,7 @@ package com.molchanov.cats.network.networkmodels
 
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
-@JsonClass(generateAdapter = true)
-data class BreedWrapper(
-    val breeds: List<Breeds>
-)
+
 @JsonClass(generateAdapter = true)
 data class Breeds(
     @Json(name = "alt_names") val altNames: String? = null,

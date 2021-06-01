@@ -14,7 +14,6 @@ class ImageItemAdapter (private val itemClickListener: ItemClickListener) : List
         fun bind(image: Cat, itemClickListener: ItemClickListener) {
             binding.clicklistener = itemClickListener
             binding.image = image
-            //binding.btnFavorites.visibility = View.GONE
             binding.executePendingBindings()
         }
 

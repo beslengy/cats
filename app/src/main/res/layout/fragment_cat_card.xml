@@ -18,9 +18,6 @@
         android:layout_height="wrap_content"
         >
 
-        <!-- TODO: Реализовать макет карточки котика -->
-
-
         <ImageView
             android:id="@+id/iv_cat_card_image"
             android:layout_width="match_parent"
@@ -31,7 +28,8 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:imageUrl="@{viewModel.cat.imageUrl}"
-            tools:src="@drawable/example_cats" />
+            tools:src="@drawable/example_cats"
+            tools:ignore="ContentDescription" />
 
         <TextView
             android:id="@+id/tv_cat_card_text"

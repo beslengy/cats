@@ -64,18 +64,6 @@ fun TextView.bindCardText(data: Cat?) {
                 append("<br>")
             }
 
-//            if (data.name != null) {
-//                data.also {
-//                    this.apply {
-//                        append("<b>Name:</b>")
-//                        append("\t${it.name}<br>")
-//                        append("<b>Alternative names:</b>")
-//                        append("\t${it.altNames}<br>")
-//                        append("<b>Description:</b><br>")
-//                        append("\t${it.description}<br>")
-//                    }
-//                }
-//            }
         }
         text = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             Html.fromHtml(sb.toString(), Html.FROM_HTML_MODE_LEGACY)
@@ -84,18 +72,6 @@ fun TextView.bindCardText(data: Cat?) {
         }
     }
 }
-
-//@BindingAdapter("cardTextContent")
-//fun bindCardText(view: TextView, cat: Cat?) {
-//    Log.d("M_BindingAdapters", "bindTextContent запущен. imageID: ${cat?.imageId}")
-//    cat?.let {
-//        view.text = StringBuilder()
-//            .append("CAT INFO\n")
-//            .append("\n")
-//            .append(it.imageId)
-//            .toString()
-//    }
-//}
 
 
 @BindingAdapter("listData")

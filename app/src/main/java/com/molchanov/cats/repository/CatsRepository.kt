@@ -15,7 +15,6 @@ import java.io.File
 import java.io.IOException
 
 class CatsRepository {
-//    var cats: List<Cat> = listOf()
     var cats: MutableList<Cat> = mutableListOf()
     lateinit var cat: Cat
 
@@ -65,10 +64,6 @@ class CatsRepository {
         return message
     }
 
-    fun removeItem(cat: Cat) : MutableList<Cat> {
-        cats.remove(cat)
-        return cats
-    }
 
     suspend fun refreshUploaded() : MutableList<Cat> {
         withContext(Dispatchers.IO) {

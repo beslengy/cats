@@ -7,7 +7,7 @@ import android.net.Uri
 import android.provider.MediaStore
 import androidx.activity.result.contract.ActivityResultContract
 
-class GaleryContract : ActivityResultContract<String, Uri>() {
+class GalleryContract : ActivityResultContract<String, Uri>() {
     override fun createIntent(context: Context, input: String?): Intent {
         val intent = Intent().apply {
             action = Intent.ACTION_PICK
@@ -15,7 +15,7 @@ class GaleryContract : ActivityResultContract<String, Uri>() {
         }.also {
             CURRENT_PHOTO_PATH = it.data?.path.toString()
         }
-        return Intent.createChooser(intent, "Выберите изображение")
+        return Intent.createChooser(intent, "Выберите приложение")
     }
 
     override fun parseResult(resultCode: Int, intent: Intent?): Uri? = when {
@@ -30,26 +30,6 @@ class PhotoContract : ActivityResultContract<Uri, Uri>() {
             action = MediaStore.ACTION_IMAGE_CAPTURE
             putExtra(MediaStore.EXTRA_OUTPUT,input)
         }
-
-//        return Intent().apply {
-//            action = MediaStore.ACTION_IMAGE_CAPTURE
-//        }.also { takePictureIntent ->
-//            val photoFile: File? = try {
-//                createImageFile()
-//            } catch (ex: IOException) {
-//                Log.d("M_TakeImageContract", "Ошибка при создании файла: ${ex.message}")
-//                null
-//            }
-//            // Continue only if the File was successfully created
-//            photoFile?.also {
-//                val photoURI: Uri = FileProvider.getUriForFile(
-//                    APP_ACTIVITY,
-//                    FILE_AUTHORITY,
-//                    it
-//                )
-//                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
-//            }
-//        }
     }
 
     override fun parseResult(resultCode: Int, intent: Intent?): Uri? = when {

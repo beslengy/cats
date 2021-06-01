@@ -32,9 +32,7 @@ class HomeFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-//         Inflate the layout for this fragment
         _binding = DataBindingUtil.inflate(inflater, R.layout.fragment_home, container, false)
-//        val binding = ImageItemBinding.inflate(inflater)
 
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
@@ -42,7 +40,6 @@ class HomeFragment : Fragment() {
             viewModel.displayCatCard(it)
         }, {
             viewModel.addToFavorites(it)
-//            Toast.makeText(context, "Сердечко нажато", Toast.LENGTH_LONG).show()
         }))
 
         binding.rvHome.adapter = adapter
@@ -68,9 +65,8 @@ class HomeFragment : Fragment() {
                 viewModel.displayCatCardComplete()
             }
         })
+
         //TODO: реализовать смену цвета при нажатии на сердечко через лайв дата
-        //Добавляем возможность изменить цвет сердечка при нажатии через лайв дата
-        //viewModel.checkFavorite.observe()
 
         return binding.root
     }

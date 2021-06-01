@@ -5,11 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.provider.MediaStore
-import android.util.Log
 import androidx.activity.result.contract.ActivityResultContract
-import androidx.core.content.FileProvider
-import java.io.File
-import java.io.IOException
 
 class GaleryContract : ActivityResultContract<String, Uri>() {
     override fun createIntent(context: Context, input: String?): Intent {
@@ -28,27 +24,32 @@ class GaleryContract : ActivityResultContract<String, Uri>() {
     }
 }
 
-class PhotoContract : ActivityResultContract<Boolean, Uri>() {
-    override fun createIntent(context: Context, input: Boolean?): Intent {
-        return Intent().apply {
+class PhotoContract : ActivityResultContract<Uri, Uri>() {
+    override fun createIntent(context: Context, input: Uri?): Intent {
+        return Intent().apply{
             action = MediaStore.ACTION_IMAGE_CAPTURE
-        }.also { takePictureIntent ->
-            val photoFile: File? = try {
-                createImageFile()
-            } catch (ex: IOException) {
-                Log.d("M_TakeImageContract", "Ошибка при создании файла: ${ex.message}")
-                null
-            }
-            // Continue only if the File was successfully created
-            photoFile?.also {
-                val photoURI: Uri = FileProvider.getUriForFile(
-                    APP_ACTIVITY,
-                    FILE_AUTHORITY,
-                    it
-                )
-                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
-            }
+            putExtra(MediaStore.EXTRA_OUTPUT,input)
         }
+
+//        return Intent().apply {
+//            action = MediaStore.ACTION_IMAGE_CAPTURE
+//        }.also { takePictureIntent ->
+//            val photoFile: File? = try {
+//                createImageFile()
+//            } catch (ex: IOException) {
+//                Log.d("M_TakeImageContract", "Ошибка при создании файла: ${ex.message}")
+//                null
+//            }
+//            // Continue only if the File was successfully created
+//            photoFile?.also {
+//                val photoURI: Uri = FileProvider.getUriForFile(
+//                    APP_ACTIVITY,
+//                    FILE_AUTHORITY,
+//                    it
+//                )
+//                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
+//            }
+//        }
     }
 
     override fun parseResult(resultCode: Int, intent: Intent?): Uri? = when {

@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts.*
+import androidx.core.net.toUri
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -28,10 +29,10 @@ class UploadedFragment : Fragment() {
 
 
     private val cameraContract = registerForActivityResult(PhotoContract()) {
-        uploadedViewModel.uploadFileByUri(CURRENT_PHOTO_PATH)
+        uploadedViewModel.uploadFileByUri(it)
     }
     private val galleryContract = registerForActivityResult(GaleryContract()) {
-        uploadedViewModel.uploadFileByUri(CURRENT_PHOTO_PATH)
+        uploadedViewModel.uploadFileByUri(it)
     }
 
     override fun onCreateView(
@@ -79,7 +80,7 @@ class UploadedFragment : Fragment() {
             }
             .setItems(items) { _, which ->
                 when (items[which]) {
-                    "Камера" -> cameraContract.launch(true)
+                    "Камера" -> cameraContract.launch(createImageFile().toUri())
                     "Галерея" -> galleryContract.launch("image/*")
                 }
             }

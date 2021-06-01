@@ -1,5 +1,6 @@
 package com.molchanov.cats.viewmodels.uploaded
 
+import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -57,12 +58,12 @@ class UploadedViewModel : ViewModel() {
     fun displayCatCardComplete() {
         _navigateToCard.value = null
     }
-    fun uploadFileByUri(path: String?) {
+    fun uploadFileByUri(uri: Uri?) {
         Log.d("M_UploadedViewModel", "uploadFileByUri запущен")
-        if (path != null) {
+        if (uri != null) {
             viewModelScope.launch {
                 try {
-                    _response.value = REPOSITORY.uploadImage(File(path))
+                    _response.value = REPOSITORY.uploadImage(File(uri.toString()))
                     Log.d("M_UploadedViewModel", "Картинка успешно загружена на сервер")
                 } catch (e: Exception) {
                     Log.d("M_UploadedViewModel", "Ошибка при загрузке изображения на сервер: ${e.message}")

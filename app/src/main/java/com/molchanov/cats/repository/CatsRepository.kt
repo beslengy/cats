@@ -9,8 +9,9 @@ import com.molchanov.cats.utils.FAV_QUERY_OPTIONS
 import com.molchanov.cats.utils.USER_ID
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import okhttp3.MediaType
-import okhttp3.RequestBody
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.RequestBody.Companion.asRequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.File
 import java.io.IOException
 
@@ -69,14 +70,14 @@ class CatsRepository {
         }
         return cats
     }
-    suspend fun uploadImage(file: File) : String {
+    suspend fun uploadImage(file: File): String {
         Log.d("M_CatsRepository", "uploadImage запущен")
         var message: String
-        val fileRequest = RequestBody.create((MediaType.parse("image/")), file)
-        val usernameRequest = RequestBody.create((MediaType.parse("text/plain")), USER_ID)
+        val fileRequest = file.asRequestBody(("image/".toMediaTypeOrNull()))
+        val usernameRequest = USER_ID.toRequestBody(("text/plain".toMediaTypeOrNull()))
 
         withContext(Dispatchers.IO) {
-            try{
+            try {
                 message = CatsApi.retrofitService.uploadImage(fileRequest, usernameRequest).message
                 Log.d("M_CatsRepository", message)
             } catch (e: IOException) {

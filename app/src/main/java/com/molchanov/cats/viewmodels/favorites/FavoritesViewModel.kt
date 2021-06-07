@@ -6,12 +6,15 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.molchanov.cats.network.networkmodels.CatItem
+import com.molchanov.cats.repository.CatsRepository
 import com.molchanov.cats.utils.ApiStatus
-import com.molchanov.cats.utils.REPOSITORY
 import com.molchanov.cats.utils.showToast
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class FavoritesViewModel : ViewModel() {
+@HiltViewModel
+class FavoritesViewModel @Inject constructor(private val repository: CatsRepository) : ViewModel() {
     private val _status = MutableLiveData<ApiStatus>()
     val status: LiveData<ApiStatus>
         get() = _status
@@ -35,7 +38,7 @@ class FavoritesViewModel : ViewModel() {
         viewModelScope.launch {
             _status.value = ApiStatus.LOADING
             try {
-                _favoriteImages.value = REPOSITORY.refreshFavorites()
+                _favoriteImages.value = repository.refreshFavorites()
                 Log.d(
                     "M_FavoritesViewModel",
                     "Избранные картинки успешно загружены: ${favoriteImages.value?.size}"
@@ -60,9 +63,8 @@ class FavoritesViewModel : ViewModel() {
         Log.d("M_FavoritesViewModel", "deleteFromFavorites запущен. Cat: ${cat.id}")
         viewModelScope.launch {
             try {
-                _response.value = REPOSITORY.removeFavoriteByFavId(cat.id)
-//                _favoriteImages.value = REPOSITORY.removeItem(cat)
-                _favoriteImages.value = REPOSITORY.refreshFavorites()
+                _response.value = repository.removeFavoriteByFavId(cat.id)
+                _favoriteImages.value = repository.refreshFavorites()
 
                 Log.d(
                     "M_FavoritesViewModel",

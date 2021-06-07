@@ -4,35 +4,8 @@ import com.molchanov.cats.network.networkmodels.CatDetail
 import com.molchanov.cats.network.networkmodels.CatItem
 import com.molchanov.cats.network.networkmodels.NetworkResponse
 import com.molchanov.cats.network.networkmodels.PostFavorite
-import com.molchanov.cats.utils.BASE_URL
-import com.squareup.moshi.Moshi
-import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
-import okhttp3.OkHttpClient
 import okhttp3.RequestBody
-import retrofit2.Retrofit
-import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.http.*
-
-private val client =  OkHttpClient().newBuilder()
-    .addInterceptor {
-
-        val request = it.request().newBuilder()
-            .header("x-api-key", "177e2034-b213-4178-834f-a3d237cc68ad")
-            .build()
-
-        it.proceed(request)
-    }
-    .build()
-
-private val moshi = Moshi.Builder()
-    .addLast(KotlinJsonAdapterFactory())
-    .build()
-
-private val retrofit = Retrofit.Builder()
-    .baseUrl(BASE_URL)
-    .client(client)
-    .addConverterFactory(MoshiConverterFactory.create(moshi))
-    .build()
 
 interface CatsApiService {
 
@@ -101,10 +74,4 @@ interface CatsApiService {
      * Метод для получения анализа картинки
      * TODO: Метод для получения анализа картинки
      */
-}
-
-object CatsApi {
-    val retrofitService : CatsApiService by lazy {
-        retrofit.create(CatsApiService::class.java)
-    }
 }

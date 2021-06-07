@@ -7,13 +7,16 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.molchanov.cats.network.networkmodels.CatItem
+import com.molchanov.cats.repository.CatsRepository
 import com.molchanov.cats.utils.ApiStatus
-import com.molchanov.cats.utils.REPOSITORY
 import com.molchanov.cats.utils.showToast
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import java.io.File
+import javax.inject.Inject
 
-class UploadedViewModel : ViewModel() {
+@HiltViewModel
+class UploadedViewModel @Inject constructor(private val repository: CatsRepository) : ViewModel() {
     private val _status = MutableLiveData<ApiStatus>()
     val status: LiveData<ApiStatus>
         get() = _status
@@ -37,7 +40,7 @@ class UploadedViewModel : ViewModel() {
         viewModelScope.launch {
             _status.value = ApiStatus.LOADING
             try {
-                _uploadedImages.value = REPOSITORY.refreshUploaded()
+                _uploadedImages.value = repository.refreshUploaded()
                 Log.d("M_UploadedViewModel", "Uploaded картинки успешно загружены: ${uploadedImages.value?.size}")
                 _status.value = if (uploadedImages.value.isNullOrEmpty()) {
                     ApiStatus.EMPTY
@@ -63,7 +66,7 @@ class UploadedViewModel : ViewModel() {
         if (uri != null) {
             viewModelScope.launch {
                 try {
-                    _response.value = REPOSITORY.uploadImage(File(uri.toString()))
+                    _response.value = repository.uploadImage(File(uri.toString()))
                     Log.d("M_UploadedViewModel", "${response.value}")
                     Log.d("M_UploadedViewModel", "Картинка успешно загружена на сервер")
                 } catch (e: Exception) {

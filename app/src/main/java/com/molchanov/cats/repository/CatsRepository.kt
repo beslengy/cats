@@ -1,7 +1,7 @@
 package com.molchanov.cats.repository
 
 import android.util.Log
-import com.molchanov.cats.network.CatsApi
+import com.molchanov.cats.network.CatsApiService
 import com.molchanov.cats.network.networkmodels.CatDetail
 import com.molchanov.cats.network.networkmodels.CatItem
 import com.molchanov.cats.network.networkmodels.PostFavorite
@@ -14,14 +14,17 @@ import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.File
 import java.io.IOException
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class CatsRepository {
+@Singleton
+class CatsRepository @Inject constructor(private val catsApi: CatsApiService){
     var cats: List<CatItem> = listOf()
     lateinit var cat: CatDetail
 
     suspend fun refreshHome(): List<CatItem> {
         withContext(Dispatchers.IO) {
-            cats = CatsApi.retrofitService.getAllImages()
+            cats = catsApi.getAllImages()
         }
         return cats
     }
@@ -29,14 +32,14 @@ class CatsRepository {
         val message: String
         val postFavorite = PostFavorite(imageId)
         withContext(Dispatchers.IO){
-            message = CatsApi.retrofitService.postFavorite(postFavorite).message
+            message = catsApi.postFavorite(postFavorite).message
         }
         return message
     }
 
     suspend fun refreshFavorites(): List<CatItem> {
         withContext(Dispatchers.IO) {
-            cats = CatsApi.retrofitService.getAllFavorites(FAV_QUERY_OPTIONS)
+            cats = catsApi.getAllFavorites(FAV_QUERY_OPTIONS)
         }
         Log.d("M_CatsRepository", "Избранные картинки обновлены")
         return cats
@@ -45,7 +48,7 @@ class CatsRepository {
     suspend fun getCatById(imageId: String) : CatDetail {
         withContext(Dispatchers.IO) {
             try{
-                cat = CatsApi.retrofitService.getCatByImage(imageId)
+                cat = catsApi.getCatByImage(imageId)
                 Log.d("M_CatsRepository", "$cat")
             } catch (e: IOException) {
                 Log.d("M_CatsRepository", "Ошибка при загрузке карточки котика: ${e.message}")
@@ -58,7 +61,7 @@ class CatsRepository {
         Log.d("M_CatsRepository", "removeFavoritesById запущен, favId: $favId")
         val message: String
         withContext(Dispatchers.IO) {
-            message = CatsApi.retrofitService.deleteFavorite(favId).message
+            message = catsApi.deleteFavorite(favId).message
         }
         return message
     }
@@ -66,7 +69,7 @@ class CatsRepository {
 
     suspend fun refreshUploaded() : List<CatItem> {
         withContext(Dispatchers.IO) {
-            cats = CatsApi.retrofitService.getAllUploaded(FAV_QUERY_OPTIONS)
+            cats = catsApi.getAllUploaded(FAV_QUERY_OPTIONS)
         }
         return cats
     }
@@ -78,7 +81,7 @@ class CatsRepository {
 
         withContext(Dispatchers.IO) {
             try {
-                message = CatsApi.retrofitService.uploadImage(fileRequest, usernameRequest).message
+                message = catsApi.uploadImage(fileRequest, usernameRequest).message
                 Log.d("M_CatsRepository", message)
             } catch (e: IOException) {
                 message = e.message.toString()

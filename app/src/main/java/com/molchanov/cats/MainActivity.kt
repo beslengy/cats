@@ -7,12 +7,12 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.molchanov.cats.repository.CatsRepository
 import com.molchanov.cats.ui.Decoration
 import com.molchanov.cats.utils.*
+import dagger.hilt.android.AndroidEntryPoint
 
 
-
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
 
@@ -23,7 +23,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         APP_ACTIVITY = this
         DECORATION = Decoration(R.dimen.rv_item_margin)
-        REPOSITORY = CatsRepository()
+//        REPOSITORY = CatsRepository()
         FAV_QUERY_OPTIONS = mapOf(
             "user_id" to USER_ID,
             "limit" to "10",

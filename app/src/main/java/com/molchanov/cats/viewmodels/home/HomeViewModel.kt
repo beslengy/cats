@@ -7,13 +7,16 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.molchanov.cats.R
 import com.molchanov.cats.network.networkmodels.CatItem
+import com.molchanov.cats.repository.CatsRepository
 import com.molchanov.cats.utils.APP_ACTIVITY
 import com.molchanov.cats.utils.ApiStatus
-import com.molchanov.cats.utils.REPOSITORY
 import com.molchanov.cats.utils.showToast
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class HomeViewModel : ViewModel() {
+@HiltViewModel
+class HomeViewModel @Inject constructor(private val repository: CatsRepository) : ViewModel() {
     //Переменная статуса загрузки/сети
     private val _status = MutableLiveData<ApiStatus>()
     val status: LiveData<ApiStatus>
@@ -42,7 +45,7 @@ class HomeViewModel : ViewModel() {
         _status.value = ApiStatus.LOADING
         viewModelScope.launch{
             try {
-                _catImage.value = REPOSITORY.refreshHome()
+                _catImage.value = repository.refreshHome()
                 Log.d("M_HomeViewModel", "картинки успешно загружены: ${catImage.value?.size}")
                 _status.value = if (catImage.value.isNullOrEmpty()) {ApiStatus.EMPTY} else {ApiStatus.DONE}
             } catch (e: Exception) {
@@ -56,7 +59,7 @@ class HomeViewModel : ViewModel() {
         Log.d("M_HomeViewModel", "addToFavorites метод запущен")
         viewModelScope.launch {
             try {
-                _response.value = REPOSITORY.addToFavoriteByImageId(currentImage.id)
+                _response.value = repository.addToFavoriteByImageId(currentImage.id)
                 showToast(APP_ACTIVITY.resources.getString(R.string.added_to_favorite_toast_text))
               Log.d("M_HomeViewModel", "Добавлено в избранное успешно: ${response.value}")
             } catch (e: java.lang.Exception) {

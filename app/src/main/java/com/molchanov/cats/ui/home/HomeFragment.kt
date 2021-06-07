@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.molchanov.cats.R
@@ -15,17 +15,15 @@ import com.molchanov.cats.ui.Decoration
 import com.molchanov.cats.ui.ImageItemAdapter
 import com.molchanov.cats.ui.ItemClickListener
 import com.molchanov.cats.viewmodels.home.HomeViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
-
+@AndroidEntryPoint
 class HomeFragment : Fragment() {
 
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel: HomeViewModel by lazy {
-            ViewModelProvider(this)
-                .get(HomeViewModel::class.java)
-    }
+    private val viewModel: HomeViewModel by viewModels()
 
 
     override fun onCreateView(

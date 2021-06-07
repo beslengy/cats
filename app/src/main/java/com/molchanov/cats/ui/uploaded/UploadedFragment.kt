@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts.*
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.molchanov.cats.R
@@ -16,15 +16,15 @@ import com.molchanov.cats.ui.ImageItemAdapter
 import com.molchanov.cats.ui.ItemClickListener
 import com.molchanov.cats.utils.*
 import com.molchanov.cats.viewmodels.uploaded.UploadedViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class UploadedFragment : Fragment() {
     private var _binding: FragmentUploadedBinding? = null
     private val binding get() = _binding!!
 
 
-    private val uploadedViewModel: UploadedViewModel by lazy {
-        ViewModelProvider(this).get(UploadedViewModel::class.java)
-    }
+    private val uploadedViewModel: UploadedViewModel by viewModels()
 
 
     private val cameraContract = registerForActivityResult(PhotoContract()) {

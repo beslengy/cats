@@ -5,13 +5,13 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.molchanov.cats.databinding.ImageItemBinding
-import com.molchanov.cats.domain.Cat
+import com.molchanov.cats.network.networkmodels.CatItem
 
-class ImageItemAdapter (private val itemClickListener: ItemClickListener) : ListAdapter<Cat, ImageItemAdapter.ViewHolder>(DiffCallback()) {
+class ImageItemAdapter (private val itemClickListener: ItemClickListener) : ListAdapter<CatItem, ImageItemAdapter.ViewHolder>(DiffCallback()) {
 
     class ViewHolder private constructor(private val binding: ImageItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(image: Cat, itemClickListener: ItemClickListener) {
+        fun bind(image: CatItem, itemClickListener: ItemClickListener) {
             binding.clicklistener = itemClickListener
             binding.image = image
             binding.executePendingBindings()

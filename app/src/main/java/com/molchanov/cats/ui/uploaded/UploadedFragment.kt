@@ -57,7 +57,7 @@ class UploadedFragment : Fragment() {
         uploadedViewModel.navigateToCard.observe(viewLifecycleOwner, {
             if (it != null) {
                 this.findNavController().navigate(
-                    UploadedFragmentDirections.actionUploadedFragmentToCatCardFragment(it.imageId)
+                    UploadedFragmentDirections.actionUploadedFragmentToCatCardFragment(it.id)
                 )
                 uploadedViewModel.displayCatCardComplete()
             }

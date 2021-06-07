@@ -1,6 +1,9 @@
 package com.molchanov.cats.network
 
-import com.molchanov.cats.network.networkmodels.*
+import com.molchanov.cats.network.networkmodels.CatDetail
+import com.molchanov.cats.network.networkmodels.CatItem
+import com.molchanov.cats.network.networkmodels.NetworkResponse
+import com.molchanov.cats.network.networkmodels.PostFavorite
 import com.molchanov.cats.utils.API_KEY
 import com.molchanov.cats.utils.BASE_URL
 import com.squareup.moshi.Moshi
@@ -26,14 +29,14 @@ interface CatsApiService {
      */
     @Headers(API_KEY)
     @GET("images/search?limit=20&page=1&include_favourite=0")
-    suspend fun getAllImages() : List<NetworkImage>
+    suspend fun getAllImages() : List<CatItem>
 
     /**
      * Метод для получения отдельного котика через его ID
      */
     @Headers(API_KEY)
     @GET("images/{image_id}")
-    suspend fun getCatByImage(@Path("image_id") imageId: String) : NetworkCat
+    suspend fun getCatByImage(@Path("image_id") imageId: String) : CatDetail
 
     /**
      * Метод для добавления картинки в избранное
@@ -43,28 +46,28 @@ interface CatsApiService {
     @POST("favourites")
     suspend fun postFavorite(
         @Body postFavorite: PostFavorite
-    ) : ResponseMessage
+    ) : NetworkResponse
 
     /**
      * Метод для получения списка всех избранных картинок по имени пользователя
      */
     @Headers(API_KEY)
     @GET("favourites")
-    suspend fun getAllFavorites(@QueryMap options: Map<String, String>) : List<NetworkFavorite>
+    suspend fun getAllFavorites(@QueryMap options: Map<String, String>) : List<CatItem>
 
     /**
      * Метод для удаления картинки из избранного
      */
     @Headers(API_KEY)
     @DELETE("favourites/{favourite_id}")
-    suspend fun deleteFavorite(@Path("favourite_id") favoriteId: String) : ResponseMessage
+    suspend fun deleteFavorite(@Path("favourite_id") favoriteId: String) : NetworkResponse
 
     /**
      * Метод для получения моих загруженных картинок
      */
     @Headers(API_KEY)
     @GET("images")
-    suspend fun getAllUploaded(@QueryMap options: Map<String, String>) : List<NetworkUploaded>
+    suspend fun getAllUploaded(@QueryMap options: Map<String, String>) : List<CatItem>
 
     /**
      * Метод для загрузки картинки на сервер
@@ -75,7 +78,7 @@ interface CatsApiService {
     suspend fun uploadImage(
         @Part("file") file: RequestBody,
         @Part("sub_id") username: RequestBody
-    ): ResponseMessage
+    ): NetworkResponse
 
     /**
      * Метод для удаления моей загруженной картинки с сервера

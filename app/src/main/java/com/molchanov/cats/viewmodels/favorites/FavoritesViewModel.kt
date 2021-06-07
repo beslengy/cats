@@ -5,7 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.molchanov.cats.domain.Cat
+import com.molchanov.cats.network.networkmodels.CatItem
 import com.molchanov.cats.utils.ApiStatus
 import com.molchanov.cats.utils.REPOSITORY
 import com.molchanov.cats.utils.showToast
@@ -16,11 +16,11 @@ class FavoritesViewModel : ViewModel() {
     val status: LiveData<ApiStatus>
         get() = _status
 
-    private val _favoriteImages = MutableLiveData<MutableList<Cat>>()
-    val favoriteImages: LiveData<MutableList<Cat>> get() = _favoriteImages
+    private val _favoriteImages = MutableLiveData<List<CatItem>>()
+    val favoriteImages: LiveData<List<CatItem>> get() = _favoriteImages
 
-    private val _navigateToCard = MutableLiveData<Cat>()
-    val navigateToCard: LiveData<Cat>
+    private val _navigateToCard = MutableLiveData<CatItem>()
+    val navigateToCard: LiveData<CatItem>
         get() = _navigateToCard
 
     private val _response = MutableLiveData<String>()
@@ -56,17 +56,17 @@ class FavoritesViewModel : ViewModel() {
         Log.d("M_FavoritesViewModel", "getFavorites отработал")
     }
 
-    fun deleteFromFavorites(cat: Cat) {
-        Log.d("M_FavoritesViewModel", "deleteFromFavorites запущен. Cat: ${cat.favoriteId}")
+    fun deleteFromFavorites(cat: CatItem) {
+        Log.d("M_FavoritesViewModel", "deleteFromFavorites запущен. Cat: ${cat.id}")
         viewModelScope.launch {
             try {
-                _response.value = REPOSITORY.removeFavoriteByFavId(cat.favoriteId)
+                _response.value = REPOSITORY.removeFavoriteByFavId(cat.id)
 //                _favoriteImages.value = REPOSITORY.removeItem(cat)
                 _favoriteImages.value = REPOSITORY.refreshFavorites()
 
                 Log.d(
                     "M_FavoritesViewModel",
-                    "Удалено из favorite images: ${cat.imageId}. Размер списка: ${favoriteImages.value?.size}"
+                    "Удалено из favorite images: ${cat.image?.id}. Размер списка: ${favoriteImages.value?.size}"
                 )
                 showToast("Удалено из избранного")
                 Log.d("M_FavoritesViewModel", "Удалено из избранного успешно: ${response.value}")
@@ -77,7 +77,7 @@ class FavoritesViewModel : ViewModel() {
         }
     }
 
-    fun displayCatCard(currentImage: Cat) {
+    fun displayCatCard(currentImage: CatItem) {
         _navigateToCard.value = currentImage
     }
 

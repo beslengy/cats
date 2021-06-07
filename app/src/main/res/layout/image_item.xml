@@ -7,7 +7,7 @@
 
         <variable
             name="image"
-            type="com.molchanov.cats.domain.Cat" />
+            type="com.molchanov.cats.network.networkmodels.CatItem" />
         <variable
             name="clicklistener"
             type="com.molchanov.cats.ui.ItemClickListener" />

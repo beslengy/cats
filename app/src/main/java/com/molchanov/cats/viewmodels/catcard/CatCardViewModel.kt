@@ -6,13 +6,13 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.molchanov.cats.domain.Cat
+import com.molchanov.cats.network.networkmodels.CatDetail
 import com.molchanov.cats.utils.REPOSITORY
 import kotlinx.coroutines.launch
 
 class CatCardViewModel(private val imageId: String, app: Application) : AndroidViewModel(app) {
-     private val _cat = MutableLiveData<Cat>()
-     val cat: LiveData<Cat> get() = _cat
+     private val _cat = MutableLiveData<CatDetail>()
+     val cat: LiveData<CatDetail> get() = _cat
 
      init {
           getCat()

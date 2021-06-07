@@ -6,7 +6,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.molchanov.cats.domain.Cat
+import com.molchanov.cats.network.networkmodels.CatItem
 import com.molchanov.cats.utils.ApiStatus
 import com.molchanov.cats.utils.REPOSITORY
 import com.molchanov.cats.utils.showToast
@@ -18,15 +18,15 @@ class UploadedViewModel : ViewModel() {
     val status: LiveData<ApiStatus>
         get() = _status
 
-    private val _uploadedImages = MutableLiveData<MutableList<Cat>>()
-    val uploadedImages: LiveData<MutableList<Cat>>
+    private val _uploadedImages = MutableLiveData<List<CatItem>>()
+    val uploadedImages: LiveData<List<CatItem>>
         get() = _uploadedImages
 
     private val _response = MutableLiveData<String>()
     private val response: LiveData<String> get() = _response
 
-    private val _navigateToCard = MutableLiveData<Cat>()
-    val navigateToCard: LiveData<Cat>
+    private val _navigateToCard = MutableLiveData<CatItem>()
+    val navigateToCard: LiveData<CatItem>
         get() = _navigateToCard
 
     init {
@@ -51,7 +51,7 @@ class UploadedViewModel : ViewModel() {
         }
     }
 
-    fun displayCatCard(currentImage: Cat) {
+    fun displayCatCard(currentImage: CatItem) {
         _navigateToCard.value = currentImage
     }
 

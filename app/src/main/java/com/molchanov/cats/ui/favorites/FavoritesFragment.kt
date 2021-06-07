@@ -50,10 +50,10 @@ class FavoritesFragment : Fragment() {
 
 
 
-        viewModel.navigateToCard.observe(viewLifecycleOwner, {
-            if (it != null) {
+        viewModel.navigateToCard.observe(viewLifecycleOwner, { catItem ->
+            catItem?.image?.let {
                 this.findNavController().navigate(
-                    FavoritesFragmentDirections.actionFavoritesFragmentToCatCardFragment(it.imageId)
+                    FavoritesFragmentDirections.actionFavoritesFragmentToCatCardFragment(it.id)
                 )
                 viewModel.displayCatCardComplete()
             }

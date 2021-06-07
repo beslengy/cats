@@ -60,7 +60,7 @@ class HomeFragment : Fragment() {
         viewModel.navigateToCard.observe(viewLifecycleOwner, {
             if (it != null) {
                 this.findNavController().navigate(
-                    HomeFragmentDirections.actionHomeFragmentToCatCardFragment(it.imageId)
+                    HomeFragmentDirections.actionHomeFragmentToCatCardFragment(it.id)
                 )
                 viewModel.displayCatCardComplete()
             }

@@ -1,15 +1,15 @@
 package com.molchanov.cats.ui
 
 import androidx.recyclerview.widget.DiffUtil
-import com.molchanov.cats.domain.Cat
+import com.molchanov.cats.network.networkmodels.CatItem
 
-class DiffCallback : DiffUtil.ItemCallback<Cat>() {
+class DiffCallback : DiffUtil.ItemCallback<CatItem>() {
 
-    override fun areItemsTheSame(oldItem: Cat, newItem: Cat): Boolean {
-        return oldItem.imageId == newItem.imageId
+    override fun areItemsTheSame(oldItem: CatItem, newItem: CatItem): Boolean {
+        return oldItem.id == newItem.id
     }
 
-    override fun areContentsTheSame(oldItem: Cat, newItem: Cat): Boolean {
+    override fun areContentsTheSame(oldItem: CatItem, newItem: CatItem): Boolean {
         return oldItem == newItem
     }
 

@@ -7,7 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.molchanov.cats.R
 import com.molchanov.cats.network.networkmodels.CatItem
-import com.molchanov.cats.repository.CatsRepository
+import com.molchanov.cats.data.CatsRepository
 import com.molchanov.cats.utils.APP_ACTIVITY
 import com.molchanov.cats.utils.ApiStatus
 import com.molchanov.cats.utils.showToast

@@ -10,11 +10,10 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.molchanov.cats.R
+import com.molchanov.cats.data.CatsRepository
 import com.molchanov.cats.databinding.FragmentCatCardBinding
-import com.molchanov.cats.repository.CatsRepository
 import com.molchanov.cats.utils.APP_ACTIVITY
 import com.molchanov.cats.viewmodels.catcard.CatCardViewModel
-import com.molchanov.cats.viewmodels.catcard.CatCardViewModelFactory
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -29,9 +28,7 @@ class CatCardFragment : Fragment() {
 
     private val args by navArgs<CatCardFragmentArgs>()
     private val imageId by lazy { args.imageId }
-    private val viewModel: CatCardViewModel by viewModels {
-        CatCardViewModelFactory(repository, imageId)
-    }
+    private val viewModel: CatCardViewModel by viewModels()
 
 
     override fun onCreateView(
@@ -40,11 +37,8 @@ class CatCardFragment : Fragment() {
     ): View? {
         APP_ACTIVITY.findViewById<BottomNavigationView>(R.id.bottom_navigation).visibility =
             View.GONE
-//        val application = requireNotNull(activity).application
-//        val viewModelFactory = CatCardViewModelFactory(imageId, application)
         _binding = DataBindingUtil.inflate(inflater, R.layout.fragment_cat_card, container, false)
         binding.lifecycleOwner = this
-//        binding.viewModel = ViewModelProvider(this, viewModelFactory).get(CatCardViewModel::class.java)
         binding.viewModel = viewModel
 
 

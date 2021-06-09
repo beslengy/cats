@@ -29,6 +29,7 @@ fun ImageView.bindImage(imageUrl: String?) {
 
         Glide.with(this.context)
             .load(imgUri)
+//            .transition(DrawableTransitionOptions.withCrossFade())
             .apply(
                 RequestOptions()
                     .placeholder(circularProgressDrawable)

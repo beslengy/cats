@@ -1,4 +1,4 @@
-package com.molchanov.cats.repository
+package com.molchanov.cats.data
 
 import android.util.Log
 import com.molchanov.cats.network.CatsApiService

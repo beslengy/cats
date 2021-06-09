@@ -4,7 +4,7 @@ package com.molchanov.cats.utils
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.molchanov.cats.BuildConfig.APPLICATION_ID
 import com.molchanov.cats.MainActivity
-import com.molchanov.cats.repository.CatsRepository
+import com.molchanov.cats.data.CatsRepository
 import com.molchanov.cats.ui.Decoration
 
 lateinit var APP_ACTIVITY: MainActivity

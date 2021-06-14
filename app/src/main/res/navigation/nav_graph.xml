@@ -8,7 +8,7 @@
     <fragment
         android:id="@+id/homeFragment"
         android:name="com.molchanov.cats.ui.home.HomeFragment"
-        android:label="HomeFragment"
+        android:label="@string/home_fragment_label"
         tools:layout="@layout/fragment_home">
         <action
             android:id="@+id/action_homeFragment_to_catCardFragment"
@@ -23,7 +23,7 @@
     <fragment
         android:id="@+id/favoritesFragment"
         android:name="com.molchanov.cats.ui.favorites.FavoritesFragment"
-        android:label="FavoritesFragment" >
+        android:label="@string/favorites_fragment_label" >
         <action
             android:id="@+id/action_favoritesFragment_to_catCardFragment"
             app:destination="@id/catCardFragment" />
@@ -37,7 +37,7 @@
     <fragment
         android:id="@+id/uploadedFragment"
         android:name="com.molchanov.cats.ui.uploaded.UploadedFragment"
-        android:label="UploadedFragment" >
+        android:label="@string/uploaded_fragment_label" >
         <action
             android:id="@+id/action_uploadedFragment_to_catCardFragment"
             app:destination="@id/catCardFragment" />
@@ -51,7 +51,6 @@
     <fragment
         android:id="@+id/catCardFragment"
         android:name="com.molchanov.cats.ui.catcard.CatCardFragment"
-        android:label="fragment_cat_card"
         tools:layout="@layout/fragment_cat_card" >
         <argument
             android:name="imageId"

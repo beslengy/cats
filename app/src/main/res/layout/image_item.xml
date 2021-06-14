@@ -8,9 +8,7 @@
         <variable
             name="image"
             type="com.molchanov.cats.network.networkmodels.CatItem" />
-        <variable
-            name="clicklistener"
-            type="com.molchanov.cats.ui.ItemClickListener" />
+
     </data>
 
     <com.google.android.material.card.MaterialCardView
@@ -36,7 +34,6 @@
                 android:layout_height="194dp"
                 android:scaleType="centerCrop"
                 app:imageUrl="@{image.imageUrl}"
-                android:onClick="@{()->clicklistener.onItemClicked(image)}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -48,7 +45,6 @@
                 android:id="@+id/btn_favorites"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:onClick="@{()->clicklistener.onFavoriteBtnClicked(image)}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:srcCompat="@drawable/ic_heart"

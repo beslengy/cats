@@ -12,52 +12,55 @@ interface CatsApiService {
     /**
      * Метод для получения всех картинок
      */
-//    @Headers(API_KEY)
-    @GET("images/search?limit=20&page=1&include_favourite=0")
-    suspend fun getAllImages() : List<CatItem>
+    @GET("images/search")
+    suspend fun getAllImages(
+        @Query("limit") limit: Int,
+        @Query("page") page: Int,
+        @Query("order") order: String = "RANDOM"
+    ): List<CatItem>
 
     /**
      * Метод для получения отдельного котика через его ID
      */
-//    @Headers(API_KEY)
     @GET("images/{image_id}")
-    suspend fun getCatByImage(@Path("image_id") imageId: String) : CatDetail
+    suspend fun getCatByImage(@Path("image_id") imageId: String): CatDetail
 
     /**
      * Метод для добавления картинки в избранное
      */
 
-//    @Headers(API_KEY)
     @POST("favourites")
     suspend fun postFavorite(
         @Body postFavorite: PostFavorite
-    ) : NetworkResponse
+    ): NetworkResponse
 
     /**
-     * Метод для получения списка всех избранных картинок по имени пользователя
+     * Метод для получения списка всех избранных картинок
      */
-//    @Headers(API_KEY)
     @GET("favourites")
-    suspend fun getAllFavorites(@QueryMap options: Map<String, String>) : List<CatItem>
+    suspend fun getAllFavorites(
+        @Query("limit") limit: Int,
+        @Query("page") page: Int
+    ): List<CatItem>
 
     /**
      * Метод для удаления картинки из избранного
      */
-//    @Headers(API_KEY)
     @DELETE("favourites/{favourite_id}")
-    suspend fun deleteFavorite(@Path("favourite_id") favoriteId: String) : NetworkResponse
+    suspend fun deleteFavorite(@Path("favourite_id") favoriteId: String): NetworkResponse
 
     /**
      * Метод для получения моих загруженных картинок
      */
-//    @Headers(API_KEY)
     @GET("images")
-    suspend fun getAllUploaded(@QueryMap options: Map<String, String>) : List<CatItem>
+    suspend fun getAllUploaded(
+        @Query("limit") limit: Int,
+        @Query("page") page: Int
+    ): List<CatItem>
 
     /**
      * Метод для загрузки картинки на сервер
      */
-//    @Headers(API_KEY)
     @Multipart
     @POST("/images/upload")
     suspend fun uploadImage(

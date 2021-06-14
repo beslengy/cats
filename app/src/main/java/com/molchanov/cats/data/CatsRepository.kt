@@ -1,11 +1,15 @@
 package com.molchanov.cats.data
 
 import android.util.Log
+import androidx.lifecycle.LiveData
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import androidx.paging.liveData
 import com.molchanov.cats.network.CatsApiService
 import com.molchanov.cats.network.networkmodels.CatDetail
 import com.molchanov.cats.network.networkmodels.CatItem
 import com.molchanov.cats.network.networkmodels.PostFavorite
-import com.molchanov.cats.utils.FAV_QUERY_OPTIONS
 import com.molchanov.cats.utils.USER_ID
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -18,36 +22,75 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class CatsRepository @Inject constructor(private val catsApi: CatsApiService){
+class CatsRepository @Inject constructor(private val catsApi: CatsApiService) {
     var cats: List<CatItem> = listOf()
     lateinit var cat: CatDetail
 
-    suspend fun refreshHome(): List<CatItem> {
-        withContext(Dispatchers.IO) {
-            cats = catsApi.getAllImages()
-        }
-        return cats
+    fun getCatList(): LiveData<PagingData<CatItem>> {
+        Log.d("M_CatsRepository", "getCatList запущен")
+        return Pager(
+            config = PagingConfig(
+                pageSize = 20,
+                enablePlaceholders = false,
+                maxSize = 100
+            ),
+            pagingSourceFactory = { HomePagingSource(catsApi) }
+        ).liveData
     }
+
+    fun getFavoritesList(): LiveData<PagingData<CatItem>> {
+        Log.d("M_CatsRepository", "getFavoritesList запущен")
+
+        return Pager(
+            config = PagingConfig(
+                pageSize = 20,
+                enablePlaceholders = false,
+                maxSize = 100
+
+            ),
+            pagingSourceFactory = { FavoritePagingSource(catsApi) }
+        ).liveData
+    }
+
+    fun getUploadedList() =
+        Pager(
+            config = PagingConfig(
+                pageSize = 20,
+                enablePlaceholders = false,
+                maxSize = 100
+
+            ),
+            pagingSourceFactory = { UploadedPagingSource(catsApi) }
+        ).liveData
+
+
+//    suspend fun refreshHome(): List<CatItem> {
+//        withContext(Dispatchers.IO) {
+//            cats = catsApi.getAllImages()
+//        }
+//        return cats
+//    }
+
     suspend fun addToFavoriteByImageId(imageId: String): String {
         val message: String
         val postFavorite = PostFavorite(imageId)
-        withContext(Dispatchers.IO){
+        withContext(Dispatchers.IO) {
             message = catsApi.postFavorite(postFavorite).message
         }
         return message
     }
 
-    suspend fun refreshFavorites(): List<CatItem> {
-        withContext(Dispatchers.IO) {
-            cats = catsApi.getAllFavorites(FAV_QUERY_OPTIONS)
-        }
-        Log.d("M_CatsRepository", "Избранные картинки обновлены")
-        return cats
-    }
+//    suspend fun refreshFavorites(): List<CatItem> {
+//        withContext(Dispatchers.IO) {
+//            cats = catsApi.getAllFavorites(FAV_QUERY_OPTIONS)
+//        }
+//        Log.d("M_CatsRepository", "Избранные картинки обновлены")
+//        return cats
+//    }
 
-    suspend fun getCatById(imageId: String) : CatDetail {
+    suspend fun getCatById(imageId: String): CatDetail {
         withContext(Dispatchers.IO) {
-            try{
+            try {
                 cat = catsApi.getCatByImage(imageId)
                 Log.d("M_CatsRepository", "$cat")
             } catch (e: IOException) {
@@ -57,7 +100,7 @@ class CatsRepository @Inject constructor(private val catsApi: CatsApiService){
         return cat
     }
 
-    suspend fun removeFavoriteByFavId(favId: String) : String {
+    suspend fun removeFavoriteByFavId(favId: String): String {
         Log.d("M_CatsRepository", "removeFavoritesById запущен, favId: $favId")
         val message: String
         withContext(Dispatchers.IO) {
@@ -67,12 +110,13 @@ class CatsRepository @Inject constructor(private val catsApi: CatsApiService){
     }
 
 
-    suspend fun refreshUploaded() : List<CatItem> {
-        withContext(Dispatchers.IO) {
-            cats = catsApi.getAllUploaded(FAV_QUERY_OPTIONS)
-        }
-        return cats
-    }
+//    suspend fun refreshUploaded(): List<CatItem> {
+//        withContext(Dispatchers.IO) {
+//            cats = catsApi.getAllUploaded(FAV_QUERY_OPTIONS)
+//        }
+//        return cats
+//    }
+
     suspend fun uploadImage(file: File): String {
         Log.d("M_CatsRepository", "uploadImage запущен")
         var message: String

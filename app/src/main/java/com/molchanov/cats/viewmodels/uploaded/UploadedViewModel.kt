@@ -6,8 +6,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.molchanov.cats.network.networkmodels.CatItem
+import androidx.paging.PagingData
 import com.molchanov.cats.data.CatsRepository
+import com.molchanov.cats.network.networkmodels.CatItem
 import com.molchanov.cats.utils.ApiStatus
 import com.molchanov.cats.utils.showToast
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -21,8 +22,8 @@ class UploadedViewModel @Inject constructor(private val repository: CatsReposito
     val status: LiveData<ApiStatus>
         get() = _status
 
-    private val _uploadedImages = MutableLiveData<List<CatItem>>()
-    val uploadedImages: LiveData<List<CatItem>>
+    private val _uploadedImages = MutableLiveData<PagingData<CatItem>>()
+    val uploadedImages: LiveData<PagingData<CatItem>>
         get() = _uploadedImages
 
     private val _response = MutableLiveData<String>()
@@ -32,17 +33,14 @@ class UploadedViewModel @Inject constructor(private val repository: CatsReposito
     val navigateToCard: LiveData<CatItem>
         get() = _navigateToCard
 
-    init {
-        getUploaded()
-    }
 
     private fun getUploaded() {
         viewModelScope.launch {
             _status.value = ApiStatus.LOADING
             try {
-                _uploadedImages.value = repository.refreshUploaded()
-                Log.d("M_UploadedViewModel", "Uploaded картинки успешно загружены: ${uploadedImages.value?.size}")
-                _status.value = if (uploadedImages.value.isNullOrEmpty()) {
+                _uploadedImages.value = repository.getUploadedList().value
+                Log.d("M_UploadedViewModel", "Uploaded картинки успешно загружены: ${uploadedImages.value.toString()}")
+                _status.value = if (uploadedImages.value == null) {
                     ApiStatus.EMPTY
                 } else {
                     ApiStatus.DONE

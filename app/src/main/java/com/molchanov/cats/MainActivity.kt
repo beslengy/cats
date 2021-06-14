@@ -22,8 +22,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         APP_ACTIVITY = this
-        DECORATION = Decoration(R.dimen.rv_item_margin)
-//        REPOSITORY = CatsRepository()
+        DECORATION = Decoration(resources.getDimensionPixelOffset(R.dimen.rv_item_margin))
         FAV_QUERY_OPTIONS = mapOf(
             "user_id" to USER_ID,
             "limit" to "10",

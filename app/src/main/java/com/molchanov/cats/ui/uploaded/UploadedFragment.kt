@@ -12,19 +12,21 @@ import androidx.navigation.fragment.findNavController
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.molchanov.cats.R
 import com.molchanov.cats.databinding.FragmentUploadedBinding
-import com.molchanov.cats.ui.ImageItemAdapter
+import com.molchanov.cats.network.networkmodels.CatItem
 import com.molchanov.cats.ui.ItemClickListener
+import com.molchanov.cats.ui.PageAdapter
 import com.molchanov.cats.utils.*
 import com.molchanov.cats.viewmodels.uploaded.UploadedViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class UploadedFragment : Fragment() {
+class UploadedFragment : Fragment(), ItemClickListener {
     private var _binding: FragmentUploadedBinding? = null
     private val binding get() = _binding!!
 
 
     private val uploadedViewModel: UploadedViewModel by viewModels()
+    private val adapter = PageAdapter(this)
 
 
     private val cameraContract = registerForActivityResult(PhotoContract()) {
@@ -40,9 +42,6 @@ class UploadedFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         _binding = DataBindingUtil.inflate(inflater, R.layout.fragment_uploaded, container, false)
-        val adapter = ImageItemAdapter(ItemClickListener({
-            uploadedViewModel.displayCatCard(it)
-        }, {}))
         binding.apply {
             lifecycleOwner = this@UploadedFragment
             viewModel = uploadedViewModel
@@ -52,8 +51,12 @@ class UploadedFragment : Fragment() {
                 setHasFixedSize(true)
                 addItemDecoration(DECORATION)
             }
-
         }
+
+        uploadedViewModel.uploadedImages.observe(viewLifecycleOwner) {
+            it?.let { adapter.submitData(viewLifecycleOwner.lifecycle, it) }
+        }
+
         uploadedViewModel.navigateToCard.observe(viewLifecycleOwner, {
             if (it != null) {
                 this.findNavController().navigate(
@@ -86,6 +89,13 @@ class UploadedFragment : Fragment() {
             .show()
     }
 
+    override fun onItemClicked(selectedImage: CatItem) {
+        uploadedViewModel.displayCatCard(selectedImage)
+    }
+
+    override fun onFavoriteBtnClicked(selectedImage: CatItem) {
+
+    }
 
     override fun onDestroyView() {
         super.onDestroyView()

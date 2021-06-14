@@ -1,10 +1,7 @@
 package com.molchanov.cats.ui.home
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -19,7 +16,7 @@ import com.molchanov.cats.viewmodels.home.HomeViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class HomeFragment : Fragment(), ItemClickListener {
+class HomeFragment : Fragment(R.layout.fragment_home), ItemClickListener {
 
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
@@ -27,16 +24,12 @@ class HomeFragment : Fragment(), ItemClickListener {
     private val viewModel: HomeViewModel by viewModels()
     private val adapter = PageAdapter(this)
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        _binding = DataBindingUtil.inflate(inflater, R.layout.fragment_home, container, false)
+        _binding = FragmentHomeBinding.bind(view)
 
         binding.apply {
-            lifecycleOwner = this@HomeFragment
-            viewModel = this@HomeFragment.viewModel
             rvHome.apply {
                 adapter = this@HomeFragment.adapter
                 addItemDecoration(DECORATION)
@@ -50,7 +43,6 @@ class HomeFragment : Fragment(), ItemClickListener {
             }
         }
 
-
         //Настраиваем видимость кнопки загрузки картинки
         activity?.findViewById<FloatingActionButton>(R.id.fab)?.visibility = View.GONE
 
@@ -59,7 +51,7 @@ class HomeFragment : Fragment(), ItemClickListener {
         }
 
         viewModel.navigateToCard.observe(viewLifecycleOwner, { catItem ->
-            catItem?.image?.let {
+            catItem?.let {
                 this.findNavController().navigate(
                     HomeFragmentDirections.actionHomeFragmentToCatCardFragment(it.id)
                 )
@@ -67,9 +59,6 @@ class HomeFragment : Fragment(), ItemClickListener {
             }
         })
 
-        //TODO: реализовать смену цвета при нажатии на сердечко через лайв дата
-
-        return binding.root
     }
 
     override fun onItemClicked(selectedImage: CatItem) {

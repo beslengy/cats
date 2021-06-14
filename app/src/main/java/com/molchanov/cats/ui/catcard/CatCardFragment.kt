@@ -1,48 +1,37 @@
 package com.molchanov.cats.ui.catcard
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.navigation.fragment.navArgs
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.molchanov.cats.R
-import com.molchanov.cats.data.CatsRepository
 import com.molchanov.cats.databinding.FragmentCatCardBinding
 import com.molchanov.cats.utils.APP_ACTIVITY
+import com.molchanov.cats.utils.bindCardText
+import com.molchanov.cats.utils.bindImage
 import com.molchanov.cats.viewmodels.catcard.CatCardViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 
 @AndroidEntryPoint
-class CatCardFragment : Fragment() {
+class CatCardFragment : Fragment(R.layout.fragment_cat_card) {
     private var _binding: FragmentCatCardBinding? = null
     private val binding get() = _binding!!
 
-    @Inject
-    lateinit var repository: CatsRepository
-
-    private val args by navArgs<CatCardFragmentArgs>()
-    private val imageId by lazy { args.imageId }
     private val viewModel: CatCardViewModel by viewModels()
 
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         APP_ACTIVITY.findViewById<BottomNavigationView>(R.id.bottom_navigation).visibility =
             View.GONE
-        _binding = DataBindingUtil.inflate(inflater, R.layout.fragment_cat_card, container, false)
-        binding.lifecycleOwner = this
-        binding.viewModel = viewModel
-
-
-        return binding.root
+        _binding = FragmentCatCardBinding.bind(view)
+        viewModel.cat.observe(viewLifecycleOwner) {
+            it?.let { binding.apply {
+                ivCatCardImage.bindImage(it.url)
+                tvCatCardText.bindCardText(it) }
+            }
+        }
     }
 
     override fun onDestroyView() {

@@ -1,11 +1,7 @@
 package com.molchanov.cats.ui.uploaded
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import androidx.activity.result.contract.ActivityResultContracts.*
-import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -20,7 +16,7 @@ import com.molchanov.cats.viewmodels.uploaded.UploadedViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class UploadedFragment : Fragment(), ItemClickListener {
+class UploadedFragment : Fragment(R.layout.fragment_uploaded), ItemClickListener {
     private var _binding: FragmentUploadedBinding? = null
     private val binding get() = _binding!!
 
@@ -36,20 +32,22 @@ class UploadedFragment : Fragment(), ItemClickListener {
         uploadedViewModel.uploadFileByUri(it)
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        _binding = DataBindingUtil.inflate(inflater, R.layout.fragment_uploaded, container, false)
-        binding.apply {
-            lifecycleOwner = this@UploadedFragment
-            viewModel = uploadedViewModel
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
+        _binding = FragmentUploadedBinding.bind(view)
+
+        binding.apply {
             rvUploaded.apply {
                 this.adapter = adapter
                 setHasFixedSize(true)
                 addItemDecoration(DECORATION)
+            }
+            srlUploaded.apply {
+                setOnRefreshListener {
+                    adapter.refresh()
+                    this.isRefreshing = false
+                }
             }
         }
 
@@ -70,20 +68,20 @@ class UploadedFragment : Fragment(), ItemClickListener {
         FAB.setOnClickListener {
             selectImage()
         }
-        return binding.root
     }
 
+
     private fun selectImage() {
-        val items = arrayOf("Камера", "Галерея")
+        val items = arrayOf(resources.getString(R.string.dialog_btn_camera), resources.getString(R.string.dialog_btn_gallery))
         MaterialAlertDialogBuilder(APP_ACTIVITY)
-            .setTitle("Загрузить изображение")
-            .setNeutralButton("Cancel") { dialog, _ ->
+            .setTitle(resources.getString(R.string.dialog_label))
+            .setNeutralButton(resources.getString(R.string.dialog_btn_cancel)) { dialog, _ ->
                 dialog.dismiss()
             }
             .setItems(items) { _, which ->
                 when (items[which]) {
-                    "Камера" -> cameraContract.launch(getNewImageUri())
-                    "Галерея" -> galleryContract.launch("image/*")
+                    resources.getString(R.string.dialog_btn_camera) -> cameraContract.launch(getNewImageUri())
+                    resources.getString(R.string.dialog_btn_gallery) -> galleryContract.launch("image/*")
                 }
             }
             .show()

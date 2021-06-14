@@ -1,9 +1,24 @@
 <resources>
     <string name="app_name">Cats</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <!-- Подписи снекбаров -->
     <string name="added_to_favorite_toast_text">Добавлено в избранное</string>
+    <string name="already_added_to_favorite_toast_text">Уже добавлено в избранное</string>
+    <string name="deleted_from_favorites_toast_text">Удалено из избранного</string>
+    <string name="already_deleted_from_favorites_toast_text">Уже удалено из избранного</string>
+
+    <!-- Подписи фрагментов -->
     <string name="home_fragment_label">Главная</string>
     <string name="favorites_fragment_label">Избранное</string>
     <string name="uploaded_fragment_label">Загруженное</string>
+
+    <!-- Диалог загрузки картинки -->
+    <string name="dialog_label">Что использовать?</string>
+    <string name="dialog_btn_camera">Камера</string>
+    <string name="dialog_btn_gallery">Галерея</string>
+    <string name="dialog_btn_cancel">Отмена</string>
+
+
+    <string name="retry_btn_text">Повторить</string>
+    <string name="connection_error_text">Ошибка соединения</string>
+    <string name="empty_response_text">Список пуст</string>
 </resources>

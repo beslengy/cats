@@ -5,15 +5,15 @@
         android:id="@+id/homeFragment"
         android:enabled="true"
         android:icon="@drawable/ic_home"
-        android:title="Home" />
+        android:title="@string/home_fragment_label" />
     <item
         android:id="@+id/favoritesFragment"
         android:enabled="true"
         android:icon="@drawable/ic_favorites"
-        android:title="Favorites" />
+        android:title="@string/favorites_fragment_label" />
     <item
         android:id="@+id/uploadedFragment"
         android:enabled="true"
         android:icon="@drawable/ic_upload"
-        android:title="Uploaded" />
+        android:title="@string/uploaded_fragment_label" />
 </menu>

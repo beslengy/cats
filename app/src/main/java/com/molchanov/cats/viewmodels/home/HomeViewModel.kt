@@ -10,7 +10,7 @@ import com.molchanov.cats.R
 import com.molchanov.cats.data.CatsRepository
 import com.molchanov.cats.network.networkmodels.CatItem
 import com.molchanov.cats.utils.APP_ACTIVITY
-import com.molchanov.cats.utils.showToast
+import com.molchanov.cats.utils.Functions.showToast
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject

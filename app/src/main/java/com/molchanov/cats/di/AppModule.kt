@@ -1,6 +1,8 @@
 package com.molchanov.cats.di
 
+import androidx.recyclerview.widget.GridLayoutManager
 import com.molchanov.cats.network.CatsApiService
+import com.molchanov.cats.utils.APP_ACTIVITY
 import com.molchanov.cats.utils.BASE_URL
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
@@ -50,4 +52,9 @@ object AppModule {
                 it.proceed(request)
             }
             .build()
+
+    @Provides
+    fun getLayoutManager(): GridLayoutManager = GridLayoutManager(APP_ACTIVITY, 2, GridLayoutManager.VERTICAL, false)
+
 }
+

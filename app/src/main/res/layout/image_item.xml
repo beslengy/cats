@@ -5,43 +5,38 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/image_card"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="@dimen/item_height"
     android:checkable="true"
     android:clickable="true"
     android:focusable="true"
-    app:cardCornerRadius="5dp"
-    app:cardElevation="1dp"
-    app:cardMaxElevation="8dp">
-
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+    app:cardCornerRadius="@dimen/item_corner_radius"
+    app:cardElevation="@dimen/item_elevation"
+    app:cardMaxElevation="@dimen/item_max_elevation">
 
 
         <ImageView
             android:id="@+id/iv_image_item"
             android:layout_width="match_parent"
-            android:layout_height="194dp"
+            android:layout_height="@dimen/item_height"
             android:scaleType="centerCrop"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
             tools:ignore="ContentDescription"
             tools:src="@tools:sample/backgrounds/scenic" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="bottom"
+            android:background="@drawable/gradient" />
+
 
         <ImageView
             android:id="@+id/btn_favorites"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
-            android:layout_marginBottom="16dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:srcCompat="@drawable/ic_heart"
+            android:layout_margin="@dimen/spacing_normal_16"
+            android:layout_gravity="bottom|end"
+            app:srcCompat="@drawable/ic_heart_border"
             tools:ignore="ContentDescription" />
 
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
 </com.google.android.material.card.MaterialCardView>

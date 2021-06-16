@@ -19,9 +19,7 @@
             android:id="@+id/rv_favorites"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:padding="@dimen/rv_item_margin"
-            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-            app:spanCount="2"
+            android:padding="@dimen/spacing_tiny_4"
             tools:listitem="@layout/image_item" />
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 

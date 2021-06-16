@@ -1,19 +1,28 @@
 package com.molchanov.cats.ui.favorites
 
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import androidx.paging.LoadState
+import androidx.recyclerview.widget.GridLayoutManager
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.molchanov.cats.R
 import com.molchanov.cats.databinding.FragmentFavoritesBinding
 import com.molchanov.cats.network.networkmodels.CatItem
+import com.molchanov.cats.ui.CatsLoadStateAdapter
 import com.molchanov.cats.ui.ItemClickListener
 import com.molchanov.cats.ui.PageAdapter
 import com.molchanov.cats.utils.DECORATION
+import com.molchanov.cats.utils.Functions.setupManager
 import com.molchanov.cats.viewmodels.favorites.FavoritesViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
+import javax.inject.Provider
 
 @AndroidEntryPoint
 class FavoritesFragment : Fragment(R.layout.fragment_favorites), ItemClickListener {
@@ -23,18 +32,36 @@ class FavoritesFragment : Fragment(R.layout.fragment_favorites), ItemClickListen
 
     private val viewModel: FavoritesViewModel by viewModels()
     private val adapter = PageAdapter(this)
+    private val headerAdapter = CatsLoadStateAdapter { adapter.retry() }
+    private val footerAdapter = CatsLoadStateAdapter { adapter.retry() }
+
+    @Inject
+    lateinit var manager: Provider<GridLayoutManager>
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?,
+    ): View? {
+        _binding = FragmentFavoritesBinding.inflate(inflater, container, false)
+        return binding.root
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
-        _binding = FragmentFavoritesBinding.bind(view)
-
         binding.apply {
             rvFavorites.apply {
-                adapter = this@FavoritesFragment.adapter
+                adapter = this@FavoritesFragment.adapter.withLoadStateHeaderAndFooter(
+                    header = headerAdapter,
+                    footer = footerAdapter
+                )
                 addItemDecoration(DECORATION)
                 setHasFixedSize(true)
+                layoutManager = setupManager(manager.get(),
+                    this@FavoritesFragment.adapter,
+                    footerAdapter,
+                    headerAdapter)
             }
             srlFavorites.apply {
                 setOnRefreshListener {
@@ -59,6 +86,27 @@ class FavoritesFragment : Fragment(R.layout.fragment_favorites), ItemClickListen
                 viewModel.displayCatCardComplete()
             }
         })
+        adapter.addLoadStateListener { loadState ->
+            binding.apply {
+                pb.isVisible = loadState.source.refresh is LoadState.Loading
+                rvFavorites.isVisible = loadState.source.refresh is LoadState.NotLoading
+                btnRetry.isVisible = loadState.source.refresh is LoadState.Error
+                tvError.isVisible = loadState.source.refresh is LoadState.Error
+                ivError.isVisible = loadState.source.refresh is LoadState.Error
+
+                if (loadState.source.refresh is LoadState.NotLoading &&
+                    loadState.append.endOfPaginationReached &&
+                    adapter.itemCount < 1
+                ) {
+                    rvFavorites.isVisible = false
+                    tvEmpty.isVisible = true
+                    ivEmpty.isVisible = true
+                } else {
+                    tvEmpty.isVisible = false
+                    ivEmpty.isVisible = false
+                }
+            }
+        }
     }
 
 

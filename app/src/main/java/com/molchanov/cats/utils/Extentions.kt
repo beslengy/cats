@@ -39,70 +39,31 @@ fun TextView.bindCardText(data: CatDetail?) {
     data?.breeds?.get(0)?.let {
         text =
             StringBuilder().apply {
-            append("CAT INFO\n")
-            if (it.name != null) {
-                append("Name: ")
-                append("\t${it.name}\n")
-                append("\n")
+                append("CAT INFO\n")
+                if (it.name != null) {
+                    append("Name: ")
+                    append("\t${it.name}\n")
+                    append("\n")
+                }
+                if (it.altNames != null) {
+                    append("Alternative names: ")
+                    append("\t${it.altNames}\n")
+                    append("\n")
+                }
+                if (it.temperament != null) {
+                    append("Temperament: ")
+                    append("${it.temperament}\n")
+                    append("\n")
+                }
+                if (it.description != null) {
+                    append("Description: \n")
+                    append("${it.description}\n")
+                    append("\n")
+                }
+
             }
-            if (it.altNames != null) {
-                append("Alternative names: ")
-                append("\t${it.altNames}\n")
-                append("\n")
-            }
-            if (it.description != null) {
-                append("Description: ")
-                append("${it.description}")
-                append("\n")
-            }
-            if (it.temperament != null) {
-                append("Description:\n")
-                append("${it.temperament}")
-            }
-        }
     }
 }
 
-
-
-//fun ImageView.bindStatusImage(
-//    status: ApiStatus
-//) {
-//    when (status) {
-//        ApiStatus.LOADING -> {
-//            this.visibility = View.VISIBLE
-//            this.setImageResource(R.drawable.loading_animation)
-//        }
-//        ApiStatus.ERROR -> {
-//            this.visibility = View.VISIBLE
-//            this.setImageResource(R.drawable.ic_connection_error)
-//        }
-//        ApiStatus.DONE -> {
-//            this.visibility = View.GONE
-//        }
-//        ApiStatus.EMPTY -> {
-//            this.visibility = View.VISIBLE
-//            this.setImageResource(R.drawable.ic_empty_list)
-//        }
-//    }
-//}
-//fun TextView.bindStatusText(status: ApiStatus) {
-//    when (status) {
-//        ApiStatus.EMPTY -> {
-//            this.visibility = View.VISIBLE
-//            this.text = "Список пуст"
-//        }
-//        ApiStatus.ERROR -> {
-//            this.visibility = View.VISIBLE
-//            this.text = "Ошибка соединения"
-//        }
-//        ApiStatus.LOADING -> {
-//            this.visibility = View.GONE
-//        }
-//        ApiStatus.DONE -> {
-//            this.visibility = View.GONE
-//        }
-//    }
-//}
 
 

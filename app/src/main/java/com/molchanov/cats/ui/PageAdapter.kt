@@ -18,11 +18,11 @@ class PageAdapter(private val itemClickListener: ItemClickListener) :
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val item = getItem(position)
-        if (item != null) {
-            holder.bind(item, itemClickListener)
+        getItem(position)?.let {
+            holder.bind(it, itemClickListener)
         }
     }
+
 
     class ViewHolder private constructor(private val binding: ImageItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
@@ -38,7 +38,6 @@ class PageAdapter(private val itemClickListener: ItemClickListener) :
                 }
             }
         }
-
 
         companion object {
             fun from(parent: ViewGroup): ViewHolder {

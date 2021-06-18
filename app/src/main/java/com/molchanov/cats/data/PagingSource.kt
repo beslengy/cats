@@ -21,7 +21,7 @@ class HomePagingSource(
 
         return try {
             val catItems = catsApi.getAllImages(pageSize, page)
-            Log.d("M_PagingSource", "api getAllImagesLaunched")
+            Log.d("M_PagingSource", "api getAllImagesLaunched, list size: ${catItems.size}")
             LoadResult.Page(
                 data = catItems,
                 prevKey = if (page == STARTING_PAGE_INDEX) null else page - 1,
@@ -54,7 +54,7 @@ class FavoritePagingSource(
 
         return try {
             val catItems = catsApi.getAllFavorites(params.loadSize, position)
-            Log.d("M_PagingSource", "api getAllImagesLaunched")
+            Log.d("M_PagingSource", "api getAllImagesLaunched, list size: ${catItems.size}")
 
             LoadResult.Page(
                 data = catItems,

@@ -17,9 +17,8 @@ class CatsLoadStateAdapter(private val retry: () -> Unit) :
     }
 
     override fun onBindViewHolder(holder: LoadStateViewHolder, loadState: LoadState) {
-        holder.bind(loadState)
+           holder.bind(loadState)
     }
-
 
     inner class LoadStateViewHolder(private val binding: LoadStateFooterBinding) :
         RecyclerView.ViewHolder(binding.root) {

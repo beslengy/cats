@@ -32,7 +32,8 @@ class CatsRepository @Inject constructor(private val catsApi: CatsApiService) {
             config = PagingConfig(
                 pageSize = 20,
                 enablePlaceholders = false,
-                maxSize = 100
+                maxSize = 100,
+                initialLoadSize = 20
             ),
             pagingSourceFactory = { HomePagingSource(catsApi) }
         ).liveData
@@ -45,8 +46,8 @@ class CatsRepository @Inject constructor(private val catsApi: CatsApiService) {
             config = PagingConfig(
                 pageSize = 20,
                 enablePlaceholders = false,
-                maxSize = 100
-
+                maxSize = 100,
+                initialLoadSize = 20
             ),
             pagingSourceFactory = { FavoritePagingSource(catsApi) }
         ).liveData
@@ -57,7 +58,8 @@ class CatsRepository @Inject constructor(private val catsApi: CatsApiService) {
             config = PagingConfig(
                 pageSize = 20,
                 enablePlaceholders = false,
-                maxSize = 100
+                maxSize = 100,
+                initialLoadSize = 20
 
             ),
             pagingSourceFactory = { UploadedPagingSource(catsApi) }

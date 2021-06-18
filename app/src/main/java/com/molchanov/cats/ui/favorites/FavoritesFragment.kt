@@ -1,6 +1,7 @@
 package com.molchanov.cats.ui.favorites
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -43,12 +44,14 @@ class FavoritesFragment : Fragment(R.layout.fragment_favorites), ItemClickListen
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View? {
+        Log.d("M_FavoritesFragment", "onCreateView")
         _binding = FragmentFavoritesBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        Log.d("M_FavoritesFragment", "onViewCreated")
 
         binding.apply {
             rvFavorites.apply {
@@ -58,11 +61,14 @@ class FavoritesFragment : Fragment(R.layout.fragment_favorites), ItemClickListen
                 )
                 addItemDecoration(DECORATION)
                 setHasFixedSize(true)
-                layoutManager = setupManager(manager.get(),
+                layoutManager = setupManager(
+                    manager.get(),
                     this@FavoritesFragment.adapter,
                     footerAdapter,
-                    headerAdapter)
+                    headerAdapter
+                )
             }
+            btnRetry.setOnClickListener { adapter.retry() }
             srlFavorites.apply {
                 setOnRefreshListener {
                     adapter.refresh()
@@ -88,7 +94,7 @@ class FavoritesFragment : Fragment(R.layout.fragment_favorites), ItemClickListen
         })
         adapter.addLoadStateListener { loadState ->
             binding.apply {
-                pb.isVisible = loadState.source.refresh is LoadState.Loading
+                pb.isVisible = loadState.refresh is LoadState.Loading
                 rvFavorites.isVisible = loadState.source.refresh is LoadState.NotLoading
                 btnRetry.isVisible = loadState.source.refresh is LoadState.Error
                 tvError.isVisible = loadState.source.refresh is LoadState.Error
@@ -107,6 +113,7 @@ class FavoritesFragment : Fragment(R.layout.fragment_favorites), ItemClickListen
                 }
             }
         }
+
     }
 
 
@@ -116,11 +123,16 @@ class FavoritesFragment : Fragment(R.layout.fragment_favorites), ItemClickListen
 
     override fun onFavoriteBtnClicked(selectedImage: CatItem) {
         viewModel.deleteFromFavorites(selectedImage)
-        adapter.refresh()
+        binding.apply {
+            adapter.refresh()
+            pb.isVisible = false
+            rvFavorites.isVisible = true
+        }
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
+        Log.d("M_FavoritesFragment", "onDestroyView")
         _binding = null
     }
 }

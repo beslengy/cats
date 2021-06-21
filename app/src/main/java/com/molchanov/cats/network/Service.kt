@@ -1,9 +1,6 @@
 package com.molchanov.cats.network
 
-import com.molchanov.cats.network.networkmodels.CatDetail
-import com.molchanov.cats.network.networkmodels.CatItem
-import com.molchanov.cats.network.networkmodels.NetworkResponse
-import com.molchanov.cats.network.networkmodels.PostFavorite
+import com.molchanov.cats.network.networkmodels.*
 import okhttp3.RequestBody
 import retrofit2.http.*
 
@@ -14,9 +11,11 @@ interface CatsApiService {
      */
     @GET("images/search")
     suspend fun getAllImages(
+        @QueryMap filter: Map<String, String>,
         @Query("limit") limit: Int,
-        @Query("page") page: Int,
-        @Query("order") order: String = "RANDOM"
+        @Query("page") page: Int
+
+
     ): List<CatItem>
 
     /**
@@ -67,6 +66,12 @@ interface CatsApiService {
         @Part("file") file: RequestBody,
         @Part("sub_id") username: RequestBody
     ): NetworkResponse
+
+    @GET("breeds")
+    suspend fun getBreeds(): List<FilterItem>
+
+    @GET("categories")
+    suspend fun getCategories(): List<FilterItem>
 
     /**
      * Метод для удаления моей загруженной картинки с сервера

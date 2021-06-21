@@ -39,26 +39,23 @@ fun TextView.bindCardText(data: CatDetail?) {
     data?.breeds?.get(0)?.let {
         text =
             StringBuilder().apply {
-                append("CAT INFO\n")
-                if (it.name != null) {
+                appendLine("CAT INFO")
+                if (!it.name.isNullOrEmpty()) {
                     append("Name: ")
-                    append("\t${it.name}\n")
-                    append("\n")
+                    appendLine("\t${it.name}\n")
                 }
-                if (it.altNames != null) {
+                if (!it.altNames.isNullOrEmpty()) {
                     append("Alternative names: ")
-                    append("\t${it.altNames}\n")
-                    append("\n")
+                    appendLine("\t${it.altNames}\n")
+
                 }
-                if (it.temperament != null) {
+                if (!it.temperament.isNullOrEmpty()) {
                     append("Temperament: ")
-                    append("${it.temperament}\n")
-                    append("\n")
+                    appendLine("${it.temperament}\n")
                 }
-                if (it.description != null) {
-                    append("Description: \n")
-                    append("${it.description}\n")
-                    append("\n")
+                if (!it.description.isNullOrEmpty()) {
+                    appendLine("Description:")
+                    appendLine("${it.description}\n")
                 }
 
             }

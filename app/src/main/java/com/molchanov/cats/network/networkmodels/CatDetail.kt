@@ -6,9 +6,11 @@ data class CatDetail(
     val breeds: List<Breeds>? = null,
     val categories: List<Categories>? = null,
     val id: String,
-    val url: String
+    val url: String,
 ) {
     data class Breeds(
+        @Json(name = "id")
+        val breedId: String? = null,
         @Json(name = "alt_names")
         val altNames: String? = null,
         @Json(name = "name")
@@ -23,6 +25,7 @@ data class CatDetail(
         )
 
     data class Categories(
-        val id: String
+        val id: String,
+        val name: String
     )
 }

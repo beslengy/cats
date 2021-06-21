@@ -9,6 +9,7 @@ import androidx.paging.liveData
 import com.molchanov.cats.network.CatsApiService
 import com.molchanov.cats.network.networkmodels.CatDetail
 import com.molchanov.cats.network.networkmodels.CatItem
+import com.molchanov.cats.network.networkmodels.FilterItem
 import com.molchanov.cats.network.networkmodels.PostFavorite
 import com.molchanov.cats.utils.USER_ID
 import kotlinx.coroutines.Dispatchers
@@ -26,7 +27,7 @@ class CatsRepository @Inject constructor(private val catsApi: CatsApiService) {
     var cats: List<CatItem> = listOf()
     lateinit var cat: CatDetail
 
-    fun getCatList(): LiveData<PagingData<CatItem>> {
+    fun getCatList(query: Map<String, String>): LiveData<PagingData<CatItem>> {
         Log.d("M_CatsRepository", "getCatList запущен")
         return Pager(
             config = PagingConfig(
@@ -35,7 +36,7 @@ class CatsRepository @Inject constructor(private val catsApi: CatsApiService) {
                 maxSize = 100,
                 initialLoadSize = 20
             ),
-            pagingSourceFactory = { HomePagingSource(catsApi) }
+            pagingSourceFactory = { HomePagingSource(catsApi, query) }
         ).liveData
     }
 
@@ -112,13 +113,6 @@ class CatsRepository @Inject constructor(private val catsApi: CatsApiService) {
     }
 
 
-//    suspend fun refreshUploaded(): List<CatItem> {
-//        withContext(Dispatchers.IO) {
-//            cats = catsApi.getAllUploaded(FAV_QUERY_OPTIONS)
-//        }
-//        return cats
-//    }
-
     suspend fun uploadImage(file: File): String {
         Log.d("M_CatsRepository", "uploadImage запущен")
         var message: String
@@ -136,4 +130,8 @@ class CatsRepository @Inject constructor(private val catsApi: CatsApiService) {
         }
         return message
     }
+
+    suspend fun getBreedsArray(): List<FilterItem> = withContext(Dispatchers.IO) { catsApi.getBreeds() }
+    suspend fun getCategoriesArray(): List<FilterItem> = withContext(Dispatchers.IO) { catsApi.getCategories() }
+
 }

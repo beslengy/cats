@@ -11,21 +11,20 @@ import java.io.IOException
 private const val STARTING_PAGE_INDEX = 0
 
 class HomePagingSource(
-    private val catsApi: CatsApiService
-//    private val breed: String
+    private val catsApi: CatsApiService,
+    private val query: Map<String, String>
 ) : PagingSource<Int, CatItem>() {
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, CatItem> {
         Log.d("M_PagingSource", "load launched")
-        val page = params.key ?: STARTING_PAGE_INDEX
-        val pageSize = params.loadSize
+        val position = params.key ?: STARTING_PAGE_INDEX
 
         return try {
-            val catItems = catsApi.getAllImages(pageSize, page)
+            val catItems = catsApi.getAllImages(query, params.loadSize, position)
             Log.d("M_PagingSource", "api getAllImagesLaunched, list size: ${catItems.size}")
             LoadResult.Page(
                 data = catItems,
-                prevKey = if (page == STARTING_PAGE_INDEX) null else page - 1,
-                nextKey = if (catItems.isEmpty()) null else page + 1
+                prevKey = if (position == STARTING_PAGE_INDEX) null else position - 1,
+                nextKey = if (catItems.isEmpty()) null else position + 1
             )
         } catch (e: IOException) {
             Log.d("M_PagingSource", "Ошибка: ${e.message}")

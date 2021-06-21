@@ -8,7 +8,9 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.molchanov.cats.ui.Decoration
-import com.molchanov.cats.utils.*
+import com.molchanov.cats.utils.APP_ACTIVITY
+import com.molchanov.cats.utils.DECORATION
+import com.molchanov.cats.utils.FAB
 import dagger.hilt.android.AndroidEntryPoint
 
 
@@ -19,15 +21,11 @@ class MainActivity : AppCompatActivity() {
     private lateinit var navController: NavController
     private lateinit var appBarConfiguration: AppBarConfiguration
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         APP_ACTIVITY = this
         DECORATION = Decoration(resources.getDimensionPixelOffset(R.dimen.rv_item_margin))
-        FAV_QUERY_OPTIONS = mapOf(
-            "user_id" to USER_ID,
-            "limit" to "10",
-            "page" to "1"
-        )
 
         setContentView(R.layout.activity_main)
 

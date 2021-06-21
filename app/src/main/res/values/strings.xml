@@ -21,4 +21,11 @@
     <string name="retry_btn_text">Повторить</string>
     <string name="connection_error_text">Ошибка соединения</string>
     <string name="empty_response_text">Список пуст</string>
+    <string name="filter_item_title">Filter</string>
+    
+    <string-array name="filter_types">
+        <item>Порода</item>
+        <item>Категория</item>
+        <item>Любой</item>
+    </string-array>
 </resources>

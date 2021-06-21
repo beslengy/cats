@@ -19,4 +19,5 @@
     <dimen name="item_corner_radius">5dp</dimen>
     <dimen name="item_elevation">1dp</dimen>
     <dimen name="item_max_elevation">8dp</dimen>
+    <dimen name="min_bottom_sheet_height">56dp</dimen>
 </resources>

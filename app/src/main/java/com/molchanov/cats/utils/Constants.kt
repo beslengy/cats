@@ -8,7 +8,6 @@ import com.molchanov.cats.ui.Decoration
 
 lateinit var APP_ACTIVITY: MainActivity
 lateinit var DECORATION: Decoration
-lateinit var FAV_QUERY_OPTIONS: Map<String, String>
 lateinit var FAB: FloatingActionButton
 lateinit var CURRENT_PHOTO_PATH: String
 
@@ -17,9 +16,6 @@ const val USER_ID = "user-17"
 const val BASE_URL = "https://api.thecatapi.com/v1/"
 const val FILE_AUTHORITY = "${APPLICATION_ID}.provider"
 
-enum class ApiStatus {
-    LOADING,
-    ERROR,
-    DONE,
-    EMPTY
-}
+const val DEFAULT_FILTER_TYPE = "Любой"
+const val BREEDS_FILTER_TYPE = "Порода"
+const val CATEGORIES_FILTER_TYPE = "Категория"

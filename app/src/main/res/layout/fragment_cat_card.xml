@@ -20,6 +20,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:adjustViewBounds="true"
+                android:layout_marginTop="@dimen/spacing_small_8"
                 android:scaleType="fitCenter"
                 tools:ignore="ContentDescription"
                 tools:src="@drawable/example_cats" />

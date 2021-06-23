@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -33,12 +32,12 @@
         tools:ignore="FragmentTagUsage" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:foregroundGravity="bottom|right"
         android:id="@+id/fab"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/spacing_normal_16"
-        android:layout_marginEnd="@dimen/spacing_normal_16"
         android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/spacing_normal_16"
+        android:layout_marginBottom="@dimen/spacing_normal_16"
+        android:foregroundGravity="bottom|right"
         android:visibility="gone"
         app:fabSize="normal"
         app:layout_constraintBottom_toTopOf="@id/bottom_navigation"
@@ -47,3 +46,4 @@
         tools:ignore="ContentDescription" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
+

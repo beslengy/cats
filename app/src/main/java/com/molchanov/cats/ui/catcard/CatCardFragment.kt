@@ -44,6 +44,11 @@ class CatCardFragment : Fragment(R.layout.fragment_cat_card) {
         super.onViewCreated(view, savedInstanceState)
         APP_ACTIVITY.findViewById<BottomNavigationView>(R.id.bottom_navigation).visibility =
             View.GONE
+//        val mToolbar = APP_ACTIVITY.findViewById<Toolbar>(R.id.toolbar)
+//        this.activity?.setActionBar(mToolbar)
+//        val toolbar = binding.toolbar
+//        APP_ACTIVITY.setSupportActionBar(toolbar)
+
         viewModel.cat.observe(viewLifecycleOwner) {
             it?.let {
                 binding.apply {

@@ -2,6 +2,8 @@ package com.molchanov.cats.utils
 
 import android.widget.Toast
 import androidx.recyclerview.widget.GridLayoutManager
+import com.google.android.material.appbar.AppBarLayout
+import com.molchanov.cats.R
 import com.molchanov.cats.ui.CatsLoadStateAdapter
 import com.molchanov.cats.ui.PageAdapter
 
@@ -35,6 +37,15 @@ object Functions {
             }
         }
         return manager
+    }
+
+     fun enableExpandedToolbar(enable: Boolean) {
+        if (enable) {
+            APP_ACTIVITY.findViewById<AppBarLayout>(R.id.app_bar).setExpanded(true)
+        } else {
+            APP_ACTIVITY.findViewById<AppBarLayout>(R.id.app_bar).setExpanded(false)
+        }
+
     }
 }
 

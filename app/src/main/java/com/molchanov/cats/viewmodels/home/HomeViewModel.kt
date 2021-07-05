@@ -32,8 +32,6 @@ class HomeViewModel @Inject constructor(
     val navigateToCard = MutableLiveData<CatItem>()
 
 
-    private val response = MutableLiveData<String>()
-
     val currentFilterType = MutableLiveData(DEFAULT_FILTER_TYPE)
     val currentFilterItem = MutableLiveData<FilterItem>(null)
 

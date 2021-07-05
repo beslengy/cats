@@ -1,6 +1,7 @@
 package com.molchanov.cats.utils
 
 
+import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.molchanov.cats.BuildConfig.APPLICATION_ID
 import com.molchanov.cats.MainActivity
@@ -10,6 +11,8 @@ lateinit var APP_ACTIVITY: MainActivity
 lateinit var DECORATION: Decoration
 lateinit var FAB: FloatingActionButton
 lateinit var CURRENT_PHOTO_PATH: String
+lateinit var APP_BAR: AppBarLayout
+
 
 
 const val USER_ID = "user-17"

@@ -59,6 +59,7 @@ class HomeFragment : Fragment(R.layout.fragment_home), ItemClickListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         Log.d("M_HomeFragment", "onViewCreated")
+
         binding.apply {
             rvHome.apply {
                 adapter = this@HomeFragment.adapter.withLoadStateHeaderAndFooter(
@@ -107,7 +108,6 @@ class HomeFragment : Fragment(R.layout.fragment_home), ItemClickListener {
                 }
             }
         }
-
 
         //Настраиваем видимость кнопки загрузки картинки
         activity?.findViewById<FloatingActionButton>(R.id.fab)?.visibility = View.GONE
@@ -181,11 +181,8 @@ class HomeFragment : Fragment(R.layout.fragment_home), ItemClickListener {
                     setOnItemClickListener { _, _, position, _ ->
                         viewModel.setFilterItem(items[position])
                     }
-
-
                 }
             }
-
 
             typeMenu?.apply {
                 if (viewModel.currentFilterItem.value == null) {

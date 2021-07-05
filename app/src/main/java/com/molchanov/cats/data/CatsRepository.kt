@@ -25,7 +25,7 @@ import javax.inject.Singleton
 @Singleton
 class CatsRepository @Inject constructor(private val catsApi: CatsApiService) {
     var cats: List<CatItem> = listOf()
-    lateinit var cat: CatDetail
+    private lateinit var cat: CatDetail
 
     fun getCatList(query: Map<String, String>): LiveData<PagingData<CatItem>> {
         Log.d("M_CatsRepository", "getCatList запущен")

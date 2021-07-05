@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -14,10 +15,12 @@ import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
+import com.google.android.material.appbar.CollapsingToolbarLayout
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.molchanov.cats.R
 import com.molchanov.cats.databinding.FragmentCatCardBinding
 import com.molchanov.cats.utils.APP_ACTIVITY
+import com.molchanov.cats.utils.Functions.enableExpandedToolbar
 import com.molchanov.cats.utils.bindCardText
 import com.molchanov.cats.viewmodels.catcard.CatCardViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -31,59 +34,64 @@ class CatCardFragment : Fragment(R.layout.fragment_cat_card) {
 
     private val viewModel: CatCardViewModel by viewModels()
 
+    companion object {
+        private const val CARD_EMPTY_TITLE = ""
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View? {
         _binding = FragmentCatCardBinding.inflate(inflater, container, false)
+        setHasOptionsMenu(true)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        APP_ACTIVITY.findViewById<CollapsingToolbarLayout>(R.id.toolbar_layout).title = CARD_EMPTY_TITLE
+
         APP_ACTIVITY.findViewById<BottomNavigationView>(R.id.bottom_navigation).visibility =
             View.GONE
-//        val mToolbar = APP_ACTIVITY.findViewById<Toolbar>(R.id.toolbar)
-//        this.activity?.setActionBar(mToolbar)
-//        val toolbar = binding.toolbar
-//        APP_ACTIVITY.setSupportActionBar(toolbar)
+        enableExpandedToolbar(true)
 
         viewModel.cat.observe(viewLifecycleOwner) {
             it?.let {
-                binding.apply {
-                    ivCatCardImage.apply {
-                        Glide.with(this@CatCardFragment)
-                            .load(it.url)
-                            .error(R.drawable.ic_broken_image)
-                            .transition(DrawableTransitionOptions.withCrossFade())
-                            .listener(object : RequestListener<Drawable> {
-                                override fun onLoadFailed(
-                                    e: GlideException?,
-                                    model: Any?,
-                                    target: Target<Drawable>?,
-                                    isFirstResource: Boolean,
-                                ): Boolean {
-                                    progressBar.isVisible = false
-                                    return false
-                                }
-
-                                override fun onResourceReady(
-                                    resource: Drawable?,
-                                    model: Any?,
-                                    target: Target<Drawable>?,
-                                    dataSource: DataSource?,
-                                    isFirstResource: Boolean,
-                                ): Boolean {
+                val imageView = APP_ACTIVITY.findViewById<ImageView>(R.id.toolbar_image)
+                imageView.apply {
+                    Glide.with(this@CatCardFragment)
+                        .load(it.url)
+                        .error(R.drawable.ic_broken_image)
+                        .transition(DrawableTransitionOptions.withCrossFade())
+                        .listener(object : RequestListener<Drawable> {
+                            override fun onLoadFailed(
+                                e: GlideException?,
+                                model: Any?,
+                                target: Target<Drawable>?,
+                                isFirstResource: Boolean,
+                            ): Boolean {
+                                binding.progressBar.isVisible = false
+                                return false
+                            }
+                            override fun onResourceReady(
+                                resource: Drawable?,
+                                model: Any?,
+                                target: Target<Drawable>?,
+                                dataSource: DataSource?,
+                                isFirstResource: Boolean,
+                            ): Boolean {
+                                binding.apply {
                                     progressBar.isVisible = false
                                     tvCatCardText.isVisible = true
-                                    return false
                                 }
-                            })
-                            .into(this)
-                    }
-                    tvCatCardText.bindCardText(it)
+                                return false
+                            }
+                        })
+                        .into(this)
                 }
+                binding.tvCatCardText.bindCardText(it)
             }
         }
     }
@@ -91,6 +99,7 @@ class CatCardFragment : Fragment(R.layout.fragment_cat_card) {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+        enableExpandedToolbar(false)
         APP_ACTIVITY.findViewById<BottomNavigationView>(R.id.bottom_navigation).visibility =
             View.VISIBLE
     }

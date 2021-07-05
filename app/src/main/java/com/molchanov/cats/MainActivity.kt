@@ -2,15 +2,20 @@ package com.molchanov.cats
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
+import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.molchanov.cats.databinding.ActivityMainBinding
 import com.molchanov.cats.ui.Decoration
 import com.molchanov.cats.utils.APP_ACTIVITY
+import com.molchanov.cats.utils.APP_BAR
 import com.molchanov.cats.utils.DECORATION
 import com.molchanov.cats.utils.FAB
+import com.molchanov.cats.utils.Functions.enableExpandedToolbar
 import dagger.hilt.android.AndroidEntryPoint
 
 
@@ -19,15 +24,34 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var navController: NavController
     private lateinit var appBarConfiguration: AppBarConfiguration
+    private lateinit var binding : ActivityMainBinding
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         APP_ACTIVITY = this
         DECORATION = Decoration(resources.getDimensionPixelOffset(R.dimen.rv_item_margin))
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        setContentView(R.layout.activity_main)
+        APP_BAR = findViewById(R.id.app_bar)
+        FAB = findViewById(R.id.fab)
 
-        FAB = this.findViewById(R.id.fab)
+        setSupportActionBar(findViewById(R.id.toolbar))
+        enableExpandedToolbar(false)
+
+        val params = APP_BAR.layoutParams as CoordinatorLayout.LayoutParams
+        if (params.behavior == null)
+            params.behavior = AppBarLayout.Behavior()
+        val behavior = params.behavior as AppBarLayout.Behavior
+        behavior.setDragCallback(object : AppBarLayout.Behavior.DragCallback() {
+            override fun canDrag(appBarLayout: AppBarLayout): Boolean {
+                return false
+            }
+        })
+
         val bottomNavigation: BottomNavigationView = findViewById(R.id.bottom_navigation)
 
         navController = findNavController(R.id.nav_host_fragment)

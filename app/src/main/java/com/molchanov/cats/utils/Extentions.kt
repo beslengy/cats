@@ -1,6 +1,5 @@
 package com.molchanov.cats.utils
 
-import android.util.Log
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.net.toUri
@@ -35,7 +34,6 @@ fun ImageView.bindImage(imageUrl: String?) {
 }
 
 fun TextView.bindCardText(data: CatDetail?) {
-    Log.d("M_BindingAdapters", "$data")
     data?.breeds?.get(0)?.let {
         text =
             StringBuilder().apply {
@@ -61,6 +59,14 @@ fun TextView.bindCardText(data: CatDetail?) {
             }
     }
 }
+
+//fun ImageButton.setVoteUpButton(voteState: VoteStates) {
+//    when(voteState) {
+//        VoteStates.VOTE_UP -> this.apply{
+//
+//        }
+//    }
+//}
 
 
 

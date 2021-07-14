@@ -10,4 +10,6 @@
     <color name="lgreen_light">#9fffe0</color>
     <color name="lgreen_dark">#2bbd7e</color>
 
+    <color name="vote_view_background">#30000000</color>
+
 </resources>

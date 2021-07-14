@@ -15,6 +15,7 @@ lateinit var APP_BAR: AppBarLayout
 
 
 
+
 const val USER_ID = "user-17"
 const val BASE_URL = "https://api.thecatapi.com/v1/"
 const val FILE_AUTHORITY = "${APPLICATION_ID}.provider"

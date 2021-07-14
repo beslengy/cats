@@ -54,6 +54,20 @@ class HomeViewModel @Inject constructor(
             }
         }
     }
+    fun deleteFromFavorites(cat: CatItem) {
+        Log.d("M_HomeViewModel", "deleteFromFavorites запущен. Cat: ${cat.favourite?.favId}")
+        try {
+            viewModelScope.launch {
+                cat.favourite?.let{
+                    repository.removeFavoriteByFavId(it.favId)
+                }
+            }
+            showToast(APP_ACTIVITY.resources.getString(R.string.deleted_from_favorites_toast_text))
+        } catch (e: Exception) {
+            showToast(APP_ACTIVITY.resources.getString(R.string.already_deleted_from_favorites_toast_text))
+            Log.d("M_HomeViewModel", "Ошибка при удалении из избранного: ${e.message}")
+        }
+    }
 
     fun displayCatCard(currentImage: CatItem) {
         navigateToCard.value = currentImage

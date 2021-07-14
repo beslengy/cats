@@ -60,6 +60,7 @@ class HomeFragment : Fragment(R.layout.fragment_home), ItemClickListener {
         super.onViewCreated(view, savedInstanceState)
         Log.d("M_HomeFragment", "onViewCreated")
 
+        //Настраиваем recyclerView
         binding.apply {
             rvHome.apply {
                 adapter = this@HomeFragment.adapter.withLoadStateHeaderAndFooter(
@@ -112,17 +113,27 @@ class HomeFragment : Fragment(R.layout.fragment_home), ItemClickListener {
         //Настраиваем видимость кнопки загрузки картинки
         activity?.findViewById<FloatingActionButton>(R.id.fab)?.visibility = View.GONE
 
+        //Наблюдатель списка картинок. Обновляет адаптер при изменении
         viewModel.homeImages.observe(viewLifecycleOwner)
         {
             it?.let { adapter.submitData(viewLifecycleOwner.lifecycle, it) }
         }
 
+        //Наблюдатель переменной навигации. Если у объекта есть параметр Vote, передает
+        //voteId карточке котика
         viewModel.navigateToCard.observe(viewLifecycleOwner,
             { catItem ->
                 catItem?.let {
-                    this.findNavController().navigate(
-                        HomeFragmentDirections.actionHomeFragmentToCatCardFragment(it.id)
-                    )
+                    if (it.vote != null) {
+                        this.findNavController().navigate(
+                            HomeFragmentDirections
+                                .actionHomeFragmentToCatCardFragment(it.id, it.vote!!.value)
+                        )
+                    } else {
+                        this.findNavController().navigate(
+                            HomeFragmentDirections.actionHomeFragmentToCatCardFragment(it.id)
+                        )
+                    }
                     viewModel.displayCatCardComplete()
                 }
             })
@@ -130,13 +141,22 @@ class HomeFragment : Fragment(R.layout.fragment_home), ItemClickListener {
         setHasOptionsMenu(true)
     }
 
-
+    //Прослушиватель нажатия на элемент recyclerView
     override fun onItemClicked(selectedImage: CatItem) {
+        Log.d("M_HomeFragment", "$selectedImage")
         viewModel.displayCatCard(selectedImage)
     }
 
+    //Прослушиватель нажатия на кнопку "сердечко"
     override fun onFavoriteBtnClicked(selectedImage: CatItem) {
-        viewModel.addToFavorites(selectedImage)
+        if (!selectedImage.isFavorite) {
+            viewModel.addToFavorites(selectedImage)
+            selectedImage.isFavorite = true
+        } else {
+            viewModel.deleteFromFavorites(selectedImage)
+            selectedImage.isFavorite = false
+        }
+
     }
 
     //Фильтр

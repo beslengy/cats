@@ -4,33 +4,29 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:nestedScrollingEnabled="true"
     tools:context=".ui.catcard.CatCardFragment">
 
     <ScrollView
+        android:id="@+id/scrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="@dimen/spacing_small_8"
         android:nestedScrollingEnabled="true">
 
-        <LinearLayout
+        <TextView
+            android:id="@+id/tv_cat_card_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/tv_cat_card_text"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/spacing_small_8"
-                android:layout_marginEnd="@dimen/spacing_small_8"
-                android:textAppearance="@style/TextAppearance.AppCompat.Headline"
-                android:textSize="@dimen/font_large_20"
-                android:visibility="gone"
-                app:layout_constraintVertical_weight="1"
-                tools:text="@string/bottom_sheet_behavior"
-                tools:visibility="visible" />
-        </LinearLayout>
+            android:layout_marginStart="@dimen/spacing_small_8"
+            android:layout_marginEnd="@dimen/spacing_small_8"
+            android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+            android:textSize="@dimen/font_large_20"
+            android:visibility="gone"
+            app:layout_constraintVertical_weight="1"
+            tools:textAppearance="@style/TextAppearance.AppCompat.Headline"
+            tools:textSize="26sp"
+            android:paddingBottom="54dp"
+            tools:text="@string/card_example"
+            tools:visibility="visible" />
     </ScrollView>
 
     <ProgressBar
@@ -38,4 +34,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center" />
+
+
+
 </FrameLayout>

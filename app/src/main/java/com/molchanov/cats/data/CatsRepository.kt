@@ -7,10 +7,7 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.liveData
 import com.molchanov.cats.network.CatsApiService
-import com.molchanov.cats.network.networkmodels.CatDetail
-import com.molchanov.cats.network.networkmodels.CatItem
-import com.molchanov.cats.network.networkmodels.FilterItem
-import com.molchanov.cats.network.networkmodels.PostFavorite
+import com.molchanov.cats.network.networkmodels.*
 import com.molchanov.cats.utils.USER_ID
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -133,5 +130,18 @@ class CatsRepository @Inject constructor(private val catsApi: CatsApiService) {
 
     suspend fun getBreedsArray(): List<FilterItem> = withContext(Dispatchers.IO) { catsApi.getBreeds() }
     suspend fun getCategoriesArray(): List<FilterItem> = withContext(Dispatchers.IO) { catsApi.getCategories() }
+
+    suspend fun postVote(imageId: String, voteValue: Int): NetworkResponse {
+        val response: NetworkResponse
+        val postBody = PostVote(imageId, voteValue)
+        withContext(Dispatchers.IO) { response = catsApi.postVote(postBody) }
+        return response
+    }
+
+    suspend fun deleteVote(voteId: String) : String {
+        val message: String
+        withContext(Dispatchers.IO) { message = catsApi.deleteVote(voteId).message }
+        return message
+    }
 
 }

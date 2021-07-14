@@ -16,3 +16,10 @@ data class PostUploaded constructor(
     @Json(name = "file") val file: MultipartBody.Part,
     @Json(name = "sub_id") val username: String = USER_ID
 )
+
+@JsonClass(generateAdapter = true)
+data class PostVote constructor(
+    @Json(name = "image_id") val imageId: String,
+    @Json(name = "value") val value: Int,
+    @Json(name = "sub_id") val username: String = USER_ID
+)

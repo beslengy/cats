@@ -2,11 +2,14 @@ package com.molchanov.cats.ui
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.content.res.ResourcesCompat.getDrawable
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.molchanov.cats.R
 import com.molchanov.cats.databinding.ImageItemBinding
 import com.molchanov.cats.network.networkmodels.CatItem
+import com.molchanov.cats.utils.APP_ACTIVITY
 import com.molchanov.cats.utils.bindImage
 
 class PageAdapter(private val itemClickListener: ItemClickListener) :
@@ -26,12 +29,22 @@ class PageAdapter(private val itemClickListener: ItemClickListener) :
 
     class ViewHolder private constructor(private val binding: ImageItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
+
         fun bind(image: CatItem, itemClickListener: ItemClickListener) {
             binding.apply {
                 ivImageItem.bindImage(image.imageUrl)
 
-                btnFavorites.setOnClickListener {
-                    itemClickListener.onFavoriteBtnClicked(image)
+                btnFavorites.apply {
+                    setOnClickListener {
+                        itemClickListener.onFavoriteBtnClicked(image)
+                        val favIcon =
+                            if (image.isFavorite) R.drawable.ic_heart
+                            else R.drawable.ic_heart_border
+                        this.setImageDrawable(getDrawable(resources, favIcon, APP_ACTIVITY.theme))
+                    }
+                    if (image.isFavorite) this.setImageDrawable(getDrawable(resources,
+                        R.drawable.ic_heart,
+                        APP_ACTIVITY.theme))
                 }
                 ivImageItem.setOnClickListener {
                     itemClickListener.onItemClicked(image)

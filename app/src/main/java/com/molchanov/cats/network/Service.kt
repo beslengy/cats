@@ -1,6 +1,7 @@
 package com.molchanov.cats.network
 
 import com.molchanov.cats.network.networkmodels.*
+import com.molchanov.cats.utils.USER_ID
 import okhttp3.RequestBody
 import retrofit2.http.*
 
@@ -13,9 +14,11 @@ interface CatsApiService {
     suspend fun getAllImages(
         @QueryMap filter: Map<String, String>,
         @Query("limit") limit: Int,
-        @Query("page") page: Int
-
-
+        @Query("page") page: Int,
+        @Query("size") size: String = "med",
+        @Query("sub_id") username: String = USER_ID,
+        @Query("include_favourite") includeFavorite: Int = 1,
+        @Query("include_vote") includeVote: Int = 1
     ): List<CatItem>
 
     /**
@@ -39,7 +42,7 @@ interface CatsApiService {
     @GET("favourites")
     suspend fun getAllFavorites(
         @Query("limit") limit: Int,
-        @Query("page") page: Int
+        @Query("page") page: Int,
     ): List<CatItem>
 
     /**
@@ -82,4 +85,19 @@ interface CatsApiService {
      * Метод для получения анализа картинки
      * TODO: Метод для получения анализа картинки
      */
+
+    /**
+     * Метод для голосования
+     */
+    @POST("votes")
+    suspend fun postVote(
+        @Body postVote: PostVote
+    ): NetworkResponse
+    /**
+     * Метод для удаления голоса
+     */
+    @DELETE("votes/{vote_id}")
+    suspend fun deleteVote(
+        @Path("vote_id") voteId: String
+    ) : NetworkResponse
 }

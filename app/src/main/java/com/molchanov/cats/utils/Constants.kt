@@ -1,7 +1,9 @@
 package com.molchanov.cats.utils
 
 
+import androidx.constraintlayout.widget.ConstraintLayout
 import com.google.android.material.appbar.AppBarLayout
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.molchanov.cats.BuildConfig.APPLICATION_ID
 import com.molchanov.cats.MainActivity
@@ -12,6 +14,8 @@ lateinit var DECORATION: Decoration
 lateinit var FAB: FloatingActionButton
 lateinit var CURRENT_PHOTO_PATH: String
 lateinit var APP_BAR: AppBarLayout
+lateinit var BOTTOM_NAV_BAR: BottomNavigationView
+lateinit var VOTE_LAYOUT: ConstraintLayout
 
 
 

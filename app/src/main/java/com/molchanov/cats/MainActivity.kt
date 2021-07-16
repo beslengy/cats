@@ -1,21 +1,20 @@
 package com.molchanov.cats
 
+import android.content.res.Configuration
 import android.os.Bundle
+import android.util.Log
+import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
-import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.molchanov.cats.databinding.ActivityMainBinding
 import com.molchanov.cats.ui.Decoration
-import com.molchanov.cats.utils.APP_ACTIVITY
-import com.molchanov.cats.utils.APP_BAR
-import com.molchanov.cats.utils.DECORATION
-import com.molchanov.cats.utils.FAB
+import com.molchanov.cats.utils.*
 import com.molchanov.cats.utils.Functions.enableExpandedToolbar
+import com.molchanov.cats.utils.Functions.setDraggableAppBar
 import dagger.hilt.android.AndroidEntryPoint
 
 
@@ -24,33 +23,47 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var navController: NavController
     private lateinit var appBarConfiguration: AppBarConfiguration
-    private lateinit var binding : ActivityMainBinding
-
+    private lateinit var binding: ActivityMainBinding
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        Log.d("M_MainActivity", "OnCreate")
         APP_ACTIVITY = this
         DECORATION = Decoration(resources.getDimensionPixelOffset(R.dimen.rv_item_margin))
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        APP_BAR = findViewById(R.id.app_bar)
-        FAB = findViewById(R.id.fab)
+        APP_BAR = binding.appBar
+        BOTTOM_NAV_BAR = binding.bottomNavigation
+        VOTE_LAYOUT = binding.voteButtonsLayout.voteButtonsLayout
+        FAB = binding.fab
+        binding.toolbarImage.apply {
+            if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                maxHeight =
+                    resources.getDimensionPixelOffset(R.dimen.toolbar_image_landscape_max_height)
+                scaleType = ImageView.ScaleType.CENTER_CROP
+            } else {
+                binding.toolbarImage.maxHeight =
+                    resources.getDimensionPixelOffset(R.dimen.toolbar_image_portrait_max_height)
+                scaleType = ImageView.ScaleType.FIT_CENTER
+            }
+        }
 
         setSupportActionBar(findViewById(R.id.toolbar))
-        enableExpandedToolbar(false)
 
-        val params = APP_BAR.layoutParams as CoordinatorLayout.LayoutParams
-        if (params.behavior == null)
-            params.behavior = AppBarLayout.Behavior()
-        val behavior = params.behavior as AppBarLayout.Behavior
-        behavior.setDragCallback(object : AppBarLayout.Behavior.DragCallback() {
-            override fun canDrag(appBarLayout: AppBarLayout): Boolean {
-                return false
-            }
-        })
+        enableExpandedToolbar(false)
+        setDraggableAppBar(false)
+
+//        val params = APP_BAR.layoutParams as CoordinatorLayout.LayoutParams
+//        if (params.behavior == null)
+//            params.behavior = AppBarLayout.Behavior()
+//        val behavior = params.behavior as AppBarLayout.Behavior
+//        behavior.setDragCallback(object : AppBarLayout.Behavior.DragCallback() {
+//            override fun canDrag(appBarLayout: AppBarLayout): Boolean {
+//                return false
+//            }
+//        })
 
         val bottomNavigation: BottomNavigationView = findViewById(R.id.bottom_navigation)
 

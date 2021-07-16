@@ -11,7 +11,6 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.GridLayoutManager
-import com.google.android.material.appbar.CollapsingToolbarLayout
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.molchanov.cats.R
 import com.molchanov.cats.databinding.FragmentFavoritesBinding
@@ -19,7 +18,6 @@ import com.molchanov.cats.network.networkmodels.CatItem
 import com.molchanov.cats.ui.CatsLoadStateAdapter
 import com.molchanov.cats.ui.ItemClickListener
 import com.molchanov.cats.ui.PageAdapter
-import com.molchanov.cats.utils.APP_ACTIVITY
 import com.molchanov.cats.utils.DECORATION
 import com.molchanov.cats.utils.Functions.setupManager
 import com.molchanov.cats.viewmodels.favorites.FavoritesViewModel
@@ -54,8 +52,6 @@ class FavoritesFragment : Fragment(R.layout.fragment_favorites), ItemClickListen
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         Log.d("M_FavoritesFragment", "onViewCreated")
-
-        APP_ACTIVITY.findViewById<CollapsingToolbarLayout>(R.id.toolbar_layout).title = resources.getString(R.string.favorites_fragment_label)
 
         binding.apply {
             rvFavorites.apply {

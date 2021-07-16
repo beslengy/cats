@@ -2,12 +2,12 @@ package com.molchanov.cats.ui.catcard
 
 import android.graphics.drawable.Drawable
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.ImageView
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.res.ResourcesCompat.getDrawable
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -19,18 +19,17 @@ import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
-import com.google.android.material.appbar.CollapsingToolbarLayout
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.molchanov.cats.R
 import com.molchanov.cats.databinding.FragmentCatCardBinding
 import com.molchanov.cats.ui.catcard.VoteStates.*
 import com.molchanov.cats.utils.APP_ACTIVITY
+import com.molchanov.cats.utils.BOTTOM_NAV_BAR
 import com.molchanov.cats.utils.Functions.enableExpandedToolbar
+import com.molchanov.cats.utils.Functions.setDraggableAppBar
+import com.molchanov.cats.utils.VOTE_LAYOUT
 import com.molchanov.cats.utils.bindCardText
 import com.molchanov.cats.viewmodels.catcard.CatCardViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
-import javax.inject.Named
 
 
 @AndroidEntryPoint
@@ -44,25 +43,19 @@ class CatCardFragment : Fragment(R.layout.fragment_cat_card) {
     private lateinit var voteState: VoteStates
     private val viewModel: CatCardViewModel by viewModels()
 
-
+//    @Inject
+//    @Named("voteUp")
+//    lateinit var voteUpButton: Provider<ImageButton>
+//
+//    @Inject
+//    @Named("voteDown")
+//    lateinit var voteDownButton: Provider<ImageButton>
 
 //    private val args by navArgs<CatCardFragmentArgs>()
 //    private var voteValue: Int = args.voteValue
 
-    @Inject
-    lateinit var voteLayout: ConstraintLayout
-
-    @Inject
-    @Named("voteUp")
-    lateinit var voteUpButton: ImageButton
-
-    @Inject
-    @Named("voteDown")
-    lateinit var voteDownButton: ImageButton
-
-    companion object {
-        private const val CARD_EMPTY_TITLE = ""
-    }
+    private lateinit var voteUpButton : ImageButton
+    private lateinit var voteDownButton : ImageButton
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -74,18 +67,14 @@ class CatCardFragment : Fragment(R.layout.fragment_cat_card) {
         return binding.root
     }
 
+
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        Log.d("M_CatCardFragment", "onViewCreated")
 
-        APP_ACTIVITY.findViewById<CollapsingToolbarLayout>(R.id.toolbar_layout).title =
-            CARD_EMPTY_TITLE
-
-        APP_ACTIVITY.findViewById<BottomNavigationView>(R.id.bottom_navigation).visibility =
-            View.GONE
-        enableExpandedToolbar(true)
-
-        voteLayout.isVisible = true
-//        setVoteButtons(voteState)
+        voteUpButton = VOTE_LAYOUT.getViewById(R.id.btn_like) as ImageButton
+        voteDownButton = VOTE_LAYOUT.getViewById(R.id.btn_dislike) as ImageButton
 
         viewModel.cat.observe(viewLifecycleOwner) {
             it?.let {
@@ -133,6 +122,28 @@ class CatCardFragment : Fragment(R.layout.fragment_cat_card) {
             setVoteButtons(voteState)
         }
 
+
+    }
+    override fun onStart() {
+        super.onStart()
+        Log.d("M_CatCardFragment", "onStart")
+
+    }
+
+    override fun onResume() {
+        super.onResume()
+        Log.d("M_CatCardFragment", "onResume")
+        BOTTOM_NAV_BAR.visibility =
+            View.GONE
+        setDraggableAppBar(true)
+        enableExpandedToolbar(true)
+        VOTE_LAYOUT.isVisible = true
+        voteUpButton = VOTE_LAYOUT.getViewById(R.id.btn_like) as ImageButton
+        voteDownButton = VOTE_LAYOUT.getViewById(R.id.btn_dislike) as ImageButton
+        setVoteButtons(voteState)
+    }
+
+    private fun setVoteButtons(voteState: VoteStates) {
         voteUpButton.setOnClickListener {
             when(voteState) {
                 NOT_VOTED, VOTE_DOWN -> {
@@ -158,9 +169,6 @@ class CatCardFragment : Fragment(R.layout.fragment_cat_card) {
                 }
             }
         }
-    }
-
-    private fun setVoteButtons(voteState: VoteStates) {
         when (voteState) {
             VOTE_UP -> {
                 voteUpButton.apply {
@@ -217,8 +225,8 @@ class CatCardFragment : Fragment(R.layout.fragment_cat_card) {
         super.onDestroyView()
         _binding = null
         enableExpandedToolbar(false)
-        APP_ACTIVITY.findViewById<BottomNavigationView>(R.id.bottom_navigation).visibility =
+        BOTTOM_NAV_BAR.visibility =
             View.VISIBLE
-        voteLayout.isVisible = false
+        VOTE_LAYOUT.isVisible = false
     }
 }

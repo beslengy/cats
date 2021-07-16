@@ -1,7 +1,6 @@
 package com.molchanov.cats.di
 
 import android.widget.ImageButton
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.GridLayoutManager
 import com.molchanov.cats.R
 import com.molchanov.cats.network.CatsApiService
@@ -61,16 +60,10 @@ object AppModule {
     fun getLayoutManager(): GridLayoutManager = GridLayoutManager(APP_ACTIVITY, 2, GridLayoutManager.VERTICAL, false)
 
     @Provides
-    @Singleton
-    fun getVoteLayout() : ConstraintLayout = APP_ACTIVITY.findViewById(R.id.vote_buttons_layout)
-
-    @Provides
-    @Singleton
     @Named("voteUp")
     fun getVoteUpButton() : ImageButton = APP_ACTIVITY.findViewById(R.id.btn_like)
 
     @Provides
-    @Singleton
     @Named("voteDown")
     fun getVoteDownButton() : ImageButton = APP_ACTIVITY.findViewById(R.id.btn_dislike)
 

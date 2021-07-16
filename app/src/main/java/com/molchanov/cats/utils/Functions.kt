@@ -1,9 +1,10 @@
 package com.molchanov.cats.utils
 
+import android.util.Log
 import android.widget.Toast
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.recyclerview.widget.GridLayoutManager
 import com.google.android.material.appbar.AppBarLayout
-import com.molchanov.cats.R
 import com.molchanov.cats.ui.CatsLoadStateAdapter
 import com.molchanov.cats.ui.PageAdapter
 
@@ -40,12 +41,21 @@ object Functions {
     }
 
      fun enableExpandedToolbar(enable: Boolean) {
-        if (enable) {
-            APP_ACTIVITY.findViewById<AppBarLayout>(R.id.app_bar).setExpanded(true)
-        } else {
-            APP_ACTIVITY.findViewById<AppBarLayout>(R.id.app_bar).setExpanded(false)
-        }
+         Log.d("M_Functions", "enableExpandedToolbar is $enable")
+            APP_BAR.setExpanded(enable)
+    }
 
+    fun setDraggableAppBar(isDraggable: Boolean) {
+        Log.d("M_Functions", "setDraggable to $isDraggable")
+        val params = APP_BAR.layoutParams as CoordinatorLayout.LayoutParams
+        if (params.behavior == null)
+            params.behavior = AppBarLayout.Behavior()
+        val behavior = params.behavior as AppBarLayout.Behavior
+        behavior.setDragCallback(object : AppBarLayout.Behavior.DragCallback() {
+            override fun canDrag(appBarLayout: AppBarLayout): Boolean {
+                return isDraggable
+            }
+        })
     }
 }
 

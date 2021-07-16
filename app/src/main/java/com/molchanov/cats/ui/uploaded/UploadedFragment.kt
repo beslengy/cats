@@ -10,7 +10,6 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.GridLayoutManager
-import com.google.android.material.appbar.CollapsingToolbarLayout
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.molchanov.cats.R
 import com.molchanov.cats.databinding.FragmentUploadedBinding
@@ -58,10 +57,7 @@ class UploadedFragment : Fragment(R.layout.fragment_uploaded), ItemClickListener
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        APP_ACTIVITY.findViewById<CollapsingToolbarLayout>(R.id.toolbar_layout).title = resources.getString(R.string.uploaded_fragment_label)
-
         _binding = FragmentUploadedBinding.bind(view)
-
 
         binding.apply {
             rvUploaded.apply {
@@ -96,6 +92,7 @@ class UploadedFragment : Fragment(R.layout.fragment_uploaded), ItemClickListener
                 uploadedViewModel.displayCatCardComplete()
             }
         })
+
         //Настраиваем видимость кнопки загрузки картинки
         FAB.visibility = View.VISIBLE
         FAB.setOnClickListener {
@@ -148,9 +145,7 @@ class UploadedFragment : Fragment(R.layout.fragment_uploaded), ItemClickListener
         uploadedViewModel.displayCatCard(selectedImage)
     }
 
-    override fun onFavoriteBtnClicked(selectedImage: CatItem) {
-
-    }
+    override fun onFavoriteBtnClicked(selectedImage: CatItem) {}
 
     override fun onDestroyView() {
         super.onDestroyView()

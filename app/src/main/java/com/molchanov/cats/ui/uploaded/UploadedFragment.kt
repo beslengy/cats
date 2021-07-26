@@ -44,11 +44,6 @@ class UploadedFragment : Fragment(R.layout.fragment_uploaded), ItemClickListener
     private val headerAdapter = CatsLoadStateAdapter { adapter.retry() }
     private val footerAdapter = CatsLoadStateAdapter { adapter.retry() }
 
-//    private val fileUri by lazy {
-//        Uri.fromFile(File(CURRENT_PHOTO_PATH))
-//    }
-
-
     private val cameraContract = registerForActivityResult(PhotoContract()) {
         Log.d("M_UploadedFragment", "Camera contract result: $it")
         if (it) {
@@ -114,13 +109,14 @@ class UploadedFragment : Fragment(R.layout.fragment_uploaded), ItemClickListener
             }
         })
 
-        uploadedViewModel.onImageUploaded.observe(viewLifecycleOwner) {
+        uploadedViewModel.onRefreshTrigger.observe(viewLifecycleOwner) {
             it?.let {
                 Log.d("M_UploadedFragment", "onImageUploaded сработал. Параметр: $it")
                 adapter.refresh()
             }
         }
 
+        adapter.setItemLongTapAble(true)
         //Настраиваем видимость кнопки загрузки картинки
         FAB.visibility = View.VISIBLE
         FAB.setOnClickListener {
@@ -181,11 +177,17 @@ class UploadedFragment : Fragment(R.layout.fragment_uploaded), ItemClickListener
     override fun onItemClicked(selectedImage: CatItem) {
         uploadedViewModel.displayCatCard(selectedImage)
     }
+    override fun onItemLongTap(selectedImage: CatItem) {
+        uploadedViewModel.deleteImageFromServer(selectedImage)
+    }
 
     override fun onFavoriteBtnClicked(selectedImage: CatItem) {}
 
+
+
     override fun onDestroyView() {
         super.onDestroyView()
+        adapter.setItemLongTapAble(false)
         _binding = null
     }
 }

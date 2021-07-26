@@ -1,7 +1,9 @@
 package com.molchanov.cats.ui
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.widget.PopupMenu
 import androidx.core.content.res.ResourcesCompat.getDrawable
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
@@ -16,8 +18,13 @@ class PageAdapter(private val itemClickListener: ItemClickListener) :
     PagingDataAdapter<CatItem, PageAdapter.ViewHolder>(
         COMPARATOR
     ) {
+    private var itemLongClickable: Boolean = false
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return ViewHolder.from(parent)
+        return ViewHolder(
+            ImageItemBinding.inflate(
+                LayoutInflater.from(parent.context)
+            )
+        )
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
@@ -27,12 +34,31 @@ class PageAdapter(private val itemClickListener: ItemClickListener) :
     }
 
 
-    class ViewHolder private constructor(private val binding: ImageItemBinding) :
+    inner class ViewHolder(private val binding: ImageItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(image: CatItem, itemClickListener: ItemClickListener) {
             binding.apply {
-                ivImageItem.bindImage(image.imageUrl)
+                ivImageItem.apply {
+                    isLongClickable = itemLongClickable
+                    bindImage(image.imageUrl)
+                    setOnClickListener {
+                        itemClickListener.onItemClicked(image)
+                    }
+                    if(itemLongClickable) setOnLongClickListener {
+                        val popup = PopupMenu(APP_ACTIVITY, this)
+                        popup.apply {
+                            inflate(R.menu.delete_uploaded_menu)
+                            setOnMenuItemClickListener {
+                                itemClickListener.onItemLongTap(image)
+                                true
+                            }
+                        }
+                        popup.show()
+                        true
+                    }
+                }
+
 
                 btnFavorites.apply {
                     setOnClickListener {
@@ -42,25 +68,24 @@ class PageAdapter(private val itemClickListener: ItemClickListener) :
                             else R.drawable.ic_heart_border
                         this.setImageDrawable(getDrawable(resources, favIcon, APP_ACTIVITY.theme))
                     }
+                    if (image.isUploaded) this.visibility = View.GONE
                     if (image.isFavorite) this.setImageDrawable(getDrawable(resources,
                         R.drawable.ic_heart,
                         APP_ACTIVITY.theme))
                 }
-                ivImageItem.setOnClickListener {
-                    itemClickListener.onItemClicked(image)
-                }
             }
+
         }
 
-        companion object {
-            fun from(parent: ViewGroup): ViewHolder {
-                return ViewHolder(
-                    ImageItemBinding.inflate(
-                        LayoutInflater.from(parent.context)
-                    )
-                )
-            }
-        }
+//        companion object {
+//            fun from(parent: ViewGroup): ViewHolder {
+//                return ViewHolder(
+//                    ImageItemBinding.inflate(
+//                        LayoutInflater.from(parent.context)
+//                    )
+//                )
+//            }
+//        }
     }
 
     companion object {
@@ -73,5 +98,8 @@ class PageAdapter(private val itemClickListener: ItemClickListener) :
             override fun areContentsTheSame(oldItem: CatItem, newItem: CatItem) =
                 oldItem == newItem
         }
+    }
+    fun setItemLongTapAble(boolean: Boolean) {
+        itemLongClickable = boolean
     }
 }

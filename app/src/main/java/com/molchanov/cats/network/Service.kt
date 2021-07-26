@@ -78,8 +78,9 @@ interface CatsApiService {
 
     /**
      * Метод для удаления моей загруженной картинки с сервера
-     * TODO: Метод для удаления моей загруженной картинки с сервера
      */
+    @DELETE("images/{imageId}")
+    suspend fun deleteUploaded(@Path("imageId") imageId: String)
 
     /**
      * Метод для получения анализа картинки

@@ -42,6 +42,6 @@ class PhotoContract : ActivityResultContract<Uri, Boolean>() {
     override fun parseResult(resultCode: Int, intent: Intent?): Boolean = when {
         resultCode != RESULT_OK -> false
         resultCode == RESULT_CANCELED -> false
-        else -> intent != null
+        else -> true
     }
 }

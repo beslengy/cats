@@ -117,25 +117,9 @@ class CatsRepository @Inject constructor(private val catsApi: CatsApiService) {
             }
         }
     }
-//    suspend fun uploadImage(file: File): String {
-//        Log.d("M_CatsRepository", "uploadImage запущен")
-//        var message: String
-//        val fileRequest = file.asRequestBody(("image/".toMediaTypeOrNull()))
-//        val usernameRequest = USER_ID.toRequestBody(("text/plain".toMediaTypeOrNull()))
-//
-//        withContext(Dispatchers.IO) {
-//            try {
-//                message = catsApi.uploadImage(fileRequest, usernameRequest).message
-//                Log.d("M_CatsRepository", message)
-//            } catch (e: IOException) {
-//                message = e.message.toString()
-//                Log.d("M_CatsRepository", "Ошибка при загрузке изображения на сервер: ${e.message}")
-//            }
-//        }
-//        return message
-//    }
 
     suspend fun getBreedsArray(): List<FilterItem> = withContext(Dispatchers.IO) { catsApi.getBreeds() }
+
     suspend fun getCategoriesArray(): List<FilterItem> = withContext(Dispatchers.IO) { catsApi.getCategories() }
 
     suspend fun postVote(imageId: String, voteValue: Int): NetworkResponse {
@@ -149,6 +133,10 @@ class CatsRepository @Inject constructor(private val catsApi: CatsApiService) {
         val message: String
         withContext(Dispatchers.IO) { message = catsApi.deleteVote(voteId).message }
         return message
+    }
+
+    suspend fun deleteUploadedImage(imageId: String) {
+        withContext(Dispatchers.IO) { catsApi.deleteUploaded(imageId) }
     }
 
 }

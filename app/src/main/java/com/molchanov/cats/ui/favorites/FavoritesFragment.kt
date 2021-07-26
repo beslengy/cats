@@ -121,6 +121,8 @@ class FavoritesFragment : Fragment(R.layout.fragment_favorites), ItemClickListen
         viewModel.displayCatCard(selectedImage)
     }
 
+    override fun onItemLongTap(selectedImage: CatItem) {}
+
     override fun onFavoriteBtnClicked(selectedImage: CatItem) {
         viewModel.deleteFromFavorites(selectedImage)
         binding.apply {

@@ -28,4 +28,5 @@ data class CatItem(
 
     val imageUrl: String = url ?: image!!.url
     var isFavorite = (favourite != null || image != null)
+    val isUploaded = filename != null
 }

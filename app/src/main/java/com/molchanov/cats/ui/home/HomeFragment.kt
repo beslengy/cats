@@ -60,6 +60,10 @@ class HomeFragment : Fragment(R.layout.fragment_home), ItemClickListener {
         super.onViewCreated(view, savedInstanceState)
         Log.d("M_HomeFragment", "onViewCreated")
 
+        viewModel.homeImages.value?.let {
+            viewModel.setQuery()
+        }
+
         //Настраиваем recyclerView
         binding.apply {
             rvHome.apply {
@@ -146,6 +150,7 @@ class HomeFragment : Fragment(R.layout.fragment_home), ItemClickListener {
         Log.d("M_HomeFragment", "$selectedImage")
         viewModel.displayCatCard(selectedImage)
     }
+    override fun onItemLongTap(selectedImage: CatItem) {}
 
     //Прослушиватель нажатия на кнопку "сердечко"
     override fun onFavoriteBtnClicked(selectedImage: CatItem) {

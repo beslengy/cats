@@ -122,7 +122,6 @@ class HomeViewModel @Inject constructor(
         Log.d("M_HomeViewModel", "query = ${currentQuery.value}")
     }
 
-
     companion object {
         private const val CURRENT_QUERY = "current_query"
         private val DEFAULT_QUERY = mapOf(

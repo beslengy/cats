@@ -67,8 +67,6 @@ class CatCardFragment : Fragment(R.layout.fragment_cat_card) {
         return binding.root
     }
 
-
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         Log.d("M_CatCardFragment", "onViewCreated")

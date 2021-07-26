@@ -1,6 +1,5 @@
 package com.molchanov.cats.viewmodels.uploaded
 
-import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -8,9 +7,11 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
 import com.molchanov.cats.data.CatsRepository
 import com.molchanov.cats.network.networkmodels.CatItem
+import com.molchanov.cats.utils.CURRENT_PHOTO_PATH
 import com.molchanov.cats.utils.Functions.showToast
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import okhttp3.MultipartBody
 import java.io.File
 import javax.inject.Inject
 
@@ -18,7 +19,7 @@ import javax.inject.Inject
 class UploadedViewModel @Inject constructor(private val repository: CatsRepository) : ViewModel() {
 
     val uploadedImages = repository.getUploadedList().cachedIn(viewModelScope)
-
+    val onImageUploaded = MutableLiveData(false)
 
     private val response = MutableLiveData<String>()
 
@@ -32,20 +33,24 @@ class UploadedViewModel @Inject constructor(private val repository: CatsReposito
     fun displayCatCardComplete() {
         navigateToCard.value = null
     }
-    fun uploadFileByUri(uri: Uri?) {
-        Log.d("M_UploadedViewModel", "uploadFileByUri запущен")
-        if (uri != null) {
+    fun uploadFile(filePart: MultipartBody.Part?) {
+        println(filePart)
+        filePart?.let {
             viewModelScope.launch {
                 try {
-                    response.value = repository.uploadImage(File(uri.toString()))
-                    Log.d("M_UploadedViewModel", "Картинка успешно загружена на сервер: ${response.value}")
+                    repository.uploadImage(it)
+                    showToast("Изображение загружено")
+                    val file = File(CURRENT_PHOTO_PATH)
+                    if(CURRENT_PHOTO_PATH.isNotEmpty())
+                        if (file.exists())
+                            file.delete()
+                    onImageUploaded.value = !(onImageUploaded.value!!)
+
                 } catch (e: Exception) {
-                    Log.d("M_UploadedViewModel", "Ошибка при загрузке изображения на сервер: ${e.message}")
+                    Log.d("M_UploadedViewModel", "Ошибка при загрузке фото на сервер: ${e.message}")
+                    e.printStackTrace()
                 }
             }
-        } else {
-            showToast("uri is null")
-            Log.d("M_UploadedViewModel", "uploadFileByUri: uri is null")
         }
     }
 }

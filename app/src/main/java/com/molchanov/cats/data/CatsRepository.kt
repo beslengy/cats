@@ -8,13 +8,9 @@ import androidx.paging.PagingData
 import androidx.paging.liveData
 import com.molchanov.cats.network.CatsApiService
 import com.molchanov.cats.network.networkmodels.*
-import com.molchanov.cats.utils.USER_ID
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import okhttp3.MediaType.Companion.toMediaTypeOrNull
-import okhttp3.RequestBody.Companion.asRequestBody
-import okhttp3.RequestBody.Companion.toRequestBody
-import java.io.File
+import okhttp3.MultipartBody
 import java.io.IOException
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -110,23 +106,34 @@ class CatsRepository @Inject constructor(private val catsApi: CatsApiService) {
     }
 
 
-    suspend fun uploadImage(file: File): String {
+    suspend fun uploadImage(file: MultipartBody.Part) {
         Log.d("M_CatsRepository", "uploadImage запущен")
-        var message: String
-        val fileRequest = file.asRequestBody(("image/".toMediaTypeOrNull()))
-        val usernameRequest = USER_ID.toRequestBody(("text/plain".toMediaTypeOrNull()))
-
         withContext(Dispatchers.IO) {
             try {
-                message = catsApi.uploadImage(fileRequest, usernameRequest).message
-                Log.d("M_CatsRepository", message)
-            } catch (e: IOException) {
-                message = e.message.toString()
+                catsApi.uploadImage(file)
+
+            } catch (e: Exception) {
                 Log.d("M_CatsRepository", "Ошибка при загрузке изображения на сервер: ${e.message}")
             }
         }
-        return message
     }
+//    suspend fun uploadImage(file: File): String {
+//        Log.d("M_CatsRepository", "uploadImage запущен")
+//        var message: String
+//        val fileRequest = file.asRequestBody(("image/".toMediaTypeOrNull()))
+//        val usernameRequest = USER_ID.toRequestBody(("text/plain".toMediaTypeOrNull()))
+//
+//        withContext(Dispatchers.IO) {
+//            try {
+//                message = catsApi.uploadImage(fileRequest, usernameRequest).message
+//                Log.d("M_CatsRepository", message)
+//            } catch (e: IOException) {
+//                message = e.message.toString()
+//                Log.d("M_CatsRepository", "Ошибка при загрузке изображения на сервер: ${e.message}")
+//            }
+//        }
+//        return message
+//    }
 
     suspend fun getBreedsArray(): List<FilterItem> = withContext(Dispatchers.IO) { catsApi.getBreeds() }
     suspend fun getCategoriesArray(): List<FilterItem> = withContext(Dispatchers.IO) { catsApi.getCategories() }

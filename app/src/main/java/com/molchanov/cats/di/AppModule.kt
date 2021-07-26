@@ -46,8 +46,8 @@ object AppModule {
     @Singleton
     fun provideOkhttpClient(): OkHttpClient =
         OkHttpClient().newBuilder()
+            .retryOnConnectionFailure(true)
             .addInterceptor {
-
                 val request = it.request().newBuilder()
                     .header("x-api-key", "177e2034-b213-4178-834f-a3d237cc68ad")
                     .build()

@@ -2,7 +2,7 @@ package com.molchanov.cats.network
 
 import com.molchanov.cats.network.networkmodels.*
 import com.molchanov.cats.utils.USER_ID
-import okhttp3.RequestBody
+import okhttp3.MultipartBody
 import retrofit2.http.*
 
 interface CatsApiService {
@@ -64,10 +64,10 @@ interface CatsApiService {
      * Метод для загрузки картинки на сервер
      */
     @Multipart
-    @POST("/images/upload")
+    @POST("images/upload")
     suspend fun uploadImage(
-        @Part("file") file: RequestBody,
-        @Part("sub_id") username: RequestBody
+        @Part file: MultipartBody.Part,
+        @Part("sub_id") username: String = USER_ID
     ): NetworkResponse
 
     @GET("breeds")

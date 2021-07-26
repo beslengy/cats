@@ -1,5 +1,6 @@
 package com.molchanov.cats.utils
 
+import android.app.Activity.RESULT_CANCELED
 import android.app.Activity.RESULT_OK
 import android.content.Context
 import android.content.Intent
@@ -7,33 +8,40 @@ import android.net.Uri
 import android.provider.MediaStore
 import androidx.activity.result.contract.ActivityResultContract
 
-class GalleryContract : ActivityResultContract<String, Uri>() {
+class GalleryContract : ActivityResultContract<String, Boolean>() {
     override fun createIntent(context: Context, input: String?): Intent {
         val intent = Intent().apply {
             action = Intent.ACTION_PICK
             type = input
-        }.also {
-            CURRENT_PHOTO_PATH = it.data?.path.toString()
         }
         return Intent.createChooser(intent, "Выберите приложение")
     }
 
-    override fun parseResult(resultCode: Int, intent: Intent?): Uri? = when {
-        resultCode != RESULT_OK -> null
-        else -> intent?.data
+    override fun parseResult(resultCode: Int, intent: Intent?): Boolean = when {
+        resultCode != RESULT_OK -> false
+        resultCode == RESULT_CANCELED -> false
+        else -> {
+            intent?.data?.let {
+                CURRENT_IMAGE_URI = it
+                CURRENT_PHOTO_PATH = ""
+            }
+            intent != null
+        }
     }
 }
 
-class PhotoContract : ActivityResultContract<Uri, Uri>() {
+class PhotoContract : ActivityResultContract<Uri, Boolean>() {
     override fun createIntent(context: Context, input: Uri?): Intent {
-        return Intent().apply{
+        return Intent().apply {
             action = MediaStore.ACTION_IMAGE_CAPTURE
-            putExtra(MediaStore.EXTRA_OUTPUT,input)
+            putExtra(MediaStore.EXTRA_OUTPUT, input)
+            input?.let { CURRENT_IMAGE_URI = it }
         }
     }
 
-    override fun parseResult(resultCode: Int, intent: Intent?): Uri? = when {
-        resultCode != RESULT_OK -> null
-        else -> intent?.data
+    override fun parseResult(resultCode: Int, intent: Intent?): Boolean = when {
+        resultCode != RESULT_OK -> false
+        resultCode == RESULT_CANCELED -> false
+        else -> intent != null
     }
 }

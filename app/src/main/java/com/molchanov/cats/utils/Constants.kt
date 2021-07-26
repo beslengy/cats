@@ -1,6 +1,7 @@
 package com.molchanov.cats.utils
 
 
+import android.net.Uri
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -16,6 +17,7 @@ lateinit var CURRENT_PHOTO_PATH: String
 lateinit var APP_BAR: AppBarLayout
 lateinit var BOTTOM_NAV_BAR: BottomNavigationView
 lateinit var VOTE_LAYOUT: ConstraintLayout
+lateinit var CURRENT_IMAGE_URI: Uri
 
 
 

@@ -1,6 +1,8 @@
 package com.molchanov.cats.ui.uploaded
 
+import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -21,6 +23,11 @@ import com.molchanov.cats.utils.*
 import com.molchanov.cats.utils.Functions.setupManager
 import com.molchanov.cats.viewmodels.uploaded.UploadedViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
+import java.io.File
 import javax.inject.Inject
 import javax.inject.Provider
 
@@ -37,12 +44,26 @@ class UploadedFragment : Fragment(R.layout.fragment_uploaded), ItemClickListener
     private val headerAdapter = CatsLoadStateAdapter { adapter.retry() }
     private val footerAdapter = CatsLoadStateAdapter { adapter.retry() }
 
+//    private val fileUri by lazy {
+//        Uri.fromFile(File(CURRENT_PHOTO_PATH))
+//    }
+
 
     private val cameraContract = registerForActivityResult(PhotoContract()) {
-        uploadedViewModel.uploadFileByUri(it)
+        Log.d("M_UploadedFragment", "Camera contract result: $it")
+        if (it) {
+            prepareFilePart(CURRENT_IMAGE_URI)?.let { part->
+                uploadedViewModel.uploadFile(part)
+            }
+        }
     }
     private val galleryContract = registerForActivityResult(GalleryContract()) {
-        uploadedViewModel.uploadFileByUri(it)
+        Log.d("M_UploadedFragment", "Gallery contract result: $it")
+        if (it) {
+            prepareFilePart(CURRENT_IMAGE_URI)?.let { part ->
+                uploadedViewModel.uploadFile(part)
+            }
+        }
     }
 
     override fun onCreateView(
@@ -93,6 +114,13 @@ class UploadedFragment : Fragment(R.layout.fragment_uploaded), ItemClickListener
             }
         })
 
+        uploadedViewModel.onImageUploaded.observe(viewLifecycleOwner) {
+            it?.let {
+                Log.d("M_UploadedFragment", "onImageUploaded сработал. Параметр: $it")
+                adapter.refresh()
+            }
+        }
+
         //Настраиваем видимость кнопки загрузки картинки
         FAB.visibility = View.VISIBLE
         FAB.setOnClickListener {
@@ -120,6 +148,15 @@ class UploadedFragment : Fragment(R.layout.fragment_uploaded), ItemClickListener
                 }
             }
         }
+    }
+
+    private fun prepareFilePart(fileUri: Uri): MultipartBody.Part? {
+        val file = File(fileUri.path!!)
+        val stream = context?.contentResolver?.openInputStream(fileUri)
+        val inputData: ByteArray? = stream?.readBytes()
+        val requestFile: RequestBody? =
+            inputData?.toRequestBody("image/jpeg".toMediaTypeOrNull())
+        return requestFile?.let { MultipartBody.Part.createFormData("file", file.name, it) }
     }
 
 

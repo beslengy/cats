@@ -19,6 +19,7 @@ import javax.inject.Singleton
 class CatsRepository @Inject constructor(private val catsApi: CatsApiService) {
     var cats: List<CatItem> = listOf()
     private lateinit var cat: CatDetail
+    private var analysis: Analysis? = null
 
     fun getCatList(query: Map<String, String>): LiveData<PagingData<CatItem>> {
         Log.d("M_CatsRepository", "getCatList запущен")
@@ -137,6 +138,18 @@ class CatsRepository @Inject constructor(private val catsApi: CatsApiService) {
 
     suspend fun deleteUploadedImage(imageId: String) {
         withContext(Dispatchers.IO) { catsApi.deleteUploaded(imageId) }
+    }
+
+    suspend fun getAnalysis(imageId: String) : Analysis? {
+        withContext(Dispatchers.IO) {
+            try {
+                analysis = catsApi.getAnalysis(imageId)[0]
+            } catch (e: IOException) {
+                Log.d("M_CatsRepository", "Ошибка при получении анализа картинки: ${e.message}")
+            }
+
+        }
+        return analysis
     }
 
 }

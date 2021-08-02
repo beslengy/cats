@@ -7,6 +7,7 @@ import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.molchanov.cats.R
+import com.molchanov.cats.network.networkmodels.Analysis
 import com.molchanov.cats.network.networkmodels.CatDetail
 
 
@@ -33,7 +34,20 @@ fun ImageView.bindImage(imageUrl: String?) {
     }
 }
 
-fun TextView.bindCardText(data: CatDetail?) {
+fun TextView.setAnalysisText(data: Analysis?) {
+    data?.labels?.let { labels ->
+        text =
+            StringBuilder().apply {
+                appendLine("ANALYSIS")
+                for (label in labels) {
+                    appendLine("${label.name}: ${label.confidence.toInt()}%\n")
+                }
+
+            }
+    }
+}
+
+fun TextView.setCardText(data: CatDetail?) {
     data?.breeds?.get(0)?.let {
         text =
             StringBuilder().apply {

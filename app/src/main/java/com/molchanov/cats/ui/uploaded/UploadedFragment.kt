@@ -94,18 +94,21 @@ class UploadedFragment : Fragment(R.layout.fragment_uploaded), ItemClickListener
                     this.isRefreshing = false
                 }
             }
+            fab.setOnClickListener {
+                selectImage()
+            }
         }
 
         uploadedViewModel.uploadedImages.observe(viewLifecycleOwner) {
             it?.let { adapter.submitData(viewLifecycleOwner.lifecycle, it) }
         }
 
-        uploadedViewModel.navigateToCard.observe(viewLifecycleOwner, {
+        uploadedViewModel.navigateToAnalysis.observe(viewLifecycleOwner, {
             if (it != null) {
                 this.findNavController().navigate(
-                    UploadedFragmentDirections.actionUploadedFragmentToCatCardFragment(it.id)
+                    UploadedFragmentDirections.actionUploadedFragmentToCatCardFragment(analysis = it)
                 )
-                uploadedViewModel.displayCatCardComplete()
+                uploadedViewModel.displayAnalysisComplete()
             }
         })
 
@@ -116,13 +119,15 @@ class UploadedFragment : Fragment(R.layout.fragment_uploaded), ItemClickListener
             }
         }
 
-        adapter.setItemLongTapAble(true)
-        //Настраиваем видимость кнопки загрузки картинки
-        FAB.visibility = View.VISIBLE
-        FAB.setOnClickListener {
-            selectImage()
-        }
 
+
+        //Настраиваем видимость кнопки загрузки картинки
+
+
+        //Настраиваем долгое нажатие на итем
+        adapter.setItemLongTapAble(true)
+
+        //Настраиваем видимость элементов в зависимости от состояния PagedList
         adapter.addLoadStateListener { loadState ->
             binding.apply {
                 pb.isVisible = loadState.source.refresh is LoadState.Loading
@@ -146,6 +151,11 @@ class UploadedFragment : Fragment(R.layout.fragment_uploaded), ItemClickListener
         }
     }
 
+    /**
+     * Метод возвращает находящийся по Uri файл в формате [MultipartBody.Part].
+     * @param [fileUri] - [Uri] необходимого файла
+     * @return [MultipartBody.Part]
+     */
     private fun prepareFilePart(fileUri: Uri): MultipartBody.Part? {
         val file = File(fileUri.path!!)
         val stream = context?.contentResolver?.openInputStream(fileUri)
@@ -155,7 +165,11 @@ class UploadedFragment : Fragment(R.layout.fragment_uploaded), ItemClickListener
         return requestFile?.let { MultipartBody.Part.createFormData("file", file.name, it) }
     }
 
-
+    /**
+     * Метод открывает [диалоговое окно][MaterialAlertDialogBuilder], в котором предоставляет
+     * возможность выбрать источник изображения - камера или галерея. Выбор вызывает
+     * соответствующие контракты - [PhotoContract] или [GalleryContract]
+     */
     private fun selectImage() {
         val items = arrayOf(resources.getString(R.string.dialog_btn_camera),
             resources.getString(R.string.dialog_btn_gallery))
@@ -175,7 +189,7 @@ class UploadedFragment : Fragment(R.layout.fragment_uploaded), ItemClickListener
     }
 
     override fun onItemClicked(selectedImage: CatItem) {
-        uploadedViewModel.displayCatCard(selectedImage)
+        uploadedViewModel.displayAnalysis(selectedImage)
     }
     override fun onItemLongTap(selectedImage: CatItem) {
         uploadedViewModel.deleteImageFromServer(selectedImage)

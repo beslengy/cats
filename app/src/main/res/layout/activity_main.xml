@@ -20,7 +20,7 @@
             android:layout_height="match_parent"
             android:fitsSystemWindows="true"
             app:contentScrim="?attr/colorPrimary"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed|snap"
             app:titleEnabled="false"
             app:toolbarId="@+id/toolbar">
 
@@ -56,19 +56,6 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         app:navGraph="@navigation/nav_graph"
         tools:ignore="FragmentTagUsage" />
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_marginEnd="@dimen/spacing_normal_16"
-        android:layout_marginBottom="@dimen/fab_margin_74"
-        android:visibility="gone"
-        app:fabSize="normal"
-        app:srcCompat="@drawable/ic_plus"
-        tools:ignore="ContentDescription"
-        tools:visibility="visible" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation"

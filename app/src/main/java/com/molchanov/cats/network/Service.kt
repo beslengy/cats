@@ -84,8 +84,15 @@ interface CatsApiService {
 
     /**
      * Метод для получения анализа картинки
+     */
+    @GET("images/{image_id}/analysis")
+    suspend fun getAnalysis(@Path("image_id") imageId: String): List<Analysis?>
+
+    /**
+     * Метод для получения всех проголосованных котиков
      * TODO: Метод для получения анализа картинки
      */
+
 
     /**
      * Метод для голосования

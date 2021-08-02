@@ -37,7 +37,6 @@ class MainActivity : AppCompatActivity() {
         APP_BAR = binding.appBar
         BOTTOM_NAV_BAR = binding.bottomNavigation
         VOTE_LAYOUT = binding.voteButtonsLayout.voteButtonsLayout
-        FAB = binding.fab
         binding.toolbarImage.apply {
             if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
                 maxHeight =

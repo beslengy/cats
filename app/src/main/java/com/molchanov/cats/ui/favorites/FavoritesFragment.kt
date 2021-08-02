@@ -77,9 +77,6 @@ class FavoritesFragment : Fragment(R.layout.fragment_favorites), ItemClickListen
             }
         }
 
-        //Настраиваем видимость кнопки загрузки картинки
-        activity?.findViewById<FloatingActionButton>(R.id.fab)?.visibility = View.GONE
-
         viewModel.favoriteImages.observe(viewLifecycleOwner) {
             it?.let { adapter.submitData(viewLifecycleOwner.lifecycle, it) }
         }
@@ -92,6 +89,7 @@ class FavoritesFragment : Fragment(R.layout.fragment_favorites), ItemClickListen
                 viewModel.displayCatCardComplete()
             }
         })
+
         adapter.addLoadStateListener { loadState ->
             binding.apply {
                 pb.isVisible = loadState.refresh is LoadState.Loading

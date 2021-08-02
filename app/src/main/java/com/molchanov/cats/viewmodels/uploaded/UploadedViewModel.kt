@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
 import com.molchanov.cats.R
 import com.molchanov.cats.data.CatsRepository
+import com.molchanov.cats.network.networkmodels.Analysis
 import com.molchanov.cats.network.networkmodels.CatItem
 import com.molchanov.cats.utils.APP_ACTIVITY
 import com.molchanov.cats.utils.CURRENT_PHOTO_PATH
@@ -25,15 +26,20 @@ class UploadedViewModel @Inject constructor(private val repository: CatsReposito
 
     private val response = MutableLiveData<String>()
 
-    val navigateToCard = MutableLiveData<CatItem>()
+    val navigateToAnalysis = MutableLiveData<Analysis>()
 
 
-    fun displayCatCard(currentImage: CatItem) {
-        navigateToCard.value = currentImage
+    fun displayAnalysis(currentImage: CatItem) {
+        var analysis : Analysis?
+        viewModelScope.launch {
+            analysis = repository.getAnalysis(currentImage.id)
+            analysis?.imageUrl = currentImage.imageUrl
+            navigateToAnalysis.value = analysis
+        }
     }
 
-    fun displayCatCardComplete() {
-        navigateToCard.value = null
+    fun displayAnalysisComplete() {
+        navigateToAnalysis.value = null
     }
 
     fun uploadFile(filePart: MultipartBody.Part?) {

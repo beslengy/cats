@@ -7,9 +7,3 @@ interface ItemClickListener {
     fun onItemLongTap(selectedImage: CatItem)
     fun onFavoriteBtnClicked(selectedImage: CatItem)
 }
-//class ItemClickListener(
-//    val imageClickListener : (selectedImage: CatItem) -> Unit,
-//    val favoriteClickListener : (selectedImage: CatItem) -> Unit) {
-//    fun onItemClicked(selectedImage: CatItem) = imageClickListener(selectedImage)
-//    fun onFavoriteBtnClicked(selectedImage: CatItem) = favoriteClickListener(selectedImage)
-//}

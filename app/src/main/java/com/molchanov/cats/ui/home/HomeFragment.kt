@@ -13,7 +13,6 @@ import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.GridLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.molchanov.cats.R
 import com.molchanov.cats.databinding.FragmentFilterBinding
 import com.molchanov.cats.databinding.FragmentHomeBinding
@@ -60,10 +59,6 @@ class HomeFragment : Fragment(R.layout.fragment_home), ItemClickListener {
         super.onViewCreated(view, savedInstanceState)
         Log.d("M_HomeFragment", "onViewCreated")
 
-        viewModel.homeImages.value?.let {
-            viewModel.setQuery()
-        }
-
         //Настраиваем recyclerView
         binding.apply {
             rvHome.apply {
@@ -88,7 +83,8 @@ class HomeFragment : Fragment(R.layout.fragment_home), ItemClickListener {
                 adapter.retry()
             }
         }
-        //Настраиваем видимость элементов в зависимости от состояния
+
+        //Настраиваем видимость элементов в зависимости от состояния PagedList
         adapter.addLoadStateListener { loadState ->
             binding.apply {
                 //Загрузка
@@ -113,9 +109,6 @@ class HomeFragment : Fragment(R.layout.fragment_home), ItemClickListener {
                 }
             }
         }
-
-        //Настраиваем видимость кнопки загрузки картинки
-        activity?.findViewById<FloatingActionButton>(R.id.fab)?.visibility = View.GONE
 
         //Наблюдатель списка картинок. Обновляет адаптер при изменении
         viewModel.homeImages.observe(viewLifecycleOwner)

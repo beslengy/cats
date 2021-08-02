@@ -45,7 +45,7 @@ class PageAdapter(private val itemClickListener: ItemClickListener) :
                     setOnClickListener {
                         itemClickListener.onItemClicked(image)
                     }
-                    if(itemLongClickable) setOnLongClickListener {
+                    if (itemLongClickable) setOnLongClickListener {
                         val popup = PopupMenu(APP_ACTIVITY, this)
                         popup.apply {
                             inflate(R.menu.delete_uploaded_menu)
@@ -74,18 +74,7 @@ class PageAdapter(private val itemClickListener: ItemClickListener) :
                         APP_ACTIVITY.theme))
                 }
             }
-
         }
-
-//        companion object {
-//            fun from(parent: ViewGroup): ViewHolder {
-//                return ViewHolder(
-//                    ImageItemBinding.inflate(
-//                        LayoutInflater.from(parent.context)
-//                    )
-//                )
-//            }
-//        }
     }
 
     companion object {
@@ -99,6 +88,7 @@ class PageAdapter(private val itemClickListener: ItemClickListener) :
                 oldItem == newItem
         }
     }
+
     fun setItemLongTapAble(boolean: Boolean) {
         itemLongClickable = boolean
     }

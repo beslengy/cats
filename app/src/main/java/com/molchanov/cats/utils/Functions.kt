@@ -57,5 +57,9 @@ object Functions {
             }
         })
     }
+
+    fun getResString(id: Int) : String {
+        return APP_ACTIVITY.resources.getString(id)
+    }
 }
 

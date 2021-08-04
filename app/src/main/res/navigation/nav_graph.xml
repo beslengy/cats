@@ -42,10 +42,6 @@
             app:nullable="true"
             android:defaultValue="null" />
         <argument
-            android:name="voteValue"
-            app:argType="integer"
-            android:defaultValue="-1" />
-        <argument
             android:name="analysis"
             app:argType="com.molchanov.cats.network.networkmodels.Analysis"
             app:nullable="true"

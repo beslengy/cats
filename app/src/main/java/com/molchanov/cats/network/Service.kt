@@ -90,8 +90,13 @@ interface CatsApiService {
 
     /**
      * Метод для получения всех проголосованных котиков
-     * TODO: Метод для получения анализа картинки
      */
+    @GET("votes")
+    suspend fun getAllVotes(
+        @Query("limit") limit: Int = 100,
+        @Query("page") page: Int = 0,
+        @Query("sub_id") username: String = USER_ID
+    ) : List<Vote>
 
 
     /**

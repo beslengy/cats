@@ -9,8 +9,10 @@ import com.molchanov.cats.R
 import com.molchanov.cats.data.CatsRepository
 import com.molchanov.cats.network.networkmodels.Analysis
 import com.molchanov.cats.network.networkmodels.CatItem
+import com.molchanov.cats.network.networkmodels.NetworkResponse
 import com.molchanov.cats.utils.APP_ACTIVITY
 import com.molchanov.cats.utils.CURRENT_PHOTO_PATH
+import com.molchanov.cats.utils.Functions.getResString
 import com.molchanov.cats.utils.Functions.showToast
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -24,13 +26,13 @@ class UploadedViewModel @Inject constructor(private val repository: CatsReposito
     val uploadedImages = repository.getUploadedList().cachedIn(viewModelScope)
     val onRefreshTrigger = MutableLiveData(false)
 
-    private val response = MutableLiveData<String>()
+    private val response = MutableLiveData<NetworkResponse>()
 
     val navigateToAnalysis = MutableLiveData<Analysis>()
 
 
     fun displayAnalysis(currentImage: CatItem) {
-        var analysis : Analysis?
+        var analysis: Analysis?
         viewModelScope.launch {
             analysis = repository.getAnalysis(currentImage.id)
             analysis?.imageUrl = currentImage.imageUrl
@@ -43,21 +45,23 @@ class UploadedViewModel @Inject constructor(private val repository: CatsReposito
     }
 
     fun uploadFile(filePart: MultipartBody.Part?) {
-        showToast(APP_ACTIVITY.resources.getString(R.string.upload_start_toast_text))
+        showToast(getResString(R.string.upload_start_toast_text))
         filePart?.let {
             viewModelScope.launch {
                 try {
-                    repository.uploadImage(it)
-                    showToast(APP_ACTIVITY.resources.getString(R.string.upload_end_toast_text))
+                    response.value = repository.uploadImage(it)
+                    Log.d("M_UploadedViewModel", "response.value: ${response.value}")
                     val file = File(CURRENT_PHOTO_PATH)
                     if (CURRENT_PHOTO_PATH.isNotEmpty())
                         if (file.exists())
                             file.delete()
                     onRefreshTrigger.value = !(onRefreshTrigger.value!!)
+                    showToast(getResString(R.string.upload_end_toast_text))
 
-                } catch (e: Exception) {
-                    Log.d("M_UploadedViewModel", "Ошибка при загрузке фото на сервер: ${e.message}")
-                    e.printStackTrace()
+                } catch (e: Exception){
+                    showToast(getResString(R.string.upload_fail_toast_text))
+                    Log.d("M_UploadedViewModel", "(uploadFile) Ошибка при загрузке изображения:" +
+                            "${e.message}, ${e.cause}")
                 }
             }
         }

@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.molchanov.cats.data.CatsRepository
 import com.molchanov.cats.network.networkmodels.Analysis
 import com.molchanov.cats.network.networkmodels.CatDetail
+import com.molchanov.cats.network.networkmodels.Vote
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -26,9 +27,11 @@ class CatCardViewModel @Inject constructor(
 
     val cat = MutableLiveData<CatDetail>()
     val analysis = MutableLiveData<Analysis?>(handle.get("analysis"))
+    private val votes = MutableLiveData<List<Vote>>()
+
 
     private val imageId: String? = handle.get("imageId")
-    val voteValue: MutableLiveData<Int> = handle.getLiveData("voteValue")
+    val voteValue = MutableLiveData(NOT_VOTED_VALUE)
 
     private var voteId: String = ""
 
@@ -38,6 +41,24 @@ class CatCardViewModel @Inject constructor(
         Log.d("M_CatCardViewModel", "init. Analysis = ${analysis.value}")
         if (analysis.value == null) {
             getCat()
+            setVoteValue()
+        }
+    }
+
+    private fun setVoteValue() {
+        viewModelScope.launch {
+            votes.value = repository.getVotes()
+            votes.value?.let { votes ->
+                for (v in votes) {
+                    if (v.imageId == imageId) {
+                        voteValue.value = v.value
+                        voteId = v.voteId
+                        break
+                    } else {
+                        voteValue.value = NOT_VOTED_VALUE
+                    }
+                }
+            }
         }
     }
 

@@ -23,7 +23,7 @@ fun ImageView.bindImage(imageUrl: String?) {
 
         Glide.with(this.context)
             .load(imgUri)
-//            .transition(DrawableTransitionOptions.withCrossFade())
+            //.transition(DrawableTransitionOptions.withCrossFade())
             .apply(
                 RequestOptions()
                     .placeholder(circularProgressDrawable)
@@ -38,11 +38,10 @@ fun TextView.setAnalysisText(data: Analysis?) {
     data?.labels?.let { labels ->
         text =
             StringBuilder().apply {
-                appendLine("ANALYSIS")
+                appendLine("ANALYSIS\n")
                 for (label in labels) {
                     appendLine("${label.name}: ${label.confidence.toInt()}%\n")
                 }
-
             }
     }
 }
@@ -51,7 +50,7 @@ fun TextView.setCardText(data: CatDetail?) {
     data?.breeds?.get(0)?.let {
         text =
             StringBuilder().apply {
-                appendLine("CAT INFO")
+                appendLine("CAT INFO\n")
                 if (!it.name.isNullOrEmpty()) {
                     append("Name: ")
                     appendLine("\t${it.name}\n")
@@ -59,7 +58,6 @@ fun TextView.setCardText(data: CatDetail?) {
                 if (!it.altNames.isNullOrEmpty()) {
                     append("Alternative names: ")
                     appendLine("\t${it.altNames}\n")
-
                 }
                 if (!it.temperament.isNullOrEmpty()) {
                     append("Temperament: ")
@@ -69,18 +67,9 @@ fun TextView.setCardText(data: CatDetail?) {
                     appendLine("Description:")
                     appendLine("${it.description}\n")
                 }
-
             }
     }
 }
-
-//fun ImageButton.setVoteUpButton(voteState: VoteStates) {
-//    when(voteState) {
-//        VoteStates.VOTE_UP -> this.apply{
-//
-//        }
-//    }
-//}
 
 
 

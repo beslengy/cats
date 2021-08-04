@@ -9,14 +9,8 @@ data class CatItem(
     val url: String? = null,
     val image: Image? = null,
     @Json(name = "original_filename") val filename: String? = null,
-    var vote: Vote? = null,
     var favourite: Favourite? = null,
 ) {
-    data class Vote(
-        @Json(name = "id") val voteId: String,
-        val value: Int,
-    )
-
     data class Favourite(
         @Json(name = "id") val favId: String,
     )

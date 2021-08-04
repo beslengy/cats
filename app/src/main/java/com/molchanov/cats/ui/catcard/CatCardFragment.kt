@@ -37,8 +37,8 @@ class CatCardFragment : Fragment(R.layout.fragment_cat_card) {
     private lateinit var voteState: VoteStates
     private val viewModel: CatCardViewModel by viewModels()
 
-    private lateinit var voteUpButton : ImageButton
-    private lateinit var voteDownButton : ImageButton
+    private lateinit var voteUpButton: ImageButton
+    private lateinit var voteDownButton: ImageButton
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -153,7 +153,7 @@ class CatCardFragment : Fragment(R.layout.fragment_cat_card) {
         BOTTOM_NAV_BAR.isVisible = !visibility
         setDraggableAppBar(visibility)
         enableExpandedToolbar(visibility)
-        VOTE_LAYOUT.isVisible = visibility
+        VOTE_LAYOUT.isVisible = if (visibility) viewModel.analysis.value == null else visibility
     }
 
     private fun getVoteButtons() {
@@ -163,7 +163,7 @@ class CatCardFragment : Fragment(R.layout.fragment_cat_card) {
 
     private fun setVoteButtons(voteState: VoteStates) {
         voteUpButton.setOnClickListener {
-            when(voteState) {
+            when (voteState) {
                 NOT_VOTED, VOTE_DOWN -> {
                     viewModel.voteUp()
                 }
@@ -171,10 +171,9 @@ class CatCardFragment : Fragment(R.layout.fragment_cat_card) {
                     viewModel.removeVote()
                 }
             }
-
         }
         voteDownButton.setOnClickListener {
-            when(voteState) {
+            when (voteState) {
                 NOT_VOTED, VOTE_UP -> {
                     viewModel.voteDown()
                 }

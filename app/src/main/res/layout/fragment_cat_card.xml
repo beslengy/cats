@@ -24,7 +24,6 @@
             app:layout_constraintVertical_weight="1"
             tools:textAppearance="@style/TextAppearance.AppCompat.Headline"
             tools:textSize="26sp"
-            android:paddingBottom="54dp"
             tools:text="@string/card_example"
             tools:visibility="visible" />
     </ScrollView>

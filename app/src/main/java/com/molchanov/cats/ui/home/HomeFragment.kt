@@ -116,21 +116,13 @@ class HomeFragment : Fragment(R.layout.fragment_home), ItemClickListener {
             it?.let { adapter.submitData(viewLifecycleOwner.lifecycle, it) }
         }
 
-        //Наблюдатель переменной навигации. Если у объекта есть параметр Vote, передает
-        //voteId карточке котика
+        //Наблюдатель переменной навигации.
         viewModel.navigateToCard.observe(viewLifecycleOwner,
             { catItem ->
                 catItem?.let {
-                    if (it.vote != null) {
-                        this.findNavController().navigate(
-                            HomeFragmentDirections
-                                .actionHomeFragmentToCatCardFragment(it.id, it.vote!!.value)
-                        )
-                    } else {
-                        this.findNavController().navigate(
-                            HomeFragmentDirections.actionHomeFragmentToCatCardFragment(it.id)
-                        )
-                    }
+                    this.findNavController().navigate(
+                        HomeFragmentDirections.actionHomeFragmentToCatCardFragment(it.id)
+                    )
                     viewModel.displayCatCardComplete()
                 }
             })
@@ -143,6 +135,7 @@ class HomeFragment : Fragment(R.layout.fragment_home), ItemClickListener {
         Log.d("M_HomeFragment", "$selectedImage")
         viewModel.displayCatCard(selectedImage)
     }
+
     override fun onItemLongTap(selectedImage: CatItem) {}
 
     //Прослушиватель нажатия на кнопку "сердечко"

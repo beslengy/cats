@@ -7,6 +7,7 @@
     <string name="already_deleted_from_favorites_toast_text">Уже удалено из избранного</string>
     <string name="upload_start_toast_text">Загрузка началась</string>
     <string name="upload_end_toast_text">Изображение успешно загружено</string>
+    <string name="upload_fail_toast_text">Ошибка при загрузке изображения</string>
     <string name="uploaded_image_is_deleted_toast_text">Изображение успешно удалено</string>
 
     <!-- Подписи фрагментов -->

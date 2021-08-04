@@ -17,7 +17,7 @@ import javax.inject.Singleton
 
 @Singleton
 class CatsRepository @Inject constructor(private val catsApi: CatsApiService) {
-    var cats: List<CatItem> = listOf()
+    var votes: List<Vote> = listOf()
     private lateinit var cat: CatDetail
     private var analysis: Analysis? = null
 
@@ -60,14 +60,6 @@ class CatsRepository @Inject constructor(private val catsApi: CatsApiService) {
             pagingSourceFactory = { UploadedPagingSource(catsApi) }
         ).liveData
 
-
-//    suspend fun refreshHome(): List<CatItem> {
-//        withContext(Dispatchers.IO) {
-//            cats = catsApi.getAllImages()
-//        }
-//        return cats
-//    }
-
     suspend fun addToFavoriteByImageId(imageId: String): String {
         val message: String
         val postFavorite = PostFavorite(imageId)
@@ -76,14 +68,6 @@ class CatsRepository @Inject constructor(private val catsApi: CatsApiService) {
         }
         return message
     }
-
-//    suspend fun refreshFavorites(): List<CatItem> {
-//        withContext(Dispatchers.IO) {
-//            cats = catsApi.getAllFavorites(FAV_QUERY_OPTIONS)
-//        }
-//        Log.d("M_CatsRepository", "Избранные картинки обновлены")
-//        return cats
-//    }
 
     suspend fun getCatById(imageId: String): CatDetail {
         withContext(Dispatchers.IO) {
@@ -107,16 +91,13 @@ class CatsRepository @Inject constructor(private val catsApi: CatsApiService) {
     }
 
 
-    suspend fun uploadImage(file: MultipartBody.Part) {
+    suspend fun uploadImage(file: MultipartBody.Part) : NetworkResponse {
         Log.d("M_CatsRepository", "uploadImage запущен")
+        val response: NetworkResponse
         withContext(Dispatchers.IO) {
-            try {
-                catsApi.uploadImage(file)
-
-            } catch (e: Exception) {
-                Log.d("M_CatsRepository", "Ошибка при загрузке изображения на сервер: ${e.message}")
-            }
+                response = catsApi.uploadImage(file)
         }
+        return response
     }
 
     suspend fun getBreedsArray(): List<FilterItem> = withContext(Dispatchers.IO) { catsApi.getBreeds() }
@@ -147,9 +128,18 @@ class CatsRepository @Inject constructor(private val catsApi: CatsApiService) {
             } catch (e: IOException) {
                 Log.d("M_CatsRepository", "Ошибка при получении анализа картинки: ${e.message}")
             }
-
         }
         return analysis
     }
 
+    suspend fun getVotes() : List<Vote> {
+        withContext(Dispatchers.IO) {
+            try {
+                votes = catsApi.getAllVotes()
+            } catch (e: IOException) {
+                Log.d("M_CatsRepository", "Ошибка при получении списка всех голосов")
+            }
+        }
+        return votes
+    }
 }

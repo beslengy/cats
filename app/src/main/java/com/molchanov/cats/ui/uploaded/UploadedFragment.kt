@@ -121,6 +121,7 @@ class UploadedFragment : Fragment(R.layout.fragment_uploaded), ItemClickListener
 
 
 
+
         //Настраиваем видимость кнопки загрузки картинки
 
 

@@ -122,6 +122,7 @@ class HomeFragment : Fragment(R.layout.fragment_home), ItemClickListener {
                         DELETE_FAV_FAIL -> R.string.already_deleted_from_favorites_toast_text
                     }
                 )
+                viewModel.toastShowComplete()
             }
         }
         //Наблюдатель списка картинок. Обновляет адаптер при изменении
@@ -140,7 +141,6 @@ class HomeFragment : Fragment(R.layout.fragment_home), ItemClickListener {
                     viewModel.displayCatCardComplete()
                 }
             })
-
         setHasOptionsMenu(true)
     }
 
@@ -154,12 +154,13 @@ class HomeFragment : Fragment(R.layout.fragment_home), ItemClickListener {
 
     //Прослушиватель нажатия на кнопку "сердечко"
     override fun onFavoriteBtnClicked(selectedImage: CatItem) {
+        Log.d("M_HomeFragment",
+            "selected image - $selectedImage, isFav = ${selectedImage.isFavorite}")
         if (!selectedImage.isFavorite) {
             viewModel.addToFavorites(selectedImage)
         } else {
             viewModel.deleteFromFavorites(selectedImage)
         }
-
     }
 
     //Фильтр
@@ -181,7 +182,6 @@ class HomeFragment : Fragment(R.layout.fragment_home), ItemClickListener {
 
             viewModel.currentFilterItem.observe(viewLifecycleOwner) {
                 itemsMenu?.setText(it?.name, false)
-
             }
 
             viewModel.currentFilterType.observe(viewLifecycleOwner) { type ->

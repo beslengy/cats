@@ -1,5 +1,6 @@
 package com.molchanov.cats.ui
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -33,7 +34,6 @@ class PageAdapter(private val itemClickListener: ItemClickListener) :
         }
     }
 
-
     inner class ViewHolder(private val binding: ImageItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
@@ -64,9 +64,11 @@ class PageAdapter(private val itemClickListener: ItemClickListener) :
                     setOnClickListener {
                         itemClickListener.onFavoriteBtnClicked(image)
                         val favIcon =
-                            if (image.isFavorite) R.drawable.ic_heart
+                            if (!image.isFavorite) R.drawable.ic_heart
                             else R.drawable.ic_heart_border
+                        Log.d("M_PageAdapter", "favIcon: ${image.isFavorite}")
                         this.setImageDrawable(getDrawable(resources, favIcon, APP_ACTIVITY.theme))
+                        Log.d("M_PageAdapter", "favIcon after work: ${image.isFavorite}")
                     }
                     if (image.isUploaded) this.visibility = View.GONE
                     if (image.isFavorite) this.setImageDrawable(getDrawable(resources,

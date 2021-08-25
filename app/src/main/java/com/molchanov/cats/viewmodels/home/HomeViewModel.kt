@@ -45,15 +45,20 @@ class HomeViewModel @Inject constructor(
     private val _categories = MutableLiveData<List<FilterItem>>()
     val categories: LiveData<List<FilterItem>> get() = _categories
 
-        init {
+    init {
         getCategories()
         getBreeds()
     }
+
     fun addToFavorites(currentImage: CatItem) {
+        Log.d("M_HomeViewModel", "addToFav")
         viewModelScope.launch {
             try {
                 val favId = repository.addToFavoriteByImageId(currentImage.id)
-                currentImage.favourite = CatItem.Favourite(favId)
+                currentImage.apply {
+                    favourite = CatItem.Favourite(favId)
+                    isFavorite = true
+                }
                 _toast.value = ToastRequest.ADD_FAV
             } catch (e: Exception) {
                 _toast.value = ToastRequest.ADD_FAV_FAIL
@@ -65,8 +70,12 @@ class HomeViewModel @Inject constructor(
         Log.d("M_HomeViewModel", "deleteFromFav")
         viewModelScope.launch {
             try {
-                cat.favourite?.favId?.let {
-                    repository.removeFavoriteByFavId(it)
+                cat.apply {
+                    favourite?.let {
+                        repository.removeFavoriteByFavId(it.favId)
+                        favourite = null
+                        isFavorite = false
+                    }
                     _toast.value = ToastRequest.DELETE_FAV
                 }
             } catch (e: Exception) {

@@ -12,7 +12,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.molchanov.cats.R
 import com.molchanov.cats.databinding.ImageItemBinding
 import com.molchanov.cats.network.networkmodels.CatItem
-import com.molchanov.cats.utils.APP_ACTIVITY
 import com.molchanov.cats.utils.bindImage
 
 class PageAdapter(private val itemClickListener: ItemClickListener) :
@@ -46,7 +45,7 @@ class PageAdapter(private val itemClickListener: ItemClickListener) :
                         itemClickListener.onItemClicked(image)
                     }
                     if (itemLongClickable) setOnLongClickListener {
-                        val popup = PopupMenu(APP_ACTIVITY, this)
+                        val popup = PopupMenu(context, this)
                         popup.apply {
                             inflate(R.menu.delete_uploaded_menu)
                             setOnMenuItemClickListener {
@@ -67,13 +66,13 @@ class PageAdapter(private val itemClickListener: ItemClickListener) :
                             if (!image.isFavorite) R.drawable.ic_heart
                             else R.drawable.ic_heart_border
                         Log.d("M_PageAdapter", "favIcon: ${image.isFavorite}")
-                        this.setImageDrawable(getDrawable(resources, favIcon, APP_ACTIVITY.theme))
+                        this.setImageDrawable(getDrawable(resources, favIcon, context.theme))
                         Log.d("M_PageAdapter", "favIcon after work: ${image.isFavorite}")
                     }
                     if (image.isUploaded) this.visibility = View.GONE
                     if (image.isFavorite) this.setImageDrawable(getDrawable(resources,
                         R.drawable.ic_heart,
-                        APP_ACTIVITY.theme))
+                        context.theme))
                 }
             }
         }

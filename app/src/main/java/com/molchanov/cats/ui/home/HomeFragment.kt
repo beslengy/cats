@@ -170,9 +170,9 @@ class HomeFragment : Fragment(R.layout.fragment_home), ItemClickListener {
 
         val filterItem = menu.findItem(R.id.action_filter)
         filterItem.setOnMenuItemClickListener {
-            val dialog = BottomSheetDialog(APP_ACTIVITY)
-            val view = LayoutInflater.from(APP_ACTIVITY).inflate(R.layout.fragment_filter,
-                APP_ACTIVITY.findViewById(R.id.ll_filter) as LinearLayout?)
+            val dialog = BottomSheetDialog(requireContext())
+            val view = LayoutInflater.from(context).inflate(R.layout.fragment_filter,
+                requireActivity().findViewById(R.id.ll_filter) as LinearLayout?)
             val dialogBinding = FragmentFilterBinding.bind(view)
             val typeMenu = dialogBinding.menuFilterType.editText as? AutoCompleteTextView
             val itemsMenu = dialogBinding.menuFilterItem.editText as? AutoCompleteTextView

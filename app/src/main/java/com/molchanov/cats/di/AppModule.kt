@@ -1,8 +1,6 @@
 package com.molchanov.cats.di
 
-import android.widget.ImageButton
 import androidx.recyclerview.widget.GridLayoutManager
-import com.molchanov.cats.R
 import com.molchanov.cats.network.CatsApiService
 import com.molchanov.cats.utils.APP_ACTIVITY
 import com.molchanov.cats.utils.BASE_URL
@@ -15,21 +13,17 @@ import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
-import javax.inject.Named
-import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModule {
     @Provides
-    @Singleton
     fun provideMoshi(): Moshi =
         Moshi.Builder()
             .addLast(KotlinJsonAdapterFactory())
             .build()
 
     @Provides
-    @Singleton
     fun provideRetrofit(moshi: Moshi, client: OkHttpClient): Retrofit =
         Retrofit.Builder()
             .baseUrl(BASE_URL)
@@ -38,12 +32,10 @@ object AppModule {
             .build()
 
     @Provides
-    @Singleton
     fun provideCatsApi(retrofit: Retrofit): CatsApiService =
         retrofit.create(CatsApiService::class.java)
 
     @Provides
-    @Singleton
     fun provideOkhttpClient(): OkHttpClient =
         OkHttpClient().newBuilder()
             .retryOnConnectionFailure(true)
@@ -59,13 +51,13 @@ object AppModule {
     @Provides
     fun getLayoutManager(): GridLayoutManager = GridLayoutManager(APP_ACTIVITY, 2, GridLayoutManager.VERTICAL, false)
 
-    @Provides
-    @Named("voteUp")
-    fun getVoteUpButton() : ImageButton = APP_ACTIVITY.findViewById(R.id.btn_like)
-
-    @Provides
-    @Named("voteDown")
-    fun getVoteDownButton() : ImageButton = APP_ACTIVITY.findViewById(R.id.btn_dislike)
+//    @Provides
+//    @Named("voteUp")
+//    fun getVoteUpButton() : ImageButton = APP_ACTIVITY.findViewById(R.id.btn_like)
+//
+//    @Provides
+//    @Named("voteDown")
+//    fun getVoteDownButton() : ImageButton = APP_ACTIVITY.findViewById(R.id.btn_dislike)
 
 }
 

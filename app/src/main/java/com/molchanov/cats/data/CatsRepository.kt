@@ -61,12 +61,13 @@ class CatsRepository @Inject constructor(private val catsApi: CatsApiService) {
         ).liveData
 
     suspend fun addToFavoriteByImageId(imageId: String): String {
-        val message: String
+        val favId: String
         val postFavorite = PostFavorite(imageId)
         withContext(Dispatchers.IO) {
-            message = catsApi.postFavorite(postFavorite).message
+            favId = catsApi.postFavorite(postFavorite).id
+            Log.d("M_CatsRepository", "fav id = $favId")
         }
-        return message
+        return favId
     }
 
     suspend fun getCatById(imageId: String): CatDetail {

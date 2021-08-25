@@ -1,7 +1,9 @@
 package com.molchanov.cats.utils
 
+import android.content.Context
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.core.net.toUri
 import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 import com.bumptech.glide.Glide
@@ -10,7 +12,12 @@ import com.molchanov.cats.R
 import com.molchanov.cats.network.networkmodels.Analysis
 import com.molchanov.cats.network.networkmodels.CatDetail
 
-
+fun Context.showToast(message: String) {
+    Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+}
+fun Context.showToast(resId: Int) {
+    Toast.makeText(this, resId, Toast.LENGTH_SHORT).show()
+}
 fun ImageView.bindImage(imageUrl: String?) {
     imageUrl?.let {
         val imgUri = it.toUri().buildUpon().scheme("https").build()

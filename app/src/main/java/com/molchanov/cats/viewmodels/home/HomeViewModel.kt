@@ -1,94 +1,103 @@
 package com.molchanov.cats.viewmodels.home
 
 
+import android.app.Application
 import android.util.Log
 import androidx.lifecycle.*
 import androidx.paging.cachedIn
-import com.molchanov.cats.R
 import com.molchanov.cats.data.CatsRepository
 import com.molchanov.cats.network.networkmodels.CatItem
 import com.molchanov.cats.network.networkmodels.FilterItem
-import com.molchanov.cats.utils.APP_ACTIVITY
 import com.molchanov.cats.utils.BREEDS_FILTER_TYPE
 import com.molchanov.cats.utils.CATEGORIES_FILTER_TYPE
 import com.molchanov.cats.utils.DEFAULT_FILTER_TYPE
-import com.molchanov.cats.utils.Functions.showToast
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val repository: CatsRepository,
     handle: SavedStateHandle,
-) : ViewModel() {
+    application: Application,
+) : AndroidViewModel(application) {
     private val currentQuery = handle.getLiveData(CURRENT_QUERY, DEFAULT_QUERY)
+
+    // Переменная хранит тип тоста и при изменении вызвает тост с нужным текстом
+    private val _toast = MutableLiveData<ToastRequest>(null)
+    val toast: LiveData<ToastRequest> get() = _toast
 
     //Переменная для хранения Paging data картинок в формате live data
     val homeImages = currentQuery.switchMap { repository.getCatList(it).cachedIn(viewModelScope) }
 
+
     //Переменная для перехода на карточку котика и передачи аргумента фрагменту CatCard
-    val navigateToCard = MutableLiveData<CatItem>()
+    private val _navigateToCard = MutableLiveData<CatItem>()
+    val navigateToCard: LiveData<CatItem> get() = _navigateToCard
 
 
     val currentFilterType = MutableLiveData(DEFAULT_FILTER_TYPE)
     val currentFilterItem = MutableLiveData<FilterItem>(null)
 
-    val breeds = MutableLiveData<List<FilterItem>>()
-    val categories = MutableLiveData<List<FilterItem>>()
+    private val _breeds = MutableLiveData<List<FilterItem>>()
+    val breeds: LiveData<List<FilterItem>> get() = _breeds
 
-    init {
+    private val _categories = MutableLiveData<List<FilterItem>>()
+    val categories: LiveData<List<FilterItem>> get() = _categories
+
+        init {
         getCategories()
         getBreeds()
     }
-
     fun addToFavorites(currentImage: CatItem) {
         viewModelScope.launch {
             try {
-                repository.addToFavoriteByImageId(currentImage.id)
-                showToast(APP_ACTIVITY.resources.getString(R.string.added_to_favorite_toast_text))
+                val favId = repository.addToFavoriteByImageId(currentImage.id)
+                currentImage.favourite = CatItem.Favourite(favId)
+                _toast.value = ToastRequest.ADD_FAV
             } catch (e: Exception) {
-                showToast(APP_ACTIVITY.resources.getString(R.string.already_added_to_favorite_toast_text))
-                Log.d("M_HomeViewModel", "Ошибка при добавлении в избранное: ${e.message}")
+                _toast.value = ToastRequest.ADD_FAV_FAIL
             }
         }
     }
+
     fun deleteFromFavorites(cat: CatItem) {
-        Log.d("M_HomeViewModel", "deleteFromFavorites запущен. Cat: ${cat.favourite?.favId}")
-        try {
-            viewModelScope.launch {
-                cat.favourite?.let{
-                    repository.removeFavoriteByFavId(it.favId)
+        Log.d("M_HomeViewModel", "deleteFromFav")
+        viewModelScope.launch {
+            try {
+                cat.favourite?.favId?.let {
+                    repository.removeFavoriteByFavId(it)
+                    _toast.value = ToastRequest.DELETE_FAV
                 }
+            } catch (e: Exception) {
+                _toast.value = ToastRequest.DELETE_FAV_FAIL
             }
-            showToast(APP_ACTIVITY.resources.getString(R.string.deleted_from_favorites_toast_text))
-        } catch (e: Exception) {
-            showToast(APP_ACTIVITY.resources.getString(R.string.already_deleted_from_favorites_toast_text))
-            Log.d("M_HomeViewModel", "Ошибка при удалении из избранного: ${e.message}")
+            _toast.value = null
         }
     }
 
     fun displayCatCard(currentImage: CatItem) {
-        navigateToCard.value = currentImage
+        _navigateToCard.value = currentImage
     }
 
     fun displayCatCardComplete() {
-        navigateToCard.value = null
+        _navigateToCard.value = null
+    }
+
+    fun toastShowComplete() {
+        _toast.value = null
     }
 
     private fun getBreeds() {
-        Log.d("M_HomeViewModel", "getBreeds запущен")
         viewModelScope.launch {
-            breeds.value = repository.getBreedsArray()
-            Log.d("M_HomeViewModel", "filter items = ${breeds.value}")
+            _breeds.value = repository.getBreedsArray()
         }
     }
 
     private fun getCategories() {
-        Log.d("M_HomeViewModel", "getCategories запущен")
-        categories.value = runBlocking { repository.getCategoriesArray() }
-        Log.d("M_HomeViewModel", "filter items = ${categories.value}")
+        viewModelScope.launch {
+            _categories.value = repository.getCategoriesArray()
+        }
     }
 
     fun setFilterType(type: String?) {
@@ -98,7 +107,6 @@ class HomeViewModel @Inject constructor(
 
     fun setFilterItem(item: FilterItem) {
         currentFilterItem.value = item
-        Log.d("M_HomeViewModel", "currentFilterItemValue = ${currentFilterItem.value}")
     }
 
     fun setQuery() {
@@ -128,5 +136,12 @@ class HomeViewModel @Inject constructor(
             "breed_ids" to "",
             "category_ids" to "",
             "order" to "RANDOM")
+
+        enum class ToastRequest {
+            ADD_FAV,
+            ADD_FAV_FAIL,
+            DELETE_FAV,
+            DELETE_FAV_FAIL
+        }
     }
 }

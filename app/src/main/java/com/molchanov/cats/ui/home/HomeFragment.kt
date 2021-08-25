@@ -24,6 +24,7 @@ import com.molchanov.cats.ui.PageAdapter
 import com.molchanov.cats.utils.*
 import com.molchanov.cats.utils.Functions.setupManager
 import com.molchanov.cats.viewmodels.home.HomeViewModel
+import com.molchanov.cats.viewmodels.home.HomeViewModel.Companion.ToastRequest.*
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
 import javax.inject.Inject
@@ -109,7 +110,20 @@ class HomeFragment : Fragment(R.layout.fragment_home), ItemClickListener {
                 }
             }
         }
-
+        //Наблюдатель для показа тоста
+        viewModel.toast.observe(viewLifecycleOwner) {
+            Log.d("M_HomeFragment", "Toast Request: $it")
+            it?.let { request ->
+                context?.showToast(
+                    when (request) {
+                        ADD_FAV -> R.string.added_to_favorite_toast_text
+                        ADD_FAV_FAIL -> R.string.already_added_to_favorite_toast_text
+                        DELETE_FAV -> R.string.deleted_from_favorites_toast_text
+                        DELETE_FAV_FAIL -> R.string.already_deleted_from_favorites_toast_text
+                    }
+                )
+            }
+        }
         //Наблюдатель списка картинок. Обновляет адаптер при изменении
         viewModel.homeImages.observe(viewLifecycleOwner)
         {
@@ -142,10 +156,8 @@ class HomeFragment : Fragment(R.layout.fragment_home), ItemClickListener {
     override fun onFavoriteBtnClicked(selectedImage: CatItem) {
         if (!selectedImage.isFavorite) {
             viewModel.addToFavorites(selectedImage)
-            selectedImage.isFavorite = true
         } else {
             viewModel.deleteFromFavorites(selectedImage)
-            selectedImage.isFavorite = false
         }
 
     }

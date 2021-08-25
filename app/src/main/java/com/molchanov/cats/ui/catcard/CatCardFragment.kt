@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.ImageView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.res.ResourcesCompat.getDrawable
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -22,8 +23,6 @@ import com.molchanov.cats.R
 import com.molchanov.cats.databinding.FragmentCatCardBinding
 import com.molchanov.cats.ui.catcard.VoteStates.*
 import com.molchanov.cats.utils.*
-import com.molchanov.cats.utils.Functions.enableExpandedToolbar
-import com.molchanov.cats.utils.Functions.setDraggableAppBar
 import com.molchanov.cats.viewmodels.catcard.CatCardViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -39,6 +38,8 @@ class CatCardFragment : Fragment(R.layout.fragment_cat_card) {
 
     private lateinit var voteUpButton: ImageButton
     private lateinit var voteDownButton: ImageButton
+    private lateinit var voteLayout: ConstraintLayout
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -54,11 +55,18 @@ class CatCardFragment : Fragment(R.layout.fragment_cat_card) {
         super.onViewCreated(view, savedInstanceState)
         Log.d("M_CatCardFragment", "onViewCreated")
 
-        getVoteButtons()
+        voteUpButton = requireActivity().findViewById(R.id.btn_like)
+        voteDownButton = requireActivity().findViewById(R.id.btn_dislike)
+
+        //Настраиваем видимость VoteLayout
+        voteLayout = requireActivity().findViewById(R.id.vote_buttons_layout)
+        voteLayout.isVisible = viewModel.analysis.value == null
+
+//        getVoteButtons()
 
         viewModel.cat.observe(viewLifecycleOwner) { catDetail ->
             catDetail?.let {
-                val imageView = APP_ACTIVITY.findViewById<ImageView>(R.id.toolbar_image)
+                val imageView = requireActivity().findViewById<ImageView>(R.id.toolbar_image)
                 imageView.apply {
                     Glide.with(this@CatCardFragment)
                         .load(it.url)
@@ -104,7 +112,7 @@ class CatCardFragment : Fragment(R.layout.fragment_cat_card) {
 
         viewModel.analysis.observe(viewLifecycleOwner) { analysis ->
             analysis?.let {
-                val imageView = APP_ACTIVITY.findViewById<ImageView>(R.id.toolbar_image)
+                val imageView = requireActivity().findViewById<ImageView>(R.id.toolbar_image)
                 imageView.apply {
                     Glide.with(this@CatCardFragment)
                         .load(it.imageUrl)
@@ -144,24 +152,12 @@ class CatCardFragment : Fragment(R.layout.fragment_cat_card) {
 
     override fun onResume() {
         super.onResume()
-        setViews(true)
-        getVoteButtons()
         setVoteButtons(voteState)
     }
 
-    private fun setViews(visibility: Boolean) {
-        BOTTOM_NAV_BAR.isVisible = !visibility
-        setDraggableAppBar(visibility)
-        enableExpandedToolbar(visibility)
-        VOTE_LAYOUT.isVisible = if (visibility) viewModel.analysis.value == null else visibility
-    }
-
-    private fun getVoteButtons() {
-        voteUpButton = VOTE_LAYOUT.getViewById(R.id.btn_like) as ImageButton
-        voteDownButton = VOTE_LAYOUT.getViewById(R.id.btn_dislike) as ImageButton
-    }
 
     private fun setVoteButtons(voteState: VoteStates) {
+        val activity = requireActivity()
         voteUpButton.setOnClickListener {
             when (voteState) {
                 NOT_VOTED, VOTE_DOWN -> {
@@ -186,49 +182,49 @@ class CatCardFragment : Fragment(R.layout.fragment_cat_card) {
             VOTE_UP -> {
                 voteUpButton.apply {
                     background =
-                        getDrawable(resources, R.drawable.btn_vote_checked, APP_ACTIVITY.theme)
+                        getDrawable(resources, R.drawable.btn_vote_checked, activity.theme)
                     setImageDrawable(getDrawable(resources,
                         R.drawable.thumb_up_filled,
-                        APP_ACTIVITY.theme))
+                        activity.theme))
                 }
                 voteDownButton.apply {
                     background =
-                        getDrawable(resources, R.drawable.btn_vote_unchecked, APP_ACTIVITY.theme)
+                        getDrawable(resources, R.drawable.btn_vote_unchecked, activity.theme)
                     setImageDrawable(getDrawable(resources,
                         R.drawable.thumb_down,
-                        APP_ACTIVITY.theme))
+                        activity.theme))
                 }
             }
             VOTE_DOWN -> {
                 voteUpButton.apply {
                     background =
-                        getDrawable(resources, R.drawable.btn_vote_unchecked, APP_ACTIVITY.theme)
+                        getDrawable(resources, R.drawable.btn_vote_unchecked, activity.theme)
                     setImageDrawable(getDrawable(resources,
                         R.drawable.thumb_up,
-                        APP_ACTIVITY.theme))
+                        activity.theme))
                 }
                 voteDownButton.apply {
                     background =
-                        getDrawable(resources, R.drawable.btn_vote_checked, APP_ACTIVITY.theme)
+                        getDrawable(resources, R.drawable.btn_vote_checked, activity.theme)
                     setImageDrawable(getDrawable(resources,
                         R.drawable.thumb_down_filled,
-                        APP_ACTIVITY.theme))
+                        activity.theme))
                 }
             }
             NOT_VOTED -> {
                 voteUpButton.apply {
                     background =
-                        getDrawable(resources, R.drawable.btn_vote_unchecked, APP_ACTIVITY.theme)
+                        getDrawable(resources, R.drawable.btn_vote_unchecked, activity.theme)
                     setImageDrawable(getDrawable(resources,
                         R.drawable.thumb_up,
-                        APP_ACTIVITY.theme))
+                        activity.theme))
                 }
                 voteDownButton.apply {
                     background =
-                        getDrawable(resources, R.drawable.btn_vote_unchecked, APP_ACTIVITY.theme)
+                        getDrawable(resources, R.drawable.btn_vote_unchecked, activity.theme)
                     setImageDrawable(getDrawable(resources,
                         R.drawable.thumb_down,
-                        APP_ACTIVITY.theme))
+                        activity.theme))
                 }
             }
         }
@@ -237,6 +233,5 @@ class CatCardFragment : Fragment(R.layout.fragment_cat_card) {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-        setViews(false)
     }
 }

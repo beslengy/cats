@@ -197,8 +197,6 @@ class UploadedFragment : Fragment(R.layout.fragment_uploaded), ItemClickListener
 
     override fun onFavoriteBtnClicked(selectedImage: CatItem) {}
 
-
-
     override fun onDestroyView() {
         super.onDestroyView()
         adapter.setItemLongTapAble(false)

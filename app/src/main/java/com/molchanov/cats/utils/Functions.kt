@@ -40,23 +40,7 @@ object Functions {
         return manager
     }
 
-     fun enableExpandedToolbar(enable: Boolean) {
-         Log.d("M_Functions", "enableExpandedToolbar is $enable")
-            APP_BAR.setExpanded(enable)
-    }
 
-    fun setDraggableAppBar(isDraggable: Boolean) {
-        Log.d("M_Functions", "setDraggable to $isDraggable")
-        val params = APP_BAR.layoutParams as CoordinatorLayout.LayoutParams
-        if (params.behavior == null)
-            params.behavior = AppBarLayout.Behavior()
-        val behavior = params.behavior as AppBarLayout.Behavior
-        behavior.setDragCallback(object : AppBarLayout.Behavior.DragCallback() {
-            override fun canDrag(appBarLayout: AppBarLayout): Boolean {
-                return isDraggable
-            }
-        })
-    }
 
     fun getResString(id: Int) : String {
         return APP_ACTIVITY.resources.getString(id)

@@ -1,4 +1,4 @@
-package com.molchanov.cats.ui.catcard
+package com.molchanov.cats.catcard
 
 import android.graphics.drawable.Drawable
 import android.os.Bundle
@@ -21,9 +21,8 @@ import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.molchanov.cats.R
 import com.molchanov.cats.databinding.FragmentCatCardBinding
-import com.molchanov.cats.ui.catcard.VoteStates.*
+import com.molchanov.cats.catcard.VoteStates.*
 import com.molchanov.cats.utils.*
-import com.molchanov.cats.viewmodels.catcard.CatCardViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 

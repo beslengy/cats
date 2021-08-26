@@ -1,4 +1,4 @@
-package com.molchanov.cats.ui.home
+package com.molchanov.cats.home
 
 import android.os.Bundle
 import android.util.Log
@@ -23,27 +23,21 @@ import com.molchanov.cats.ui.ItemClickListener
 import com.molchanov.cats.ui.PageAdapter
 import com.molchanov.cats.utils.*
 import com.molchanov.cats.utils.Functions.setupManager
-import com.molchanov.cats.viewmodels.home.HomeViewModel
-import com.molchanov.cats.viewmodels.home.HomeViewModel.Companion.ToastRequest.*
+import com.molchanov.cats.home.HomeViewModel.Companion.ToastRequest.*
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
-import javax.inject.Inject
-import javax.inject.Provider
 
 @AndroidEntryPoint
-class HomeFragment : Fragment(R.layout.fragment_home), ItemClickListener {
+class HomeFragment : Fragment(), ItemClickListener {
 
-    private var _binding: FragmentHomeBinding? = null
-    private val binding get() = _binding!!
-
-    @Inject
-    lateinit var manager: Provider<GridLayoutManager>
+    private lateinit var binding: FragmentHomeBinding
 
     private val viewModel: HomeViewModel by viewModels()
     private val adapter = PageAdapter(this)
     private val headerAdapter = CatsLoadStateAdapter { adapter.retry() }
     private val footerAdapter = CatsLoadStateAdapter { adapter.retry() }
     private lateinit var itemMenuAdapter: ArrayAdapter<String>
+    private lateinit var manager: GridLayoutManager
 
 
     override fun onCreateView(
@@ -52,13 +46,14 @@ class HomeFragment : Fragment(R.layout.fragment_home), ItemClickListener {
         savedInstanceState: Bundle?,
     ): View? {
         Log.d("M_HomeFragment", "onCreateView")
-        _binding = FragmentHomeBinding.inflate(inflater, container, false)
+        binding = FragmentHomeBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         Log.d("M_HomeFragment", "onViewCreated")
+        manager = GridLayoutManager(context, 2, GridLayoutManager.VERTICAL, false)
 
         //Настраиваем recyclerView
         binding.apply {
@@ -69,7 +64,7 @@ class HomeFragment : Fragment(R.layout.fragment_home), ItemClickListener {
                 )
                 addItemDecoration(DECORATION)
                 setHasFixedSize(true)
-                layoutManager = setupManager(manager.get(),
+                layoutManager = setupManager(manager,
                     this@HomeFragment.adapter,
                     footerAdapter,
                     headerAdapter)
@@ -229,11 +224,5 @@ class HomeFragment : Fragment(R.layout.fragment_home), ItemClickListener {
 
             true
         }
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        Log.d("M_HomeFragment", "onDestroyView()")
-        _binding = null
     }
 }

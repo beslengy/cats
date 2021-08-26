@@ -1,4 +1,4 @@
-package com.molchanov.cats.ui.uploaded
+package com.molchanov.cats.uploaded
 
 import android.net.Uri
 import android.os.Bundle
@@ -21,7 +21,6 @@ import com.molchanov.cats.ui.ItemClickListener
 import com.molchanov.cats.ui.PageAdapter
 import com.molchanov.cats.utils.*
 import com.molchanov.cats.utils.Functions.setupManager
-import com.molchanov.cats.viewmodels.uploaded.UploadedViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody

@@ -1,4 +1,4 @@
-package com.molchanov.cats.viewmodels.favorites
+package com.molchanov.cats.favorites
 
 import android.util.Log
 import androidx.lifecycle.MutableLiveData

@@ -44,17 +44,19 @@ class PageAdapter(private val itemClickListener: ItemClickListener) :
                     setOnClickListener {
                         itemClickListener.onItemClicked(image)
                     }
-                    if (itemLongClickable) setOnLongClickListener {
-                        val popup = PopupMenu(context, this)
-                        popup.apply {
-                            inflate(R.menu.delete_uploaded_menu)
-                            setOnMenuItemClickListener {
-                                itemClickListener.onItemLongTap(image)
-                                true
+                    if (itemLongClickable) {
+                        setOnLongClickListener {
+                            val popup = PopupMenu(context, this)
+                            popup.apply {
+                                inflate(R.menu.delete_uploaded_menu)
+                                setOnMenuItemClickListener {
+                                    itemClickListener.onItemLongTap(image)
+                                    true
+                                }
                             }
+                            popup.show()
+                            true
                         }
-                        popup.show()
-                        true
                     }
                 }
 

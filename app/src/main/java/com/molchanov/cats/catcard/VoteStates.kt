@@ -1,4 +1,4 @@
-package com.molchanov.cats.ui.catcard
+package com.molchanov.cats.catcard
 
 enum class VoteStates (
     val voteValue: Int

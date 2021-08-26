@@ -1,4 +1,4 @@
-package com.molchanov.cats.viewmodels.uploaded
+package com.molchanov.cats.uploaded
 
 import android.util.Log
 import androidx.lifecycle.MutableLiveData

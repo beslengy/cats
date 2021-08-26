@@ -1,4 +1,4 @@
-package com.molchanov.cats.viewmodels.home
+package com.molchanov.cats.home
 
 
 import android.app.Application

@@ -1,4 +1,4 @@
-package com.molchanov.cats.ui.favorites
+package com.molchanov.cats.favorites
 
 import android.os.Bundle
 import android.util.Log
@@ -11,7 +11,6 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.GridLayoutManager
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.molchanov.cats.R
 import com.molchanov.cats.databinding.FragmentFavoritesBinding
 import com.molchanov.cats.network.networkmodels.CatItem
@@ -20,7 +19,6 @@ import com.molchanov.cats.ui.ItemClickListener
 import com.molchanov.cats.ui.PageAdapter
 import com.molchanov.cats.utils.DECORATION
 import com.molchanov.cats.utils.Functions.setupManager
-import com.molchanov.cats.viewmodels.favorites.FavoritesViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 import javax.inject.Provider

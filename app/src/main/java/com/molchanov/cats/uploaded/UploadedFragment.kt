@@ -116,12 +116,6 @@ class UploadedFragment : Fragment(), ItemClickListener {
             }
         }
 
-
-
-
-        //Настраиваем видимость кнопки загрузки картинки
-
-
         //Настраиваем долгое нажатие на итем
         adapter.setItemLongTapAble(true)
 

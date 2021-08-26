@@ -1,6 +1,7 @@
 package com.molchanov.cats.uploaded
 
 import android.util.Log
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -24,11 +25,14 @@ import javax.inject.Inject
 class UploadedViewModel @Inject constructor(private val repository: CatsRepository) : ViewModel() {
 
     val uploadedImages = repository.getUploadedList().cachedIn(viewModelScope)
-    val onRefreshTrigger = MutableLiveData(false)
+
+    private val _onRefreshTrigger = MutableLiveData(false)
+    val onRefreshTrigger: LiveData<Boolean> get() = _onRefreshTrigger
 
     private val response = MutableLiveData<NetworkResponse>()
 
-    val navigateToAnalysis = MutableLiveData<Analysis>()
+    private val _navigateToAnalysis = MutableLiveData<Analysis>()
+    val navigateToAnalysis: LiveData<Analysis> get() = _navigateToAnalysis
 
 
     fun displayAnalysis(currentImage: CatItem) {
@@ -36,12 +40,12 @@ class UploadedViewModel @Inject constructor(private val repository: CatsReposito
         viewModelScope.launch {
             analysis = repository.getAnalysis(currentImage.id)
             analysis?.imageUrl = currentImage.imageUrl
-            navigateToAnalysis.value = analysis
+            _navigateToAnalysis.value = analysis
         }
     }
 
     fun displayAnalysisComplete() {
-        navigateToAnalysis.value = null
+        _navigateToAnalysis.value = null
     }
 
     fun uploadFile(filePart: MultipartBody.Part?) {
@@ -55,7 +59,7 @@ class UploadedViewModel @Inject constructor(private val repository: CatsReposito
                     if (CURRENT_PHOTO_PATH.isNotEmpty())
                         if (file.exists())
                             file.delete()
-                    onRefreshTrigger.value = !(onRefreshTrigger.value!!)
+                    _onRefreshTrigger.value = !(_onRefreshTrigger.value!!)
                     showToast(getResString(R.string.upload_end_toast_text))
 
                 } catch (e: Exception){
@@ -77,7 +81,7 @@ class UploadedViewModel @Inject constructor(private val repository: CatsReposito
                     "Ошибка при удалении загруженной картинки: ${e.message}")
             }
             showToast(APP_ACTIVITY.resources.getString(R.string.uploaded_image_is_deleted_toast_text))
-            onRefreshTrigger.value = !(onRefreshTrigger.value!!)
+            _onRefreshTrigger.value = !(_onRefreshTrigger.value!!)
         }
     }
 }

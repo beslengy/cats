@@ -34,8 +34,11 @@ class HomeViewModel @Inject constructor(
     private val _navigateToCard = MutableLiveData<CatItem>()
     val navigateToCard: LiveData<CatItem> get() = _navigateToCard
 
-    val currentFilterType = MutableLiveData(DEFAULT_FILTER_TYPE)
-    val currentFilterItem = MutableLiveData<FilterItem>(null)
+    private val _currentFilterType = MutableLiveData(DEFAULT_FILTER_TYPE)
+    val currentFilterType: LiveData<String> get() = _currentFilterType
+
+    private val _currentFilterItem = MutableLiveData<FilterItem>(null)
+    val currentFilterItem: LiveData<FilterItem> get() = _currentFilterItem
 
     private val _breeds = MutableLiveData<List<FilterItem>>()
     val breeds: LiveData<List<FilterItem>> get() = _breeds
@@ -108,25 +111,25 @@ class HomeViewModel @Inject constructor(
     }
 
     fun setFilterType(type: String?) {
-        currentFilterType.value = type
-        currentFilterItem.value = null
+        _currentFilterType.value = type
+        _currentFilterItem.value = null
     }
 
     fun setFilterItem(item: FilterItem) {
-        currentFilterItem.value = item
+        _currentFilterItem.value = item
     }
 
     fun setQuery() {
-        currentQuery.value = if (currentFilterItem.value != null) {
-            when (currentFilterType.value) {
+        currentQuery.value = if (_currentFilterItem.value != null) {
+            when (_currentFilterType.value) {
                 BREEDS_FILTER_TYPE -> mapOf(
-                    "breed_ids" to currentFilterItem.value!!.id,
+                    "breed_ids" to _currentFilterItem.value!!.id,
                     "category_ids" to "",
                     "order" to "DESC"
                 )
                 CATEGORIES_FILTER_TYPE -> mapOf(
                     "breed_ids" to "",
-                    "category_ids" to currentFilterItem.value!!.id,
+                    "category_ids" to _currentFilterItem.value!!.id,
                     "order" to "DESC"
                 )
                 else -> DEFAULT_QUERY

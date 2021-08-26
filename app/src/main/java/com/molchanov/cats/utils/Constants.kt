@@ -20,6 +20,7 @@ lateinit var CURRENT_IMAGE_URI: Uri
 const val USER_ID = "user-17"
 const val BASE_URL = "https://api.thecatapi.com/v1/"
 const val FILE_AUTHORITY = "${APPLICATION_ID}.provider"
+const val STARTING_PAGE_INDEX = 0
 
 const val DEFAULT_FILTER_TYPE = "Любой"
 const val BREEDS_FILTER_TYPE = "Порода"

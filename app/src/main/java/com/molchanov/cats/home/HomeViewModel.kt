@@ -30,11 +30,9 @@ class HomeViewModel @Inject constructor(
     //Переменная для хранения Paging data картинок в формате live data
     val homeImages = currentQuery.switchMap { repository.getCatList(it).cachedIn(viewModelScope) }
 
-
     //Переменная для перехода на карточку котика и передачи аргумента фрагменту CatCard
     private val _navigateToCard = MutableLiveData<CatItem>()
     val navigateToCard: LiveData<CatItem> get() = _navigateToCard
-
 
     val currentFilterType = MutableLiveData(DEFAULT_FILTER_TYPE)
     val currentFilterItem = MutableLiveData<FilterItem>(null)

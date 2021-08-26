@@ -6,8 +6,11 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.liveData
+import com.molchanov.cats.favorites.FavoritePagingSource
+import com.molchanov.cats.home.HomePagingSource
 import com.molchanov.cats.network.CatsApiService
 import com.molchanov.cats.network.networkmodels.*
+import com.molchanov.cats.uploaded.UploadedPagingSource
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okhttp3.MultipartBody

@@ -14,7 +14,7 @@ import androidx.paging.LoadState
 import androidx.recyclerview.widget.GridLayoutManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.molchanov.cats.R
-import com.molchanov.cats.databinding.FragmentUploadedBinding
+import com.molchanov.cats.databinding.FragmentMainBinding
 import com.molchanov.cats.network.networkmodels.CatItem
 import com.molchanov.cats.ui.CatsLoadStateAdapter
 import com.molchanov.cats.ui.ItemClickListener
@@ -27,21 +27,16 @@ import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.File
-import javax.inject.Inject
-import javax.inject.Provider
 
 @AndroidEntryPoint
-class UploadedFragment : Fragment(R.layout.fragment_uploaded), ItemClickListener {
-    private var _binding: FragmentUploadedBinding? = null
-    private val binding get() = _binding!!
-
-    @Inject
-    lateinit var manager: Provider<GridLayoutManager>
+class UploadedFragment : Fragment(), ItemClickListener {
+    private lateinit var binding: FragmentMainBinding
 
     private val uploadedViewModel: UploadedViewModel by viewModels()
     private val adapter = PageAdapter(this)
     private val headerAdapter = CatsLoadStateAdapter { adapter.retry() }
     private val footerAdapter = CatsLoadStateAdapter { adapter.retry() }
+    private lateinit var manager: GridLayoutManager
 
     private val cameraContract = registerForActivityResult(PhotoContract()) {
         Log.d("M_UploadedFragment", "Camera contract result: $it")
@@ -65,36 +60,39 @@ class UploadedFragment : Fragment(R.layout.fragment_uploaded), ItemClickListener
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View? {
-        _binding = FragmentUploadedBinding.inflate(inflater, container, false)
+        binding = FragmentMainBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        _binding = FragmentUploadedBinding.bind(view)
+        manager = GridLayoutManager(context, 2, GridLayoutManager.VERTICAL, false)
 
         binding.apply {
-            rvUploaded.apply {
+            rvMain.apply {
                 this.adapter = this@UploadedFragment.adapter.withLoadStateHeaderAndFooter(
                     header = headerAdapter,
                     footer = footerAdapter
                 )
                 setHasFixedSize(true)
                 addItemDecoration(DECORATION)
-                layoutManager = setupManager(manager.get(),
+                layoutManager = setupManager(manager,
                     this@UploadedFragment.adapter,
                     footerAdapter,
                     headerAdapter)
             }
-            srlUploaded.apply {
+            srl.apply {
                 setOnRefreshListener {
                     adapter.refresh()
                     this.isRefreshing = false
                 }
             }
-            fab.setOnClickListener {
-                selectImage()
+            fab.apply {
+                isVisible = true
+                setOnClickListener {
+                    selectImage()
+            }
             }
         }
 
@@ -130,8 +128,8 @@ class UploadedFragment : Fragment(R.layout.fragment_uploaded), ItemClickListener
         //Настраиваем видимость элементов в зависимости от состояния PagedList
         adapter.addLoadStateListener { loadState ->
             binding.apply {
-                pb.isVisible = loadState.source.refresh is LoadState.Loading
-                rvUploaded.isVisible = loadState.source.refresh is LoadState.NotLoading
+                progressBar.isVisible = loadState.source.refresh is LoadState.Loading
+                rvMain.isVisible = loadState.source.refresh is LoadState.NotLoading
                 btnRetry.isVisible = loadState.source.refresh is LoadState.Error
                 tvError.isVisible = loadState.source.refresh is LoadState.Error
                 ivError.isVisible = loadState.source.refresh is LoadState.Error
@@ -140,7 +138,7 @@ class UploadedFragment : Fragment(R.layout.fragment_uploaded), ItemClickListener
                     loadState.append.endOfPaginationReached &&
                     adapter.itemCount < 1
                 ) {
-                    rvUploaded.isVisible = false
+                    rvMain.isVisible = false
                     tvEmpty.isVisible = true
                     ivEmpty.isVisible = true
                 } else {
@@ -200,6 +198,5 @@ class UploadedFragment : Fragment(R.layout.fragment_uploaded), ItemClickListener
     override fun onDestroyView() {
         super.onDestroyView()
         adapter.setItemLongTapAble(false)
-        _binding = null
     }
 }

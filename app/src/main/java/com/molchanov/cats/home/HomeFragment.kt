@@ -15,7 +15,8 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.molchanov.cats.R
 import com.molchanov.cats.databinding.FragmentFilterBinding
-import com.molchanov.cats.databinding.FragmentHomeBinding
+import com.molchanov.cats.databinding.FragmentMainBinding
+import com.molchanov.cats.home.HomeViewModel.Companion.ToastRequest.*
 import com.molchanov.cats.network.networkmodels.CatItem
 import com.molchanov.cats.network.networkmodels.FilterItem
 import com.molchanov.cats.ui.CatsLoadStateAdapter
@@ -23,14 +24,13 @@ import com.molchanov.cats.ui.ItemClickListener
 import com.molchanov.cats.ui.PageAdapter
 import com.molchanov.cats.utils.*
 import com.molchanov.cats.utils.Functions.setupManager
-import com.molchanov.cats.home.HomeViewModel.Companion.ToastRequest.*
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
 
 @AndroidEntryPoint
 class HomeFragment : Fragment(), ItemClickListener {
 
-    private lateinit var binding: FragmentHomeBinding
+    private lateinit var binding: FragmentMainBinding
 
     private val viewModel: HomeViewModel by viewModels()
     private val adapter = PageAdapter(this)
@@ -46,7 +46,7 @@ class HomeFragment : Fragment(), ItemClickListener {
         savedInstanceState: Bundle?,
     ): View? {
         Log.d("M_HomeFragment", "onCreateView")
-        binding = FragmentHomeBinding.inflate(inflater, container, false)
+        binding = FragmentMainBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -57,7 +57,7 @@ class HomeFragment : Fragment(), ItemClickListener {
 
         //Настраиваем recyclerView
         binding.apply {
-            rvHome.apply {
+            rvMain.apply {
                 adapter = this@HomeFragment.adapter.withLoadStateHeaderAndFooter(
                     header = headerAdapter,
                     footer = footerAdapter
@@ -69,39 +69,40 @@ class HomeFragment : Fragment(), ItemClickListener {
                     footerAdapter,
                     headerAdapter)
             }
-            srlHome.apply {
+            srl.apply {
                 setOnRefreshListener {
                     adapter.refresh()
                     this.isRefreshing = false
                 }
             }
-            btnRetryHome.setOnClickListener {
+            btnRetry.setOnClickListener {
                 adapter.retry()
             }
+            fab.isVisible = false
         }
 
         //Настраиваем видимость элементов в зависимости от состояния PagedList
         adapter.addLoadStateListener { loadState ->
             binding.apply {
                 //Загрузка
-                pbHome.isVisible = loadState.source.refresh is LoadState.Loading
+                progressBar.isVisible = loadState.source.refresh is LoadState.Loading
                 //Состояние просмотра
-                rvHome.isVisible = loadState.source.refresh is LoadState.NotLoading
+                rvMain.isVisible = loadState.source.refresh is LoadState.NotLoading
                 //Ошибка
-                btnRetryHome.isVisible = loadState.source.refresh is LoadState.Error
-                tvErrorHome.isVisible = loadState.source.refresh is LoadState.Error
-                ivErrorHome.isVisible = loadState.source.refresh is LoadState.Error
+                btnRetry.isVisible = loadState.source.refresh is LoadState.Error
+                tvError.isVisible = loadState.source.refresh is LoadState.Error
+                ivError.isVisible = loadState.source.refresh is LoadState.Error
                 //Пустой список
                 if (loadState.source.refresh is LoadState.NotLoading &&
                     loadState.append.endOfPaginationReached &&
                     adapter.itemCount < 1
                 ) {
-                    rvHome.isVisible = false
-                    tvEmptyHome.isVisible = true
-                    ivEmptyHome.isVisible = true
+                    rvMain.isVisible = false
+                    tvEmpty.isVisible = true
+                    ivEmpty.isVisible = true
                 } else {
-                    tvEmptyHome.isVisible = false
-                    ivEmptyHome.isVisible = false
+                    tvEmpty.isVisible = false
+                    ivEmpty.isVisible = false
                 }
             }
         }
@@ -215,7 +216,7 @@ class HomeFragment : Fragment(), ItemClickListener {
             }
             dialogBinding.btnClose.setOnClickListener {
                 viewModel.setQuery()
-                binding.rvHome.scrollToPosition(0)
+                binding.rvMain.scrollToPosition(0)
                 dialog.dismiss()
             }
 

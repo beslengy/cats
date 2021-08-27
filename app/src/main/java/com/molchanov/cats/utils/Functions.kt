@@ -1,17 +1,10 @@
 package com.molchanov.cats.utils
 
-import android.util.Log
-import android.widget.Toast
-import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.recyclerview.widget.GridLayoutManager
-import com.google.android.material.appbar.AppBarLayout
 import com.molchanov.cats.ui.CatsLoadStateAdapter
 import com.molchanov.cats.ui.PageAdapter
 
 object Functions {
-    fun showToast(message: String) {
-        Toast.makeText(APP_ACTIVITY, message, Toast.LENGTH_SHORT).show()
-    }
 
     //делаем так, чтобы хэдер был на все три столбца
     //так как SpanSizeLookup является абстрактным классом, мы не можем создать его экземпляр
@@ -38,12 +31,6 @@ object Functions {
             }
         }
         return manager
-    }
-
-
-
-    fun getResString(id: Int) : String {
-        return APP_ACTIVITY.resources.getString(id)
     }
 }
 

@@ -1,7 +1,6 @@
 package com.molchanov.cats.di
 
 import com.molchanov.cats.network.CatsApiService
-import com.molchanov.cats.utils.BASE_URL
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import dagger.Module
@@ -15,6 +14,7 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModule {
+    private const val BASE_URL ="https://api.thecatapi.com/v1/"
     @Provides
     fun provideMoshi(): Moshi =
         Moshi.Builder()

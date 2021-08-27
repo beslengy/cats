@@ -1,26 +1,23 @@
 package com.molchanov.cats.favorites
 
-import android.util.Log
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.molchanov.cats.network.CatsApiService
 import com.molchanov.cats.network.networkmodels.CatItem
-import com.molchanov.cats.utils.STARTING_PAGE_INDEX
 import retrofit2.HttpException
 import java.io.IOException
 
 class FavoritePagingSource(
     private val catsApi: CatsApiService,
 ) : PagingSource<Int, CatItem>() {
+    companion object {
+        private const val STARTING_PAGE_INDEX = 0
+    }
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, CatItem> {
-        Log.d("M_PagingSource", "load launched")
-
         val position = params.key ?: STARTING_PAGE_INDEX
 
         return try {
             val catItems = catsApi.getAllFavorites(params.loadSize, position)
-            Log.d("M_PagingSource", "api getAllImagesLaunched, list size: ${catItems.size}")
-
             LoadResult.Page(
                 data = catItems,
                 prevKey = if (position == STARTING_PAGE_INDEX) null else position - 1,

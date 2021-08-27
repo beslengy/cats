@@ -2,7 +2,6 @@ package com.molchanov.cats
 
 import android.content.res.Configuration
 import android.os.Bundle
-import android.util.Log
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -14,9 +13,6 @@ import androidx.navigation.ui.NavigationUI
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.molchanov.cats.databinding.ActivityMainBinding
-import com.molchanov.cats.ui.Decoration
-import com.molchanov.cats.utils.APP_ACTIVITY
-import com.molchanov.cats.utils.DECORATION
 import dagger.hilt.android.AndroidEntryPoint
 
 
@@ -28,22 +24,15 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var bottomNavBar: BottomNavigationView
     private lateinit var appBar: AppBarLayout
-//    private lateinit var voteLayout: ConstraintLayout
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Log.d("M_MainActivity", "OnCreate")
-        APP_ACTIVITY = this
-        DECORATION = Decoration(resources.getDimensionPixelOffset(R.dimen.rv_item_margin))
         binding = ActivityMainBinding.inflate(layoutInflater)
-
 
         setContentView(binding.root)
 
         appBar = binding.appBar
         bottomNavBar = binding.bottomNavigation
-//        voteLayout = binding.voteButtonsLayout.root
 
         binding.toolbarImage.apply {
             if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
@@ -61,19 +50,6 @@ class MainActivity : AppCompatActivity() {
         enableExpandedToolbar(false)
         setDraggableAppBar(false)
 
-//        val params = APP_BAR.layoutParams as CoordinatorLayout.LayoutParams
-//        if (params.behavior == null)
-//            params.behavior = AppBarLayout.Behavior()
-//        val behavior = params.behavior as AppBarLayout.Behavior
-//        behavior.setDragCallback(object : AppBarLayout.Behavior.DragCallback() {
-//            override fun canDrag(appBarLayout: AppBarLayout): Boolean {
-//                return false
-//            }
-//        })
-
-//        val bottomNavigation: BottomNavigationView = findViewById(R.id.bottom_navigation)
-
-
         navController = findNavController(R.id.nav_host_fragment)
         appBarConfiguration = AppBarConfiguration(setOf(
             R.id.homeFragment, R.id.favoritesFragment, R.id.uploadedFragment))
@@ -84,11 +60,9 @@ class MainActivity : AppCompatActivity() {
             when (destination.id) {
                 R.id.homeFragment, R.id.favoritesFragment, R.id.uploadedFragment -> {
                     setViewsForMainFragments()
-                    Log.d("M_MainActivity", "reselected fragment")
                 }
                 else -> {
                     setViewsForCardFragment()
-                    Log.d("M_MainActivity", "reselected card")
                 }
             }
         }
@@ -101,12 +75,10 @@ class MainActivity : AppCompatActivity() {
 
 
     private fun enableExpandedToolbar(enable: Boolean) {
-        Log.d("M_Functions", "enableExpandedToolbar is $enable")
         appBar.setExpanded(enable)
     }
 
     private fun setDraggableAppBar(isDraggable: Boolean) {
-        Log.d("M_Functions", "setDraggable to $isDraggable")
         val params = appBar.layoutParams as CoordinatorLayout.LayoutParams
         if (params.behavior == null)
             params.behavior = AppBarLayout.Behavior()
@@ -120,13 +92,11 @@ class MainActivity : AppCompatActivity() {
 
     private fun setViewsForMainFragments() {
         bottomNavBar.isVisible = true
-//        voteLayout.isVisible = false
         setDraggableAppBar(false)
         enableExpandedToolbar(false)
     }
     private fun setViewsForCardFragment() {
         bottomNavBar.isVisible = false
-//        voteLayout.isVisible = true
         setDraggableAppBar(true)
         enableExpandedToolbar(true)
     }

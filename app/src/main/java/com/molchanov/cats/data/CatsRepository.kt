@@ -20,6 +20,9 @@ import javax.inject.Singleton
 
 @Singleton
 class CatsRepository @Inject constructor(private val catsApi: CatsApiService) {
+    companion object {
+        private const val USER_ID = "user-17"
+    }
     var votes: List<Vote> = listOf()
     private lateinit var cat: CatDetail
     private var analysis: Analysis? = null
@@ -65,7 +68,7 @@ class CatsRepository @Inject constructor(private val catsApi: CatsApiService) {
 
     suspend fun addToFavoriteByImageId(imageId: String): String {
         val favId: String
-        val postFavorite = PostFavorite(imageId)
+        val postFavorite = PostFavorite(imageId, USER_ID)
         withContext(Dispatchers.IO) {
             favId = catsApi.postFavorite(postFavorite).id
             Log.d("M_CatsRepository", "fav id = $favId")
@@ -96,10 +99,9 @@ class CatsRepository @Inject constructor(private val catsApi: CatsApiService) {
 
 
     suspend fun uploadImage(file: MultipartBody.Part) : NetworkResponse {
-        Log.d("M_CatsRepository", "uploadImage запущен")
         val response: NetworkResponse
         withContext(Dispatchers.IO) {
-                response = catsApi.uploadImage(file)
+                response = catsApi.uploadImage(file, USER_ID)
         }
         return response
     }
@@ -110,7 +112,7 @@ class CatsRepository @Inject constructor(private val catsApi: CatsApiService) {
 
     suspend fun postVote(imageId: String, voteValue: Int): NetworkResponse {
         val response: NetworkResponse
-        val postBody = PostVote(imageId, voteValue)
+        val postBody = PostVote(imageId, voteValue, USER_ID)
         withContext(Dispatchers.IO) { response = catsApi.postVote(postBody) }
         return response
     }
@@ -130,7 +132,6 @@ class CatsRepository @Inject constructor(private val catsApi: CatsApiService) {
             try {
                 analysis = catsApi.getAnalysis(imageId)[0]
             } catch (e: IOException) {
-                Log.d("M_CatsRepository", "Ошибка при получении анализа картинки: ${e.message}")
             }
         }
         return analysis
@@ -139,9 +140,8 @@ class CatsRepository @Inject constructor(private val catsApi: CatsApiService) {
     suspend fun getVotes() : List<Vote> {
         withContext(Dispatchers.IO) {
             try {
-                votes = catsApi.getAllVotes()
+                votes = catsApi.getAllVotes(username = USER_ID)
             } catch (e: IOException) {
-                Log.d("M_CatsRepository", "Ошибка при получении списка всех голосов")
             }
         }
         return votes

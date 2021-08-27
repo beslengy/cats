@@ -1,6 +1,5 @@
 package com.molchanov.cats.catcard
 
-import android.util.Log
 import androidx.lifecycle.*
 import com.molchanov.cats.data.CatsRepository
 import com.molchanov.cats.network.networkmodels.Analysis
@@ -40,7 +39,6 @@ class CatCardViewModel @Inject constructor(
     private var response: String = ""
 
     init {
-        Log.d("M_CatCardViewModel", "init. Analysis = ${_analysis.value}")
         if (_analysis.value == null) {
             getCat()
             setVoteValue()
@@ -66,13 +64,10 @@ class CatCardViewModel @Inject constructor(
 
     private fun getCat() {
         imageId?.let {
-            Log.d("M_CatCardViewModel", "getCat запущен")
             viewModelScope.launch {
                 try {
                     _cat.value = repository.getCatById(it)
-                    Log.d("M_CatCardViewModel", "Картинка успешно загружена")
                 } catch (e: Exception) {
-                    Log.d("M_CatCardViewModel", "Ошибка при загрузке карточки: ${e.message}")
                 }
             }
         }
@@ -87,10 +82,7 @@ class CatCardViewModel @Inject constructor(
                     response = responseBody.message
                     voteId = responseBody.id
                     _voteValue.value = VOTE_UP_VALUE
-                    Log.d("M_CatCardViewModel",
-                        "Голос отправлен успешно. $response. VoteId = $voteId")
                 } catch (e: Exception) {
-                    Log.d("M_CatCardViewModel", "Ошибка при отправке голоса. ${e.message}")
                 }
             }
         }
@@ -104,9 +96,7 @@ class CatCardViewModel @Inject constructor(
                     response = responseBody.message
                     voteId = responseBody.id
                     _voteValue.value = VOTE_DOWN_VALUE
-                    Log.d("M_CatCardViewModel", "Голос отправлен успешно: $response")
                 } catch (e: Exception) {
-                    Log.d("M_CatCardViewModel", "Ошибка при отправке голоса: ${e.message}")
                 }
             }
         }
@@ -117,9 +107,7 @@ class CatCardViewModel @Inject constructor(
             try {
                 response = repository.deleteVote(voteId)
                 _voteValue.value = NOT_VOTED_VALUE
-                Log.d("M_CatCardViewModel", "Голос успешно удален: $response")
             } catch (e: Exception) {
-                Log.d("M_CatCardViewModel", "Ошибка при удалении голоса: ${e.message}")
             }
         }
     }

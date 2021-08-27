@@ -2,15 +2,11 @@ package com.molchanov.cats.home
 
 
 import android.app.Application
-import android.util.Log
 import androidx.lifecycle.*
 import androidx.paging.cachedIn
 import com.molchanov.cats.data.CatsRepository
 import com.molchanov.cats.network.networkmodels.CatItem
 import com.molchanov.cats.network.networkmodels.FilterItem
-import com.molchanov.cats.utils.BREEDS_FILTER_TYPE
-import com.molchanov.cats.utils.CATEGORIES_FILTER_TYPE
-import com.molchanov.cats.utils.DEFAULT_FILTER_TYPE
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -19,8 +15,9 @@ import javax.inject.Inject
 class HomeViewModel @Inject constructor(
     private val repository: CatsRepository,
     handle: SavedStateHandle,
-    application: Application,
-) : AndroidViewModel(application) {
+    app: Application,
+) : AndroidViewModel(app) {
+
     private val currentQuery = handle.getLiveData(CURRENT_QUERY, DEFAULT_QUERY)
 
     // Переменная хранит тип тоста и при изменении вызвает тост с нужным текстом
@@ -52,7 +49,6 @@ class HomeViewModel @Inject constructor(
     }
 
     fun addToFavorites(currentImage: CatItem) {
-        Log.d("M_HomeViewModel", "addToFav")
         viewModelScope.launch {
             try {
                 val favId = repository.addToFavoriteByImageId(currentImage.id)
@@ -68,7 +64,6 @@ class HomeViewModel @Inject constructor(
     }
 
     fun deleteFromFavorites(cat: CatItem) {
-        Log.d("M_HomeViewModel", "deleteFromFav")
         viewModelScope.launch {
             try {
                 cat.apply {
@@ -137,10 +132,12 @@ class HomeViewModel @Inject constructor(
         } else {
             DEFAULT_QUERY
         }
-        Log.d("M_HomeViewModel", "query = ${currentQuery.value}")
     }
 
     companion object {
+        const val DEFAULT_FILTER_TYPE = "Любой"
+        const val BREEDS_FILTER_TYPE = "Порода"
+        const val CATEGORIES_FILTER_TYPE = "Категория"
         private const val CURRENT_QUERY = "current_query"
         private val DEFAULT_QUERY = mapOf(
             "breed_ids" to "",

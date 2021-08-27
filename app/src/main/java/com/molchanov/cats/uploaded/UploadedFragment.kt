@@ -2,7 +2,6 @@ package com.molchanov.cats.uploaded
 
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,10 +16,13 @@ import com.molchanov.cats.R
 import com.molchanov.cats.databinding.FragmentMainBinding
 import com.molchanov.cats.network.networkmodels.CatItem
 import com.molchanov.cats.ui.CatsLoadStateAdapter
+import com.molchanov.cats.ui.Decoration
 import com.molchanov.cats.ui.ItemClickListener
 import com.molchanov.cats.ui.PageAdapter
 import com.molchanov.cats.utils.*
+import com.molchanov.cats.utils.CatImagePicker.Companion.getNewImageUri
 import com.molchanov.cats.utils.Functions.setupManager
+import com.molchanov.cats.utils.Global.CURRENT_IMAGE_URI
 import dagger.hilt.android.AndroidEntryPoint
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
@@ -36,18 +38,17 @@ class UploadedFragment : Fragment(), ItemClickListener {
     private val adapter = PageAdapter(this)
     private val headerAdapter = CatsLoadStateAdapter { adapter.retry() }
     private val footerAdapter = CatsLoadStateAdapter { adapter.retry() }
+    private lateinit var decoration: Decoration
     private lateinit var manager: GridLayoutManager
 
     private val cameraContract = registerForActivityResult(PhotoContract()) {
-        Log.d("M_UploadedFragment", "Camera contract result: $it")
         if (it) {
-            prepareFilePart(CURRENT_IMAGE_URI)?.let { part->
+            prepareFilePart(CURRENT_IMAGE_URI)?.let { part ->
                 uploadedViewModel.uploadFile(part)
             }
         }
     }
     private val galleryContract = registerForActivityResult(GalleryContract()) {
-        Log.d("M_UploadedFragment", "Gallery contract result: $it")
         if (it) {
             prepareFilePart(CURRENT_IMAGE_URI)?.let { part ->
                 uploadedViewModel.uploadFile(part)
@@ -68,6 +69,7 @@ class UploadedFragment : Fragment(), ItemClickListener {
         super.onViewCreated(view, savedInstanceState)
 
         manager = GridLayoutManager(context, 2, GridLayoutManager.VERTICAL, false)
+        decoration = Decoration(resources.getDimensionPixelOffset(R.dimen.rv_item_margin))
 
         binding.apply {
             rvMain.apply {
@@ -76,7 +78,7 @@ class UploadedFragment : Fragment(), ItemClickListener {
                     footer = footerAdapter
                 )
                 setHasFixedSize(true)
-                addItemDecoration(DECORATION)
+                addItemDecoration(decoration)
                 layoutManager = setupManager(manager,
                     this@UploadedFragment.adapter,
                     footerAdapter,
@@ -92,7 +94,7 @@ class UploadedFragment : Fragment(), ItemClickListener {
                 isVisible = true
                 setOnClickListener {
                     selectImage()
-            }
+                }
             }
         }
 
@@ -111,7 +113,6 @@ class UploadedFragment : Fragment(), ItemClickListener {
 
         uploadedViewModel.onRefreshTrigger.observe(viewLifecycleOwner) {
             it?.let {
-                Log.d("M_UploadedFragment", "onImageUploaded сработал. Параметр: $it")
                 adapter.refresh()
             }
         }
@@ -165,7 +166,7 @@ class UploadedFragment : Fragment(), ItemClickListener {
     private fun selectImage() {
         val items = arrayOf(resources.getString(R.string.dialog_btn_camera),
             resources.getString(R.string.dialog_btn_gallery))
-        MaterialAlertDialogBuilder(APP_ACTIVITY)
+        MaterialAlertDialogBuilder(requireContext())
             .setTitle(resources.getString(R.string.dialog_label))
             .setNeutralButton(resources.getString(R.string.dialog_btn_cancel)) { dialog, _ ->
                 dialog.dismiss()
@@ -173,7 +174,7 @@ class UploadedFragment : Fragment(), ItemClickListener {
             .setItems(items) { _, which ->
                 when (items[which]) {
                     resources.getString(R.string.dialog_btn_camera) -> cameraContract.launch(
-                        getNewImageUri())
+                        getNewImageUri(requireContext()))
                     resources.getString(R.string.dialog_btn_gallery) -> galleryContract.launch("image/*")
                 }
             }
@@ -183,6 +184,7 @@ class UploadedFragment : Fragment(), ItemClickListener {
     override fun onItemClicked(selectedImage: CatItem) {
         uploadedViewModel.displayAnalysis(selectedImage)
     }
+
     override fun onItemLongTap(selectedImage: CatItem) {
         uploadedViewModel.deleteImageFromServer(selectedImage)
     }

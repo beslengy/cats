@@ -1,7 +1,6 @@
 package com.molchanov.cats.favorites
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,12 +10,13 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.GridLayoutManager
+import com.molchanov.cats.R
 import com.molchanov.cats.databinding.FragmentMainBinding
 import com.molchanov.cats.network.networkmodels.CatItem
 import com.molchanov.cats.ui.CatsLoadStateAdapter
+import com.molchanov.cats.ui.Decoration
 import com.molchanov.cats.ui.ItemClickListener
 import com.molchanov.cats.ui.PageAdapter
-import com.molchanov.cats.utils.DECORATION
 import com.molchanov.cats.utils.Functions.setupManager
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -29,6 +29,7 @@ class FavoritesFragment : Fragment(), ItemClickListener {
     private val adapter = PageAdapter(this)
     private val headerAdapter = CatsLoadStateAdapter { adapter.retry() }
     private val footerAdapter = CatsLoadStateAdapter { adapter.retry() }
+    private lateinit var decoration: Decoration
     private lateinit var manager: GridLayoutManager
 
     override fun onCreateView(
@@ -36,16 +37,15 @@ class FavoritesFragment : Fragment(), ItemClickListener {
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View? {
-        Log.d("M_FavoritesFragment", "onCreateView")
         binding = FragmentMainBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        Log.d("M_FavoritesFragment", "onViewCreated")
 
         manager = GridLayoutManager(context, 2, GridLayoutManager.VERTICAL, false)
+        decoration = Decoration(resources.getDimensionPixelOffset(R.dimen.rv_item_margin))
 
         binding.apply {
             rvMain.apply {
@@ -53,7 +53,7 @@ class FavoritesFragment : Fragment(), ItemClickListener {
                     header = headerAdapter,
                     footer = footerAdapter
                 )
-                addItemDecoration(DECORATION)
+                addItemDecoration(decoration)
                 setHasFixedSize(true)
                 layoutManager = setupManager(
                     manager,

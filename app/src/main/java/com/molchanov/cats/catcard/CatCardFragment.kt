@@ -2,7 +2,6 @@ package com.molchanov.cats.catcard
 
 import android.graphics.drawable.Drawable
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,8 +19,8 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.molchanov.cats.R
-import com.molchanov.cats.databinding.FragmentCatCardBinding
 import com.molchanov.cats.catcard.VoteStates.*
+import com.molchanov.cats.databinding.FragmentCatCardBinding
 import com.molchanov.cats.utils.*
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -52,7 +51,6 @@ class CatCardFragment : Fragment(R.layout.fragment_cat_card) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        Log.d("M_CatCardFragment", "onViewCreated")
 
         voteUpButton = requireActivity().findViewById(R.id.btn_like)
         voteDownButton = requireActivity().findViewById(R.id.btn_dislike)

@@ -1,7 +1,6 @@
 package com.molchanov.cats.home
 
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
@@ -16,10 +15,14 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.molchanov.cats.R
 import com.molchanov.cats.databinding.FragmentFilterBinding
 import com.molchanov.cats.databinding.FragmentMainBinding
+import com.molchanov.cats.home.HomeViewModel.Companion.BREEDS_FILTER_TYPE
+import com.molchanov.cats.home.HomeViewModel.Companion.CATEGORIES_FILTER_TYPE
+import com.molchanov.cats.home.HomeViewModel.Companion.DEFAULT_FILTER_TYPE
 import com.molchanov.cats.home.HomeViewModel.Companion.ToastRequest.*
 import com.molchanov.cats.network.networkmodels.CatItem
 import com.molchanov.cats.network.networkmodels.FilterItem
 import com.molchanov.cats.ui.CatsLoadStateAdapter
+import com.molchanov.cats.ui.Decoration
 import com.molchanov.cats.ui.ItemClickListener
 import com.molchanov.cats.ui.PageAdapter
 import com.molchanov.cats.utils.*
@@ -36,6 +39,7 @@ class HomeFragment : Fragment(), ItemClickListener {
     private val adapter = PageAdapter(this)
     private val headerAdapter = CatsLoadStateAdapter { adapter.retry() }
     private val footerAdapter = CatsLoadStateAdapter { adapter.retry() }
+    private lateinit var decoration: Decoration
     private lateinit var itemMenuAdapter: ArrayAdapter<String>
     private lateinit var manager: GridLayoutManager
 
@@ -45,15 +49,14 @@ class HomeFragment : Fragment(), ItemClickListener {
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View? {
-        Log.d("M_HomeFragment", "onCreateView")
         binding = FragmentMainBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        Log.d("M_HomeFragment", "onViewCreated")
         manager = GridLayoutManager(context, 2, GridLayoutManager.VERTICAL, false)
+        decoration = Decoration(resources.getDimensionPixelOffset(R.dimen.rv_item_margin))
 
         //Настраиваем recyclerView
         binding.apply {
@@ -62,7 +65,7 @@ class HomeFragment : Fragment(), ItemClickListener {
                     header = headerAdapter,
                     footer = footerAdapter
                 )
-                addItemDecoration(DECORATION)
+                addItemDecoration(decoration)
                 setHasFixedSize(true)
                 layoutManager = setupManager(manager,
                     this@HomeFragment.adapter,
@@ -108,7 +111,6 @@ class HomeFragment : Fragment(), ItemClickListener {
         }
         //Наблюдатель для показа тоста
         viewModel.toast.observe(viewLifecycleOwner) {
-            Log.d("M_HomeFragment", "Toast Request: $it")
             it?.let { request ->
                 context?.showToast(
                     when (request) {
@@ -142,7 +144,6 @@ class HomeFragment : Fragment(), ItemClickListener {
 
     //Прослушиватель нажатия на элемент recyclerView
     override fun onItemClicked(selectedImage: CatItem) {
-        Log.d("M_HomeFragment", "$selectedImage")
         viewModel.displayCatCard(selectedImage)
     }
 
@@ -150,8 +151,6 @@ class HomeFragment : Fragment(), ItemClickListener {
 
     //Прослушиватель нажатия на кнопку "сердечко"
     override fun onFavoriteBtnClicked(selectedImage: CatItem) {
-        Log.d("M_HomeFragment",
-            "selected image - $selectedImage, isFav = ${selectedImage.isFavorite}")
         if (!selectedImage.isFavorite) {
             viewModel.addToFavorites(selectedImage)
         } else {

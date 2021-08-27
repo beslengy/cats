@@ -7,6 +7,9 @@ import android.content.Intent
 import android.net.Uri
 import android.provider.MediaStore
 import androidx.activity.result.contract.ActivityResultContract
+import com.molchanov.cats.R
+import com.molchanov.cats.utils.Global.CURRENT_IMAGE_URI
+import com.molchanov.cats.utils.Global.CURRENT_PHOTO_PATH
 
 class GalleryContract : ActivityResultContract<String, Boolean>() {
     override fun createIntent(context: Context, input: String?): Intent {
@@ -14,7 +17,7 @@ class GalleryContract : ActivityResultContract<String, Boolean>() {
             action = Intent.ACTION_PICK
             type = input
         }
-        return Intent.createChooser(intent, "Выберите приложение")
+        return Intent.createChooser(intent, context.getString(R.string.upload_dialog_title))
     }
 
     override fun parseResult(resultCode: Int, intent: Intent?): Boolean = when {

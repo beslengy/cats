@@ -7,10 +7,11 @@ import android.widget.AutoCompleteTextView
 import android.widget.LinearLayout
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.molchanov.cats.R
 import com.molchanov.cats.databinding.FragmentFilterBinding
@@ -35,7 +36,7 @@ class HomeFragment : Fragment(), ItemClickListener {
 
     private lateinit var binding: FragmentMainBinding
 
-    private val viewModel: HomeViewModel by viewModels()
+    private val viewModel: HomeViewModel by activityViewModels()
     private val adapter = PageAdapter(this)
     private val headerAdapter = CatsLoadStateAdapter { adapter.retry() }
     private val footerAdapter = CatsLoadStateAdapter { adapter.retry() }
@@ -57,6 +58,7 @@ class HomeFragment : Fragment(), ItemClickListener {
         super.onViewCreated(view, savedInstanceState)
         manager = GridLayoutManager(context, 2, GridLayoutManager.VERTICAL, false)
         decoration = Decoration(resources.getDimensionPixelOffset(R.dimen.rv_item_margin))
+        adapter.stateRestorationPolicy = PREVENT_WHEN_EMPTY
 
         //Настраиваем recyclerView
         binding.apply {
@@ -84,6 +86,7 @@ class HomeFragment : Fragment(), ItemClickListener {
             fab.isVisible = false
         }
 
+
         //Настраиваем видимость элементов в зависимости от состояния PagedList
         adapter.addLoadStateListener { loadState ->
             binding.apply {
@@ -109,6 +112,16 @@ class HomeFragment : Fragment(), ItemClickListener {
                 }
             }
         }
+
+        viewModel.rvIndex.observe(viewLifecycleOwner) {
+            it?.let { index ->
+                val top = viewModel.rvTop.value
+                if (index != -1 && top != null) {
+                    manager.scrollToPositionWithOffset(index, top)
+                }
+            }
+        }
+
         //Наблюдатель для показа тоста
         viewModel.toast.observe(viewLifecycleOwner) {
             it?.let { request ->
@@ -123,6 +136,7 @@ class HomeFragment : Fragment(), ItemClickListener {
                 viewModel.toastShowComplete()
             }
         }
+
         //Наблюдатель списка картинок. Обновляет адаптер при изменении
         viewModel.homeImages.observe(viewLifecycleOwner)
         {
@@ -140,6 +154,13 @@ class HomeFragment : Fragment(), ItemClickListener {
                 }
             })
         setHasOptionsMenu(true)
+    }
+
+    private fun saveScroll() {
+        val index = manager.findFirstVisibleItemPosition()
+        val v: View? = binding.rvMain.getChildAt(0)
+        val top = if (v == null) 0 else v.top - binding.rvMain.paddingTop
+        viewModel.saveScrollPosition(index, top)
     }
 
     //Прослушиватель нажатия на элемент recyclerView
@@ -224,5 +245,10 @@ class HomeFragment : Fragment(), ItemClickListener {
 
             true
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        saveScroll()
     }
 }

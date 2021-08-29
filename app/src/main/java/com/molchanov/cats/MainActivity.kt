@@ -15,7 +15,6 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.molchanov.cats.databinding.ActivityMainBinding
 import dagger.hilt.android.AndroidEntryPoint
 
-
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
@@ -73,7 +72,6 @@ class MainActivity : AppCompatActivity() {
             appBarConfiguration) || super.onSupportNavigateUp()
     }
 
-
     private fun enableExpandedToolbar(enable: Boolean) {
         appBar.setExpanded(enable)
     }
@@ -95,9 +93,11 @@ class MainActivity : AppCompatActivity() {
         setDraggableAppBar(false)
         enableExpandedToolbar(false)
     }
+
     private fun setViewsForCardFragment() {
         bottomNavBar.isVisible = false
         setDraggableAppBar(true)
         enableExpandedToolbar(true)
     }
+
 }

@@ -1,10 +1,8 @@
 package com.molchanov.cats.uploaded
 
 import android.app.Application
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.viewModelScope
+import android.util.Log
+import androidx.lifecycle.*
 import androidx.paging.cachedIn
 import com.molchanov.cats.R
 import com.molchanov.cats.data.CatsRepository
@@ -22,15 +20,22 @@ import javax.inject.Inject
 @HiltViewModel
 class UploadedViewModel @Inject constructor(
     private val repository: CatsRepository,
-    val app: Application,
+    private val handle: SavedStateHandle,
+    private val app: Application,
 ) : AndroidViewModel(app) {
 
-    val uploadedImages = repository.getUploadedList().cachedIn(viewModelScope)
+    //Переменные для сохранения состояния прокрутки
+    val rvIndex = handle.getLiveData<Int?>("rv_index", null) as LiveData<Int?>
+    val rvTop = handle.getLiveData("rv_top", 0) as LiveData<Int>
+
+    private val state = handle.getLiveData("state", true)
+
+    val uploadedImages = state.switchMap { repository.getUploadedList().cachedIn(viewModelScope) }
 
     private val resources = app.resources
 
-    private val _onRefreshTrigger = MutableLiveData(false)
-    val onRefreshTrigger: LiveData<Boolean> get() = _onRefreshTrigger
+    private val _onRefreshTrigger = MutableLiveData<Boolean?>(null)
+    val onRefreshTrigger: LiveData<Boolean?> get() = _onRefreshTrigger
 
     private val response = MutableLiveData<NetworkResponse>()
 
@@ -80,7 +85,17 @@ class UploadedViewModel @Inject constructor(
             app.showToast(
                 resources.getString(R.string.uploaded_image_is_deleted_toast_text)
             )
-            _onRefreshTrigger.value = !(_onRefreshTrigger.value!!)
+            _onRefreshTrigger.value = true
         }
+    }
+
+    fun saveScrollPosition(index: Int, top: Int) {
+        Log.d("M_HomeViewModel", "saveScroll: $index")
+        handle["rv_index"] = index
+        handle["rv_top"] = top
+    }
+
+    fun refreshComplete() {
+        _onRefreshTrigger.value = null
     }
 }

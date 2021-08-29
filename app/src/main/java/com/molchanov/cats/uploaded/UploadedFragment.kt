@@ -7,10 +7,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.molchanov.cats.R
 import com.molchanov.cats.databinding.FragmentMainBinding
@@ -34,7 +35,7 @@ import java.io.File
 class UploadedFragment : Fragment(), ItemClickListener {
     private lateinit var binding: FragmentMainBinding
 
-    private val uploadedViewModel: UploadedViewModel by viewModels()
+    private val viewModel: UploadedViewModel by activityViewModels()
     private val adapter = PageAdapter(this)
     private val headerAdapter = CatsLoadStateAdapter { adapter.retry() }
     private val footerAdapter = CatsLoadStateAdapter { adapter.retry() }
@@ -44,14 +45,14 @@ class UploadedFragment : Fragment(), ItemClickListener {
     private val cameraContract = registerForActivityResult(PhotoContract()) {
         if (it) {
             prepareFilePart(CURRENT_IMAGE_URI)?.let { part ->
-                uploadedViewModel.uploadFile(part)
+                viewModel.uploadFile(part)
             }
         }
     }
     private val galleryContract = registerForActivityResult(GalleryContract()) {
         if (it) {
             prepareFilePart(CURRENT_IMAGE_URI)?.let { part ->
-                uploadedViewModel.uploadFile(part)
+                viewModel.uploadFile(part)
             }
         }
     }
@@ -70,6 +71,7 @@ class UploadedFragment : Fragment(), ItemClickListener {
 
         manager = GridLayoutManager(context, 2, GridLayoutManager.VERTICAL, false)
         decoration = Decoration(resources.getDimensionPixelOffset(R.dimen.rv_item_margin))
+        adapter.stateRestorationPolicy = PREVENT_WHEN_EMPTY
 
         binding.apply {
             rvMain.apply {
@@ -98,22 +100,32 @@ class UploadedFragment : Fragment(), ItemClickListener {
             }
         }
 
-        uploadedViewModel.uploadedImages.observe(viewLifecycleOwner) {
+        viewModel.rvIndex.observe(viewLifecycleOwner) {
+            it?.let { index ->
+                val top = viewModel.rvTop.value
+                if (index != -1 && top != null) {
+                    manager.scrollToPositionWithOffset(index, top)
+                }
+            }
+        }
+
+        viewModel.uploadedImages.observe(viewLifecycleOwner) {
             it?.let { adapter.submitData(viewLifecycleOwner.lifecycle, it) }
         }
 
-        uploadedViewModel.navigateToAnalysis.observe(viewLifecycleOwner, {
+        viewModel.navigateToAnalysis.observe(viewLifecycleOwner, {
             if (it != null) {
                 this.findNavController().navigate(
                     UploadedFragmentDirections.actionUploadedFragmentToCatCardFragment(analysis = it)
                 )
-                uploadedViewModel.displayAnalysisComplete()
+                viewModel.displayAnalysisComplete()
             }
         })
 
-        uploadedViewModel.onRefreshTrigger.observe(viewLifecycleOwner) {
+        viewModel.onRefreshTrigger.observe(viewLifecycleOwner) {
             it?.let {
                 adapter.refresh()
+                viewModel.refreshComplete()
             }
         }
 
@@ -181,12 +193,19 @@ class UploadedFragment : Fragment(), ItemClickListener {
             .show()
     }
 
+    private fun saveScroll() {
+        val index = manager.findFirstVisibleItemPosition()
+        val v: View? = binding.rvMain.getChildAt(0)
+        val top = if (v == null) 0 else v.top - binding.rvMain.paddingTop
+        viewModel.saveScrollPosition(index, top)
+    }
+
     override fun onItemClicked(selectedImage: CatItem) {
-        uploadedViewModel.displayAnalysis(selectedImage)
+        viewModel.displayAnalysis(selectedImage)
     }
 
     override fun onItemLongTap(selectedImage: CatItem) {
-        uploadedViewModel.deleteImageFromServer(selectedImage)
+        viewModel.deleteImageFromServer(selectedImage)
     }
 
     override fun onFavoriteBtnClicked(selectedImage: CatItem) {}
@@ -194,5 +213,6 @@ class UploadedFragment : Fragment(), ItemClickListener {
     override fun onDestroyView() {
         super.onDestroyView()
         adapter.setItemLongTapAble(false)
+        saveScroll()
     }
 }

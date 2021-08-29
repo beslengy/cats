@@ -2,6 +2,7 @@ package com.molchanov.cats.home
 
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.*
 import androidx.paging.cachedIn
 import com.molchanov.cats.data.CatsRepository
@@ -14,11 +15,16 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val repository: CatsRepository,
-    handle: SavedStateHandle,
+    private val handle: SavedStateHandle,
     app: Application,
 ) : AndroidViewModel(app) {
 
     private val currentQuery = handle.getLiveData(CURRENT_QUERY, DEFAULT_QUERY)
+
+    //Переменные для сохранения состояния прокрутки
+    val rvIndex = handle.getLiveData<Int?>("rv_index", null) as LiveData<Int?>
+    val rvTop = handle.getLiveData("rv_top", 0) as LiveData<Int>
+
 
     // Переменная хранит тип тоста и при изменении вызвает тост с нужным текстом
     private val _toast = MutableLiveData<ToastRequest>(null)
@@ -150,5 +156,11 @@ class HomeViewModel @Inject constructor(
             DELETE_FAV,
             DELETE_FAV_FAIL
         }
+    }
+
+    fun saveScrollPosition(index: Int, top: Int) {
+        Log.d("M_HomeViewModel", "saveScroll: $index")
+        handle["rv_index"] = index
+        handle["rv_top"] = top
     }
 }

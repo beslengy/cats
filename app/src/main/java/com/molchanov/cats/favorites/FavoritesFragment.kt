@@ -6,10 +6,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
 import com.molchanov.cats.R
 import com.molchanov.cats.databinding.FragmentMainBinding
 import com.molchanov.cats.network.networkmodels.CatItem
@@ -25,7 +26,7 @@ class FavoritesFragment : Fragment(), ItemClickListener {
 
     private lateinit var binding: FragmentMainBinding
 
-    private val viewModel: FavoritesViewModel by viewModels()
+    private val viewModel: FavoritesViewModel by activityViewModels()
     private val adapter = PageAdapter(this)
     private val headerAdapter = CatsLoadStateAdapter { adapter.retry() }
     private val footerAdapter = CatsLoadStateAdapter { adapter.retry() }
@@ -46,6 +47,7 @@ class FavoritesFragment : Fragment(), ItemClickListener {
 
         manager = GridLayoutManager(context, 2, GridLayoutManager.VERTICAL, false)
         decoration = Decoration(resources.getDimensionPixelOffset(R.dimen.rv_item_margin))
+        adapter.stateRestorationPolicy = PREVENT_WHEN_EMPTY
 
         binding.apply {
             rvMain.apply {
@@ -70,6 +72,15 @@ class FavoritesFragment : Fragment(), ItemClickListener {
                 }
             }
             fab.isVisible = false
+        }
+
+        viewModel.rvIndex.observe(viewLifecycleOwner) {
+            it?.let { index ->
+                val top = viewModel.rvTop.value
+                if (index != -1 && top != null) {
+                    manager.scrollToPositionWithOffset(index, top)
+                }
+            }
         }
 
         viewModel.favoriteImages.observe(viewLifecycleOwner) {
@@ -106,9 +117,14 @@ class FavoritesFragment : Fragment(), ItemClickListener {
                 }
             }
         }
-
     }
 
+    private fun saveScroll() {
+        val index = manager.findFirstVisibleItemPosition()
+        val v: View? = binding.rvMain.getChildAt(0)
+        val top = if (v == null) 0 else v.top - binding.rvMain.paddingTop
+        viewModel.saveScrollPosition(index, top)
+    }
 
     override fun onItemClicked(selectedImage: CatItem) {
         viewModel.displayCatCard(selectedImage)
@@ -123,5 +139,9 @@ class FavoritesFragment : Fragment(), ItemClickListener {
             progressBar.isVisible = false
             rvMain.isVisible = true
         }
+    }
+    override fun onDestroyView() {
+        super.onDestroyView()
+        saveScroll()
     }
 }

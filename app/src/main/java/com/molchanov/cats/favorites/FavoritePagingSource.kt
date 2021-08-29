@@ -13,6 +13,7 @@ class FavoritePagingSource(
     companion object {
         private const val STARTING_PAGE_INDEX = 0
     }
+
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, CatItem> {
         val position = params.key ?: STARTING_PAGE_INDEX
 

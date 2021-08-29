@@ -1,7 +1,6 @@
 package com.molchanov.cats.favorites
 
 import android.app.Application
-import android.util.Log
 import androidx.lifecycle.*
 import androidx.paging.cachedIn
 import com.molchanov.cats.R
@@ -48,7 +47,6 @@ class FavoritesViewModel @Inject constructor(
                 resources.getString(R.string.already_deleted_from_favorites_toast_text)
             )
         }
-
     }
 
     fun displayCatCard(currentImage: CatItem) {
@@ -58,8 +56,8 @@ class FavoritesViewModel @Inject constructor(
     fun displayCatCardComplete() {
         navigateToCard.value = null
     }
+
     fun saveScrollPosition(index: Int, top: Int) {
-        Log.d("M_HomeViewModel", "saveScroll: $index")
         handle["rv_index"] = index
         handle["rv_top"] = top
     }

@@ -9,15 +9,15 @@ data class CatItem(
     val url: String? = null,
     val image: Image? = null,
     @Json(name = "original_filename") val filename: String? = null,
-    var favourite: Favourite? = null,
+    var favourite: Favourite? = null
 ) {
     data class Favourite(
-        @Json(name = "id") val favId: String,
+        @Json(name = "id") val favId: String
     )
 
     data class Image(
         val id: String,
-        val url: String,
+        val url: String
     )
 
     val imageUrl: String = url ?: image!!.url

@@ -42,7 +42,7 @@ class CatCardFragment : Fragment(R.layout.fragment_cat_card) {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?,
+        savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentCatCardBinding.inflate(inflater, container, false)
         setHasOptionsMenu(true)
@@ -58,8 +58,6 @@ class CatCardFragment : Fragment(R.layout.fragment_cat_card) {
         //Настраиваем видимость VoteLayout
         voteLayout = requireActivity().findViewById(R.id.vote_buttons_layout)
         voteLayout.isVisible = viewModel.analysis.value == null
-
-//        getVoteButtons()
 
         viewModel.cat.observe(viewLifecycleOwner) { catDetail ->
             catDetail?.let {

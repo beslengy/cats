@@ -36,7 +36,7 @@ class FavoritesFragment : Fragment(), ItemClickListener {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?,
+        savedInstanceState: Bundle?
     ): View? {
         binding = FragmentMainBinding.inflate(inflater, container, false)
         return binding.root
@@ -119,6 +119,18 @@ class FavoritesFragment : Fragment(), ItemClickListener {
         }
     }
 
+    //Переопределяем метод и добавляем обновление списка для реализации кейса:
+    //прокручиваем избранные до конца -> переходим на главную -> добавляем картинку в избранное ->
+    //-> возвращаемся на вкладку избранное -> новая картинка должна появиться в конце списка
+    override fun onResume() {
+        super.onResume()
+        binding.apply {
+            adapter.refresh()
+            progressBar.isVisible = false
+            rvMain.isVisible = true
+        }
+    }
+
     private fun saveScroll() {
         val index = manager.findFirstVisibleItemPosition()
         val v: View? = binding.rvMain.getChildAt(0)
@@ -140,6 +152,7 @@ class FavoritesFragment : Fragment(), ItemClickListener {
             rvMain.isVisible = true
         }
     }
+
     override fun onDestroyView() {
         super.onDestroyView()
         saveScroll()

@@ -12,7 +12,7 @@ import javax.inject.Inject
 @HiltViewModel
 class CatCardViewModel @Inject constructor(
     private val repository: CatsRepository,
-    handle: SavedStateHandle,
+    handle: SavedStateHandle
 ) : ViewModel() {
 
     companion object {
@@ -71,7 +71,6 @@ class CatCardViewModel @Inject constructor(
                 }
             }
         }
-
     }
 
     fun voteUp() {

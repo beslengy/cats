@@ -1,6 +1,5 @@
 package com.molchanov.cats.data
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
@@ -23,12 +22,13 @@ class CatsRepository @Inject constructor(private val catsApi: CatsApiService) {
     companion object {
         private const val USER_ID = "user-17"
     }
+
     var votes: List<Vote> = listOf()
     private lateinit var cat: CatDetail
+    private lateinit var filenames: List<CatItem>
     private var analysis: Analysis? = null
 
     fun getCatList(query: Map<String, String>): LiveData<PagingData<CatItem>> {
-        Log.d("M_CatsRepository", "getCatList запущен")
         return Pager(
             config = PagingConfig(
                 pageSize = 20,
@@ -41,7 +41,6 @@ class CatsRepository @Inject constructor(private val catsApi: CatsApiService) {
     }
 
     fun getFavoritesList(): LiveData<PagingData<CatItem>> {
-        Log.d("M_CatsRepository", "getFavoritesList запущен")
 
         return Pager(
             config = PagingConfig(
@@ -66,12 +65,18 @@ class CatsRepository @Inject constructor(private val catsApi: CatsApiService) {
             pagingSourceFactory = { UploadedPagingSource(catsApi) }
         ).liveData
 
+    suspend fun getFilenames(): List<CatItem> {
+        withContext(Dispatchers.IO) {
+            filenames = catsApi.getAllUploaded(100, 0)
+        }
+        return filenames
+    }
+
     suspend fun addToFavoriteByImageId(imageId: String): String {
         val favId: String
         val postFavorite = PostFavorite(imageId, USER_ID)
         withContext(Dispatchers.IO) {
             favId = catsApi.postFavorite(postFavorite).id
-            Log.d("M_CatsRepository", "fav id = $favId")
         }
         return favId
     }
@@ -80,16 +85,13 @@ class CatsRepository @Inject constructor(private val catsApi: CatsApiService) {
         withContext(Dispatchers.IO) {
             try {
                 cat = catsApi.getCatByImage(imageId)
-                Log.d("M_CatsRepository", "$cat")
             } catch (e: IOException) {
-                Log.d("M_CatsRepository", "Ошибка при загрузке карточки котика: ${e.message}")
             }
         }
         return cat
     }
 
     suspend fun removeFavoriteByFavId(favId: String): String {
-        Log.d("M_CatsRepository", "removeFavoritesById запущен, favId: $favId")
         val message: String
         withContext(Dispatchers.IO) {
             message = catsApi.deleteFavorite(favId).message
@@ -98,17 +100,19 @@ class CatsRepository @Inject constructor(private val catsApi: CatsApiService) {
     }
 
 
-    suspend fun uploadImage(file: MultipartBody.Part) : NetworkResponse {
+    suspend fun uploadImage(file: MultipartBody.Part): NetworkResponse {
         val response: NetworkResponse
         withContext(Dispatchers.IO) {
-                response = catsApi.uploadImage(file, USER_ID)
+            response = catsApi.uploadImage(file, USER_ID)
         }
         return response
     }
 
-    suspend fun getBreedsArray(): List<FilterItem> = withContext(Dispatchers.IO) { catsApi.getBreeds() }
+    suspend fun getBreedsArray(): List<FilterItem> =
+        withContext(Dispatchers.IO) { catsApi.getBreeds() }
 
-    suspend fun getCategoriesArray(): List<FilterItem> = withContext(Dispatchers.IO) { catsApi.getCategories() }
+    suspend fun getCategoriesArray(): List<FilterItem> =
+        withContext(Dispatchers.IO) { catsApi.getCategories() }
 
     suspend fun postVote(imageId: String, voteValue: Int): NetworkResponse {
         val response: NetworkResponse
@@ -117,7 +121,7 @@ class CatsRepository @Inject constructor(private val catsApi: CatsApiService) {
         return response
     }
 
-    suspend fun deleteVote(voteId: String) : String {
+    suspend fun deleteVote(voteId: String): String {
         val message: String
         withContext(Dispatchers.IO) { message = catsApi.deleteVote(voteId).message }
         return message
@@ -127,7 +131,7 @@ class CatsRepository @Inject constructor(private val catsApi: CatsApiService) {
         withContext(Dispatchers.IO) { catsApi.deleteUploaded(imageId) }
     }
 
-    suspend fun getAnalysis(imageId: String) : Analysis? {
+    suspend fun getAnalysis(imageId: String): Analysis? {
         withContext(Dispatchers.IO) {
             try {
                 analysis = catsApi.getAnalysis(imageId)[0]
@@ -137,7 +141,7 @@ class CatsRepository @Inject constructor(private val catsApi: CatsApiService) {
         return analysis
     }
 
-    suspend fun getVotes() : List<Vote> {
+    suspend fun getVotes(): List<Vote> {
         withContext(Dispatchers.IO) {
             try {
                 votes = catsApi.getAllVotes(username = USER_ID)

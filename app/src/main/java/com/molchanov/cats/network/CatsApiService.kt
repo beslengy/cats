@@ -2,6 +2,7 @@ package com.molchanov.cats.network
 
 import com.molchanov.cats.network.networkmodels.*
 import okhttp3.MultipartBody
+import retrofit2.Response
 import retrofit2.http.*
 
 interface CatsApiService {
@@ -40,7 +41,7 @@ interface CatsApiService {
     @GET("favourites")
     suspend fun getAllFavorites(
         @Query("limit") limit: Int,
-        @Query("page") page: Int,
+        @Query("page") page: Int
     ): List<CatItem>
 
     /**
@@ -78,7 +79,7 @@ interface CatsApiService {
      * Метод для удаления моей загруженной картинки с сервера
      */
     @DELETE("images/{imageId}")
-    suspend fun deleteUploaded(@Path("imageId") imageId: String)
+    suspend fun deleteUploaded(@Path("imageId") imageId: String): Response<Unit>
 
     /**
      * Метод для получения анализа картинки
@@ -94,7 +95,7 @@ interface CatsApiService {
         @Query("limit") limit: Int = 100,
         @Query("page") page: Int = 0,
         @Query("sub_id") username: String
-    ) : List<Vote>
+    ): List<Vote>
 
 
     /**
@@ -104,11 +105,12 @@ interface CatsApiService {
     suspend fun postVote(
         @Body postVote: PostVote
     ): NetworkResponse
+
     /**
      * Метод для удаления голоса
      */
     @DELETE("votes/{vote_id}")
     suspend fun deleteVote(
         @Path("vote_id") voteId: String
-    ) : NetworkResponse
+    ): NetworkResponse
 }

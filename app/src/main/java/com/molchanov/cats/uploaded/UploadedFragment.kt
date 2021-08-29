@@ -44,18 +44,15 @@ class UploadedFragment : Fragment(), ItemClickListener {
 
     private val cameraContract = registerForActivityResult(PhotoContract()) {
         if (it) {
-            prepareFilePart(CURRENT_IMAGE_URI)?.let { part ->
-                viewModel.uploadFile(part)
-            }
+            viewModel.checkFileIsExist(CURRENT_IMAGE_URI)
         }
     }
     private val galleryContract = registerForActivityResult(GalleryContract()) {
         if (it) {
-            prepareFilePart(CURRENT_IMAGE_URI)?.let { part ->
-                viewModel.uploadFile(part)
-            }
+            viewModel.checkFileIsExist(CURRENT_IMAGE_URI)
         }
     }
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -100,6 +97,29 @@ class UploadedFragment : Fragment(), ItemClickListener {
             }
         }
 
+        viewModel.response.observe(viewLifecycleOwner) {
+            it?.let {
+                binding.apply {
+                    adapter.refresh()
+                    progressBar.isVisible = false
+                    rvMain.isVisible = true
+                }
+            }
+        }
+
+        viewModel.isFileExist.observe(viewLifecycleOwner) {
+            it?.let { isExist ->
+                if (isExist) {
+                    context?.showToast(getString(R.string.upload_image_file_exist_toast))
+                } else {
+                    prepareFilePart(CURRENT_IMAGE_URI)?.let { part ->
+                        viewModel.uploadFile(part)
+                    }
+                }
+                viewModel.fileExistCheckingComplete()
+            }
+        }
+
         viewModel.rvIndex.observe(viewLifecycleOwner) {
             it?.let { index ->
                 val top = viewModel.rvTop.value
@@ -110,7 +130,10 @@ class UploadedFragment : Fragment(), ItemClickListener {
         }
 
         viewModel.uploadedImages.observe(viewLifecycleOwner) {
-            it?.let { adapter.submitData(viewLifecycleOwner.lifecycle, it) }
+            it?.let {
+                adapter.submitData(viewLifecycleOwner.lifecycle, it)
+                viewModel.getFilenames()
+            }
         }
 
         viewModel.navigateToAnalysis.observe(viewLifecycleOwner, {
@@ -121,13 +144,6 @@ class UploadedFragment : Fragment(), ItemClickListener {
                 viewModel.displayAnalysisComplete()
             }
         })
-
-        viewModel.onRefreshTrigger.observe(viewLifecycleOwner) {
-            it?.let {
-                adapter.refresh()
-                viewModel.refreshComplete()
-            }
-        }
 
         //Настраиваем долгое нажатие на итем
         adapter.setItemLongTapAble(true)
@@ -206,6 +222,11 @@ class UploadedFragment : Fragment(), ItemClickListener {
 
     override fun onItemLongTap(selectedImage: CatItem) {
         viewModel.deleteImageFromServer(selectedImage)
+        binding.apply {
+            adapter.refresh()
+            progressBar.isVisible = false
+            rvMain.isVisible = true
+        }
     }
 
     override fun onFavoriteBtnClicked(selectedImage: CatItem) {}

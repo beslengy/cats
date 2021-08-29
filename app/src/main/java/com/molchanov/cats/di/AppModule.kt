@@ -14,7 +14,8 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModule {
-    private const val BASE_URL ="https://api.thecatapi.com/v1/"
+    private const val BASE_URL = "https://api.thecatapi.com/v1/"
+
     @Provides
     fun provideMoshi(): Moshi =
         Moshi.Builder()

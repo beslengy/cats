@@ -14,6 +14,7 @@ import java.util.*
 class CatImagePicker {
     companion object {
         private const val FILE_AUTHORITY = "${BuildConfig.APPLICATION_ID}.provider"
+
         /**
          * Метод для создания пустого файла изображения (без самого изображения).
          * Задаем имя исходя из текущего времени и даты.
@@ -33,6 +34,7 @@ class CatImagePicker {
                 CURRENT_PHOTO_PATH = absolutePath
             }
         }
+
         /**
          * Метод создает пустой файл, используя [createImageFile]
          * и возвращает его Uri через [FileProvider.getUriForFile]

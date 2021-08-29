@@ -4,7 +4,7 @@ import com.squareup.moshi.JsonClass
 
 
 @JsonClass(generateAdapter = true)
-data class NetworkResponse (
+data class NetworkResponse(
     val message: String = "",
     val id: String = ""
 )

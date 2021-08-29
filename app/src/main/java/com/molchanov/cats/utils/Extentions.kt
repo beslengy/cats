@@ -15,9 +15,11 @@ import com.molchanov.cats.network.networkmodels.CatDetail
 fun Context.showToast(message: String) {
     Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
 }
+
 fun Context.showToast(resId: Int) {
     Toast.makeText(this, resId, Toast.LENGTH_SHORT).show()
 }
+
 fun ImageView.bindImage(imageUrl: String?) {
     imageUrl?.let {
         val imgUri = it.toUri().buildUpon().scheme("https").build()

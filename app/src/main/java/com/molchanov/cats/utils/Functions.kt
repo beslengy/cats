@@ -13,7 +13,7 @@ object Functions {
         manager: GridLayoutManager,
         adapter: PageAdapter,
         footerAdapter: CatsLoadStateAdapter,
-        headerAdapter: CatsLoadStateAdapter,
+        headerAdapter: CatsLoadStateAdapter
     ): GridLayoutManager {
         manager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
             //переопределяем обязательный метод и добавляем логику выбора

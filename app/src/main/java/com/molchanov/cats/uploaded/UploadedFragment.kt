@@ -1,128 +1,149 @@
-package com.molchanov.cats.ui.uploaded
+package com.molchanov.cats.uploaded
 
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.molchanov.cats.R
-import com.molchanov.cats.databinding.FragmentUploadedBinding
+import com.molchanov.cats.databinding.FragmentMainBinding
 import com.molchanov.cats.network.networkmodels.CatItem
 import com.molchanov.cats.ui.CatsLoadStateAdapter
+import com.molchanov.cats.ui.Decoration
 import com.molchanov.cats.ui.ItemClickListener
 import com.molchanov.cats.ui.PageAdapter
 import com.molchanov.cats.utils.*
+import com.molchanov.cats.utils.CatImagePicker.Companion.getNewImageUri
 import com.molchanov.cats.utils.Functions.setupManager
-import com.molchanov.cats.viewmodels.uploaded.UploadedViewModel
+import com.molchanov.cats.utils.Global.CURRENT_IMAGE_URI
 import dagger.hilt.android.AndroidEntryPoint
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.File
-import javax.inject.Inject
-import javax.inject.Provider
 
 @AndroidEntryPoint
-class UploadedFragment : Fragment(R.layout.fragment_uploaded), ItemClickListener {
-    private var _binding: FragmentUploadedBinding? = null
-    private val binding get() = _binding!!
+class UploadedFragment : Fragment(), ItemClickListener {
+    private lateinit var binding: FragmentMainBinding
 
-    @Inject
-    lateinit var manager: Provider<GridLayoutManager>
-
-    private val uploadedViewModel: UploadedViewModel by viewModels()
+    private val viewModel: UploadedViewModel by activityViewModels()
     private val adapter = PageAdapter(this)
     private val headerAdapter = CatsLoadStateAdapter { adapter.retry() }
     private val footerAdapter = CatsLoadStateAdapter { adapter.retry() }
+    private lateinit var decoration: Decoration
+    private lateinit var manager: GridLayoutManager
 
     private val cameraContract = registerForActivityResult(PhotoContract()) {
-        Log.d("M_UploadedFragment", "Camera contract result: $it")
         if (it) {
-            prepareFilePart(CURRENT_IMAGE_URI)?.let { part->
-                uploadedViewModel.uploadFile(part)
-            }
+            viewModel.checkFileIsExist(CURRENT_IMAGE_URI)
         }
     }
     private val galleryContract = registerForActivityResult(GalleryContract()) {
-        Log.d("M_UploadedFragment", "Gallery contract result: $it")
         if (it) {
-            prepareFilePart(CURRENT_IMAGE_URI)?.let { part ->
-                uploadedViewModel.uploadFile(part)
-            }
+            viewModel.checkFileIsExist(CURRENT_IMAGE_URI)
         }
     }
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View? {
-        _binding = FragmentUploadedBinding.inflate(inflater, container, false)
+        binding = FragmentMainBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        _binding = FragmentUploadedBinding.bind(view)
+        manager = GridLayoutManager(context, 2, GridLayoutManager.VERTICAL, false)
+        decoration = Decoration(resources.getDimensionPixelOffset(R.dimen.rv_item_margin))
+        adapter.stateRestorationPolicy = PREVENT_WHEN_EMPTY
 
         binding.apply {
-            rvUploaded.apply {
+            rvMain.apply {
                 this.adapter = this@UploadedFragment.adapter.withLoadStateHeaderAndFooter(
                     header = headerAdapter,
                     footer = footerAdapter
                 )
                 setHasFixedSize(true)
-                addItemDecoration(DECORATION)
-                layoutManager = setupManager(manager.get(),
+                addItemDecoration(decoration)
+                layoutManager = setupManager(manager,
                     this@UploadedFragment.adapter,
                     footerAdapter,
                     headerAdapter)
             }
-            srlUploaded.apply {
+            srl.apply {
                 setOnRefreshListener {
                     adapter.refresh()
                     this.isRefreshing = false
                 }
             }
-            fab.setOnClickListener {
-                selectImage()
+            fab.apply {
+                isVisible = true
+                setOnClickListener {
+                    selectImage()
+                }
             }
         }
 
-        uploadedViewModel.uploadedImages.observe(viewLifecycleOwner) {
-            it?.let { adapter.submitData(viewLifecycleOwner.lifecycle, it) }
+        viewModel.response.observe(viewLifecycleOwner) {
+            it?.let {
+                binding.apply {
+                    adapter.refresh()
+                    progressBar.isVisible = false
+                    rvMain.isVisible = true
+                }
+            }
         }
 
-        uploadedViewModel.navigateToAnalysis.observe(viewLifecycleOwner, {
+        viewModel.isFileExist.observe(viewLifecycleOwner) {
+            it?.let { isExist ->
+                if (isExist) {
+                    context?.showToast(getString(R.string.upload_image_file_exist_toast))
+                } else {
+                    prepareFilePart(CURRENT_IMAGE_URI)?.let { part ->
+                        viewModel.uploadFile(part)
+                    }
+                }
+                viewModel.fileExistCheckingComplete()
+            }
+        }
+
+        viewModel.rvIndex.observe(viewLifecycleOwner) {
+            it?.let { index ->
+                val top = viewModel.rvTop.value
+                if (index != -1 && top != null) {
+                    manager.scrollToPositionWithOffset(index, top)
+                }
+            }
+        }
+
+        viewModel.uploadedImages.observe(viewLifecycleOwner) {
+            it?.let {
+                adapter.submitData(viewLifecycleOwner.lifecycle, it)
+                viewModel.getFilenames()
+            }
+        }
+
+        viewModel.navigateToAnalysis.observe(viewLifecycleOwner, {
             if (it != null) {
                 this.findNavController().navigate(
                     UploadedFragmentDirections.actionUploadedFragmentToCatCardFragment(analysis = it)
                 )
-                uploadedViewModel.displayAnalysisComplete()
+                viewModel.displayAnalysisComplete()
             }
         })
-
-        uploadedViewModel.onRefreshTrigger.observe(viewLifecycleOwner) {
-            it?.let {
-                Log.d("M_UploadedFragment", "onImageUploaded сработал. Параметр: $it")
-                adapter.refresh()
-            }
-        }
-
-
-
-        //Настраиваем видимость кнопки загрузки картинки
-
 
         //Настраиваем долгое нажатие на итем
         adapter.setItemLongTapAble(true)
@@ -130,8 +151,8 @@ class UploadedFragment : Fragment(R.layout.fragment_uploaded), ItemClickListener
         //Настраиваем видимость элементов в зависимости от состояния PagedList
         adapter.addLoadStateListener { loadState ->
             binding.apply {
-                pb.isVisible = loadState.source.refresh is LoadState.Loading
-                rvUploaded.isVisible = loadState.source.refresh is LoadState.NotLoading
+                progressBar.isVisible = loadState.source.refresh is LoadState.Loading
+                rvMain.isVisible = loadState.source.refresh is LoadState.NotLoading
                 btnRetry.isVisible = loadState.source.refresh is LoadState.Error
                 tvError.isVisible = loadState.source.refresh is LoadState.Error
                 ivError.isVisible = loadState.source.refresh is LoadState.Error
@@ -140,7 +161,7 @@ class UploadedFragment : Fragment(R.layout.fragment_uploaded), ItemClickListener
                     loadState.append.endOfPaginationReached &&
                     adapter.itemCount < 1
                 ) {
-                    rvUploaded.isVisible = false
+                    rvMain.isVisible = false
                     tvEmpty.isVisible = true
                     ivEmpty.isVisible = true
                 } else {
@@ -173,7 +194,7 @@ class UploadedFragment : Fragment(R.layout.fragment_uploaded), ItemClickListener
     private fun selectImage() {
         val items = arrayOf(resources.getString(R.string.dialog_btn_camera),
             resources.getString(R.string.dialog_btn_gallery))
-        MaterialAlertDialogBuilder(APP_ACTIVITY)
+        MaterialAlertDialogBuilder(requireContext())
             .setTitle(resources.getString(R.string.dialog_label))
             .setNeutralButton(resources.getString(R.string.dialog_btn_cancel)) { dialog, _ ->
                 dialog.dismiss()
@@ -181,27 +202,38 @@ class UploadedFragment : Fragment(R.layout.fragment_uploaded), ItemClickListener
             .setItems(items) { _, which ->
                 when (items[which]) {
                     resources.getString(R.string.dialog_btn_camera) -> cameraContract.launch(
-                        getNewImageUri())
+                        getNewImageUri(requireContext()))
                     resources.getString(R.string.dialog_btn_gallery) -> galleryContract.launch("image/*")
                 }
             }
             .show()
     }
 
-    override fun onItemClicked(selectedImage: CatItem) {
-        uploadedViewModel.displayAnalysis(selectedImage)
+    private fun saveScroll() {
+        val index = manager.findFirstVisibleItemPosition()
+        val v: View? = binding.rvMain.getChildAt(0)
+        val top = if (v == null) 0 else v.top - binding.rvMain.paddingTop
+        viewModel.saveScrollPosition(index, top)
     }
+
+    override fun onItemClicked(selectedImage: CatItem) {
+        viewModel.displayAnalysis(selectedImage)
+    }
+
     override fun onItemLongTap(selectedImage: CatItem) {
-        uploadedViewModel.deleteImageFromServer(selectedImage)
+        viewModel.deleteImageFromServer(selectedImage)
+        binding.apply {
+            adapter.refresh()
+            progressBar.isVisible = false
+            rvMain.isVisible = true
+        }
     }
 
     override fun onFavoriteBtnClicked(selectedImage: CatItem) {}
 
-
-
     override fun onDestroyView() {
         super.onDestroyView()
         adapter.setItemLongTapAble(false)
-        _binding = null
+        saveScroll()
     }
 }

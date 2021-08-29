@@ -6,7 +6,7 @@ data class CatDetail(
     val breeds: List<Breeds>? = null,
     val categories: List<Categories>? = null,
     val id: String,
-    val url: String,
+    val url: String
 ) {
     data class Breeds(
         @Json(name = "id")
@@ -20,8 +20,7 @@ data class CatDetail(
         @Json(name = "temperament")
         val temperament: String? = null,
         @Json(name = "description")
-        val description: String? = null,
-
+        val description: String? = null
         )
 
     data class Categories(

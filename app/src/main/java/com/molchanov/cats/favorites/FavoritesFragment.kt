@@ -1,78 +1,84 @@
-package com.molchanov.cats.ui.favorites
+package com.molchanov.cats.favorites
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.GridLayoutManager
-import com.google.android.material.floatingactionbutton.FloatingActionButton
+import androidx.recyclerview.widget.RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
 import com.molchanov.cats.R
-import com.molchanov.cats.databinding.FragmentFavoritesBinding
+import com.molchanov.cats.databinding.FragmentMainBinding
 import com.molchanov.cats.network.networkmodels.CatItem
 import com.molchanov.cats.ui.CatsLoadStateAdapter
+import com.molchanov.cats.ui.Decoration
 import com.molchanov.cats.ui.ItemClickListener
 import com.molchanov.cats.ui.PageAdapter
-import com.molchanov.cats.utils.DECORATION
 import com.molchanov.cats.utils.Functions.setupManager
-import com.molchanov.cats.viewmodels.favorites.FavoritesViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
-import javax.inject.Provider
 
 @AndroidEntryPoint
-class FavoritesFragment : Fragment(R.layout.fragment_favorites), ItemClickListener {
+class FavoritesFragment : Fragment(), ItemClickListener {
 
-    private var _binding: FragmentFavoritesBinding? = null
-    private val binding get() = _binding!!
+    private lateinit var binding: FragmentMainBinding
 
-    private val viewModel: FavoritesViewModel by viewModels()
+    private val viewModel: FavoritesViewModel by activityViewModels()
     private val adapter = PageAdapter(this)
     private val headerAdapter = CatsLoadStateAdapter { adapter.retry() }
     private val footerAdapter = CatsLoadStateAdapter { adapter.retry() }
-
-    @Inject
-    lateinit var manager: Provider<GridLayoutManager>
+    private lateinit var decoration: Decoration
+    private lateinit var manager: GridLayoutManager
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?,
+        savedInstanceState: Bundle?
     ): View? {
-        Log.d("M_FavoritesFragment", "onCreateView")
-        _binding = FragmentFavoritesBinding.inflate(inflater, container, false)
+        binding = FragmentMainBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        Log.d("M_FavoritesFragment", "onViewCreated")
+
+        manager = GridLayoutManager(context, 2, GridLayoutManager.VERTICAL, false)
+        decoration = Decoration(resources.getDimensionPixelOffset(R.dimen.rv_item_margin))
+        adapter.stateRestorationPolicy = PREVENT_WHEN_EMPTY
 
         binding.apply {
-            rvFavorites.apply {
+            rvMain.apply {
                 adapter = this@FavoritesFragment.adapter.withLoadStateHeaderAndFooter(
                     header = headerAdapter,
                     footer = footerAdapter
                 )
-                addItemDecoration(DECORATION)
+                addItemDecoration(decoration)
                 setHasFixedSize(true)
                 layoutManager = setupManager(
-                    manager.get(),
+                    manager,
                     this@FavoritesFragment.adapter,
                     footerAdapter,
                     headerAdapter
                 )
             }
             btnRetry.setOnClickListener { adapter.retry() }
-            srlFavorites.apply {
+            srl.apply {
                 setOnRefreshListener {
                     adapter.refresh()
                     this.isRefreshing = false
+                }
+            }
+            fab.isVisible = false
+        }
+
+        viewModel.rvIndex.observe(viewLifecycleOwner) {
+            it?.let { index ->
+                val top = viewModel.rvTop.value
+                if (index != -1 && top != null) {
+                    manager.scrollToPositionWithOffset(index, top)
                 }
             }
         }
@@ -92,8 +98,8 @@ class FavoritesFragment : Fragment(R.layout.fragment_favorites), ItemClickListen
 
         adapter.addLoadStateListener { loadState ->
             binding.apply {
-                pb.isVisible = loadState.refresh is LoadState.Loading
-                rvFavorites.isVisible = loadState.source.refresh is LoadState.NotLoading
+                progressBar.isVisible = loadState.refresh is LoadState.Loading
+                rvMain.isVisible = loadState.source.refresh is LoadState.NotLoading
                 btnRetry.isVisible = loadState.source.refresh is LoadState.Error
                 tvError.isVisible = loadState.source.refresh is LoadState.Error
                 ivError.isVisible = loadState.source.refresh is LoadState.Error
@@ -102,7 +108,7 @@ class FavoritesFragment : Fragment(R.layout.fragment_favorites), ItemClickListen
                     loadState.append.endOfPaginationReached &&
                     adapter.itemCount < 1
                 ) {
-                    rvFavorites.isVisible = false
+                    rvMain.isVisible = false
                     tvEmpty.isVisible = true
                     ivEmpty.isVisible = true
                 } else {
@@ -111,9 +117,26 @@ class FavoritesFragment : Fragment(R.layout.fragment_favorites), ItemClickListen
                 }
             }
         }
-
     }
 
+    //Переопределяем метод и добавляем обновление списка для реализации кейса:
+    //прокручиваем избранные до конца -> переходим на главную -> добавляем картинку в избранное ->
+    //-> возвращаемся на вкладку избранное -> новая картинка должна появиться в конце списка
+    override fun onResume() {
+        super.onResume()
+        binding.apply {
+            adapter.refresh()
+            progressBar.isVisible = false
+            rvMain.isVisible = true
+        }
+    }
+
+    private fun saveScroll() {
+        val index = manager.findFirstVisibleItemPosition()
+        val v: View? = binding.rvMain.getChildAt(0)
+        val top = if (v == null) 0 else v.top - binding.rvMain.paddingTop
+        viewModel.saveScrollPosition(index, top)
+    }
 
     override fun onItemClicked(selectedImage: CatItem) {
         viewModel.displayCatCard(selectedImage)
@@ -125,14 +148,13 @@ class FavoritesFragment : Fragment(R.layout.fragment_favorites), ItemClickListen
         viewModel.deleteFromFavorites(selectedImage)
         binding.apply {
             adapter.refresh()
-            pb.isVisible = false
-            rvFavorites.isVisible = true
+            progressBar.isVisible = false
+            rvMain.isVisible = true
         }
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        Log.d("M_FavoritesFragment", "onDestroyView")
-        _binding = null
+        saveScroll()
     }
 }

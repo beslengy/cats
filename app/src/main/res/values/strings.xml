@@ -9,6 +9,7 @@
     <string name="upload_end_toast_text">Изображение успешно загружено</string>
     <string name="upload_fail_toast_text">Ошибка при загрузке изображения</string>
     <string name="uploaded_image_is_deleted_toast_text">Изображение успешно удалено</string>
+    <string name="uploaded_image_delete_fail_toast_text">Ошибка при удалении изображения</string>
 
     <!-- Подписи фрагментов -->
     <string name="home_fragment_label">Главная</string>
@@ -38,7 +39,13 @@
         писатель Отто Ран, палеонтолог Рой Чемпен Эндрюс, археолог Вендиль Джонс, носивший такую же
         шляпу и археолог Фредерик Альберт Митчелл Хеджес, который по слухам нашел Хрустальный череп
     </string>
+
     <string name="delete_menu_item_title">Удалить</string>
+    <string name="upload_dialog_title">Выберите приложение</string>
+    <string name="default_filter_type">Любой</string>
+    <string name="breeds_filter_type">Порода</string>
+    <string name="categories_filter_type">Категория</string>
+    <string name="upload_image_file_exist_toast">Файл с таким именем уже существует</string>
 
     <string-array name="filter_types">
         <item>Порода</item>

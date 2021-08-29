@@ -1,48 +1,48 @@
-package com.molchanov.cats.ui.home
+package com.molchanov.cats.home
 
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import android.widget.LinearLayout
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.molchanov.cats.R
 import com.molchanov.cats.databinding.FragmentFilterBinding
-import com.molchanov.cats.databinding.FragmentHomeBinding
+import com.molchanov.cats.databinding.FragmentMainBinding
+import com.molchanov.cats.home.HomeViewModel.Companion.BREEDS_FILTER_TYPE
+import com.molchanov.cats.home.HomeViewModel.Companion.CATEGORIES_FILTER_TYPE
+import com.molchanov.cats.home.HomeViewModel.Companion.DEFAULT_FILTER_TYPE
+import com.molchanov.cats.home.HomeViewModel.Companion.ToastRequest.*
 import com.molchanov.cats.network.networkmodels.CatItem
 import com.molchanov.cats.network.networkmodels.FilterItem
 import com.molchanov.cats.ui.CatsLoadStateAdapter
+import com.molchanov.cats.ui.Decoration
 import com.molchanov.cats.ui.ItemClickListener
 import com.molchanov.cats.ui.PageAdapter
 import com.molchanov.cats.utils.*
 import com.molchanov.cats.utils.Functions.setupManager
-import com.molchanov.cats.viewmodels.home.HomeViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
-import javax.inject.Inject
-import javax.inject.Provider
 
 @AndroidEntryPoint
-class HomeFragment : Fragment(R.layout.fragment_home), ItemClickListener {
+class HomeFragment : Fragment(), ItemClickListener {
 
-    private var _binding: FragmentHomeBinding? = null
-    private val binding get() = _binding!!
+    private lateinit var binding: FragmentMainBinding
 
-    @Inject
-    lateinit var manager: Provider<GridLayoutManager>
-
-    private val viewModel: HomeViewModel by viewModels()
+    private val viewModel: HomeViewModel by activityViewModels()
     private val adapter = PageAdapter(this)
     private val headerAdapter = CatsLoadStateAdapter { adapter.retry() }
     private val footerAdapter = CatsLoadStateAdapter { adapter.retry() }
+    private lateinit var decoration: Decoration
     private lateinit var itemMenuAdapter: ArrayAdapter<String>
+    private lateinit var manager: GridLayoutManager
 
 
     override fun onCreateView(
@@ -50,63 +50,90 @@ class HomeFragment : Fragment(R.layout.fragment_home), ItemClickListener {
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View? {
-        Log.d("M_HomeFragment", "onCreateView")
-        _binding = FragmentHomeBinding.inflate(inflater, container, false)
+        binding = FragmentMainBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        Log.d("M_HomeFragment", "onViewCreated")
+        manager = GridLayoutManager(context, 2, GridLayoutManager.VERTICAL, false)
+        decoration = Decoration(resources.getDimensionPixelOffset(R.dimen.rv_item_margin))
+        adapter.stateRestorationPolicy = PREVENT_WHEN_EMPTY
 
         //Настраиваем recyclerView
         binding.apply {
-            rvHome.apply {
+            rvMain.apply {
                 adapter = this@HomeFragment.adapter.withLoadStateHeaderAndFooter(
                     header = headerAdapter,
                     footer = footerAdapter
                 )
-                addItemDecoration(DECORATION)
+                addItemDecoration(decoration)
                 setHasFixedSize(true)
-                layoutManager = setupManager(manager.get(),
+                layoutManager = setupManager(manager,
                     this@HomeFragment.adapter,
                     footerAdapter,
                     headerAdapter)
             }
-            srlHome.apply {
+            srl.apply {
                 setOnRefreshListener {
                     adapter.refresh()
                     this.isRefreshing = false
                 }
             }
-            btnRetryHome.setOnClickListener {
+            btnRetry.setOnClickListener {
                 adapter.retry()
             }
+            fab.isVisible = false
         }
+
 
         //Настраиваем видимость элементов в зависимости от состояния PagedList
         adapter.addLoadStateListener { loadState ->
             binding.apply {
                 //Загрузка
-                pbHome.isVisible = loadState.source.refresh is LoadState.Loading
+                progressBar.isVisible = loadState.source.refresh is LoadState.Loading
                 //Состояние просмотра
-                rvHome.isVisible = loadState.source.refresh is LoadState.NotLoading
+                rvMain.isVisible = loadState.source.refresh is LoadState.NotLoading
                 //Ошибка
-                btnRetryHome.isVisible = loadState.source.refresh is LoadState.Error
-                tvErrorHome.isVisible = loadState.source.refresh is LoadState.Error
-                ivErrorHome.isVisible = loadState.source.refresh is LoadState.Error
+                btnRetry.isVisible = loadState.source.refresh is LoadState.Error
+                tvError.isVisible = loadState.source.refresh is LoadState.Error
+                ivError.isVisible = loadState.source.refresh is LoadState.Error
                 //Пустой список
                 if (loadState.source.refresh is LoadState.NotLoading &&
                     loadState.append.endOfPaginationReached &&
                     adapter.itemCount < 1
                 ) {
-                    rvHome.isVisible = false
-                    tvEmptyHome.isVisible = true
-                    ivEmptyHome.isVisible = true
+                    rvMain.isVisible = false
+                    tvEmpty.isVisible = true
+                    ivEmpty.isVisible = true
                 } else {
-                    tvEmptyHome.isVisible = false
-                    ivEmptyHome.isVisible = false
+                    tvEmpty.isVisible = false
+                    ivEmpty.isVisible = false
                 }
+            }
+        }
+
+        viewModel.rvIndex.observe(viewLifecycleOwner) {
+            it?.let { index ->
+                val top = viewModel.rvTop.value
+                if (index != -1 && top != null) {
+                    manager.scrollToPositionWithOffset(index, top)
+                }
+            }
+        }
+
+        //Наблюдатель для показа тоста
+        viewModel.toast.observe(viewLifecycleOwner) {
+            it?.let { request ->
+                context?.showToast(
+                    when (request) {
+                        ADD_FAV -> R.string.added_to_favorite_toast_text
+                        ADD_FAV_FAIL -> R.string.already_added_to_favorite_toast_text
+                        DELETE_FAV -> R.string.deleted_from_favorites_toast_text
+                        DELETE_FAV_FAIL -> R.string.already_deleted_from_favorites_toast_text
+                    }
+                )
+                viewModel.toastShowComplete()
             }
         }
 
@@ -126,13 +153,18 @@ class HomeFragment : Fragment(R.layout.fragment_home), ItemClickListener {
                     viewModel.displayCatCardComplete()
                 }
             })
-
         setHasOptionsMenu(true)
+    }
+
+    private fun saveScroll() {
+        val index = manager.findFirstVisibleItemPosition()
+        val v: View? = binding.rvMain.getChildAt(0)
+        val top = if (v == null) 0 else v.top - binding.rvMain.paddingTop
+        viewModel.saveScrollPosition(index, top)
     }
 
     //Прослушиватель нажатия на элемент recyclerView
     override fun onItemClicked(selectedImage: CatItem) {
-        Log.d("M_HomeFragment", "$selectedImage")
         viewModel.displayCatCard(selectedImage)
     }
 
@@ -142,12 +174,9 @@ class HomeFragment : Fragment(R.layout.fragment_home), ItemClickListener {
     override fun onFavoriteBtnClicked(selectedImage: CatItem) {
         if (!selectedImage.isFavorite) {
             viewModel.addToFavorites(selectedImage)
-            selectedImage.isFavorite = true
         } else {
             viewModel.deleteFromFavorites(selectedImage)
-            selectedImage.isFavorite = false
         }
-
     }
 
     //Фильтр
@@ -157,9 +186,9 @@ class HomeFragment : Fragment(R.layout.fragment_home), ItemClickListener {
 
         val filterItem = menu.findItem(R.id.action_filter)
         filterItem.setOnMenuItemClickListener {
-            val dialog = BottomSheetDialog(APP_ACTIVITY)
-            val view = LayoutInflater.from(APP_ACTIVITY).inflate(R.layout.fragment_filter,
-                APP_ACTIVITY.findViewById(R.id.ll_filter) as LinearLayout?)
+            val dialog = BottomSheetDialog(requireContext())
+            val view = LayoutInflater.from(context).inflate(R.layout.fragment_filter,
+                requireActivity().findViewById(R.id.ll_filter) as LinearLayout?)
             val dialogBinding = FragmentFilterBinding.bind(view)
             val typeMenu = dialogBinding.menuFilterType.editText as? AutoCompleteTextView
             val itemsMenu = dialogBinding.menuFilterItem.editText as? AutoCompleteTextView
@@ -169,7 +198,6 @@ class HomeFragment : Fragment(R.layout.fragment_home), ItemClickListener {
 
             viewModel.currentFilterItem.observe(viewLifecycleOwner) {
                 itemsMenu?.setText(it?.name, false)
-
             }
 
             viewModel.currentFilterType.observe(viewLifecycleOwner) { type ->
@@ -208,7 +236,7 @@ class HomeFragment : Fragment(R.layout.fragment_home), ItemClickListener {
             }
             dialogBinding.btnClose.setOnClickListener {
                 viewModel.setQuery()
-                binding.rvHome.scrollToPosition(0)
+                binding.rvMain.scrollToPosition(0)
                 dialog.dismiss()
             }
 
@@ -221,7 +249,6 @@ class HomeFragment : Fragment(R.layout.fragment_home), ItemClickListener {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        Log.d("M_HomeFragment", "onDestroyView()")
-        _binding = null
+        saveScroll()
     }
 }

@@ -6,7 +6,7 @@
     app:startDestination="@id/homeFragment">
     <fragment
         android:id="@+id/uploadedFragment"
-        android:name="com.molchanov.cats.ui.uploaded.UploadedFragment"
+        android:name="com.molchanov.cats.uploaded.UploadedFragment"
         android:label="@string/uploaded_fragment_label"
         tools:layout="@layout/fragment_uploaded" >
         <action
@@ -15,7 +15,7 @@
     </fragment>
     <fragment
         android:id="@+id/favoritesFragment"
-        android:name="com.molchanov.cats.ui.favorites.FavoritesFragment"
+        android:name="com.molchanov.cats.favorites.FavoritesFragment"
         android:label="@string/favorites_fragment_label"
         tools:layout="@layout/fragment_favorites" >
         <action
@@ -24,7 +24,7 @@
     </fragment>
     <fragment
         android:id="@+id/homeFragment"
-        android:name="com.molchanov.cats.ui.home.HomeFragment"
+        android:name="com.molchanov.cats.home.HomeFragment"
         android:label="@string/home_fragment_label"
         tools:layout="@layout/fragment_home" >
         <action
@@ -33,7 +33,7 @@
     </fragment>
     <fragment
         android:id="@+id/catCardFragment"
-        android:name="com.molchanov.cats.ui.catcard.CatCardFragment"
+        android:name="com.molchanov.cats.catcard.CatCardFragment"
         android:label=""
         tools:layout="@layout/fragment_cat_card" >
         <argument

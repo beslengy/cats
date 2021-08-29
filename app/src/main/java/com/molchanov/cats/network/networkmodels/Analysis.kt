@@ -12,7 +12,7 @@ data class Analysis(
     val vendor: String,
     @Json(name = "created_at") val createdAt: String,
     val labels: List<Label>,
-    var imageUrl : String = ""
+    var imageUrl: String = ""
 ) : Parcelable {
     @Parcelize
     @JsonClass(generateAdapter = true)

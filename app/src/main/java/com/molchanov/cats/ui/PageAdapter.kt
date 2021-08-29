@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.molchanov.cats.R
 import com.molchanov.cats.databinding.ImageItemBinding
 import com.molchanov.cats.network.networkmodels.CatItem
-import com.molchanov.cats.utils.APP_ACTIVITY
 import com.molchanov.cats.utils.bindImage
 
 class PageAdapter(private val itemClickListener: ItemClickListener) :
@@ -33,7 +32,6 @@ class PageAdapter(private val itemClickListener: ItemClickListener) :
         }
     }
 
-
     inner class ViewHolder(private val binding: ImageItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
@@ -45,33 +43,34 @@ class PageAdapter(private val itemClickListener: ItemClickListener) :
                     setOnClickListener {
                         itemClickListener.onItemClicked(image)
                     }
-                    if (itemLongClickable) setOnLongClickListener {
-                        val popup = PopupMenu(APP_ACTIVITY, this)
-                        popup.apply {
-                            inflate(R.menu.delete_uploaded_menu)
-                            setOnMenuItemClickListener {
-                                itemClickListener.onItemLongTap(image)
-                                true
+                    if (itemLongClickable) {
+                        setOnLongClickListener {
+                            val popup = PopupMenu(context, this)
+                            popup.apply {
+                                inflate(R.menu.delete_uploaded_menu)
+                                setOnMenuItemClickListener {
+                                    itemClickListener.onItemLongTap(image)
+                                    true
+                                }
                             }
+                            popup.show()
+                            true
                         }
-                        popup.show()
-                        true
                     }
                 }
-
 
                 btnFavorites.apply {
                     setOnClickListener {
                         itemClickListener.onFavoriteBtnClicked(image)
                         val favIcon =
-                            if (image.isFavorite) R.drawable.ic_heart
+                            if (!image.isFavorite) R.drawable.ic_heart
                             else R.drawable.ic_heart_border
-                        this.setImageDrawable(getDrawable(resources, favIcon, APP_ACTIVITY.theme))
+                        this.setImageDrawable(getDrawable(resources, favIcon, context.theme))
                     }
                     if (image.isUploaded) this.visibility = View.GONE
                     if (image.isFavorite) this.setImageDrawable(getDrawable(resources,
                         R.drawable.ic_heart,
-                        APP_ACTIVITY.theme))
+                        context.theme))
                 }
             }
         }

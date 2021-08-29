@@ -1,8 +1,8 @@
 package com.molchanov.cats.network
 
 import com.molchanov.cats.network.networkmodels.*
-import com.molchanov.cats.utils.USER_ID
 import okhttp3.MultipartBody
+import retrofit2.Response
 import retrofit2.http.*
 
 interface CatsApiService {
@@ -16,7 +16,6 @@ interface CatsApiService {
         @Query("limit") limit: Int,
         @Query("page") page: Int,
         @Query("size") size: String = "med",
-        @Query("sub_id") username: String = USER_ID,
         @Query("include_favourite") includeFavorite: Int = 1,
         @Query("include_vote") includeVote: Int = 1
     ): List<CatItem>
@@ -42,7 +41,7 @@ interface CatsApiService {
     @GET("favourites")
     suspend fun getAllFavorites(
         @Query("limit") limit: Int,
-        @Query("page") page: Int,
+        @Query("page") page: Int
     ): List<CatItem>
 
     /**
@@ -67,7 +66,7 @@ interface CatsApiService {
     @POST("images/upload")
     suspend fun uploadImage(
         @Part file: MultipartBody.Part,
-        @Part("sub_id") username: String = USER_ID
+        @Part("sub_id") username: String
     ): NetworkResponse
 
     @GET("breeds")
@@ -80,7 +79,7 @@ interface CatsApiService {
      * Метод для удаления моей загруженной картинки с сервера
      */
     @DELETE("images/{imageId}")
-    suspend fun deleteUploaded(@Path("imageId") imageId: String)
+    suspend fun deleteUploaded(@Path("imageId") imageId: String): Response<Unit>
 
     /**
      * Метод для получения анализа картинки
@@ -95,8 +94,8 @@ interface CatsApiService {
     suspend fun getAllVotes(
         @Query("limit") limit: Int = 100,
         @Query("page") page: Int = 0,
-        @Query("sub_id") username: String = USER_ID
-    ) : List<Vote>
+        @Query("sub_id") username: String
+    ): List<Vote>
 
 
     /**
@@ -106,11 +105,12 @@ interface CatsApiService {
     suspend fun postVote(
         @Body postVote: PostVote
     ): NetworkResponse
+
     /**
      * Метод для удаления голоса
      */
     @DELETE("votes/{vote_id}")
     suspend fun deleteVote(
         @Path("vote_id") voteId: String
-    ) : NetworkResponse
+    ): NetworkResponse
 }

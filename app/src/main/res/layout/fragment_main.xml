@@ -2,7 +2,6 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:transitionGroup="true"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:nestedScrollingEnabled="false"
@@ -15,6 +14,7 @@
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_main"
+            android:transitionGroup="true"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:padding="@dimen/spacing_tiny_4"

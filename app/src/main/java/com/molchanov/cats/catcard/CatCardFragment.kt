@@ -26,10 +26,9 @@ import dagger.hilt.android.AndroidEntryPoint
 
 
 @AndroidEntryPoint
-class CatCardFragment : Fragment(R.layout.fragment_cat_card) {
+class CatCardFragment : Fragment() {
 
-    private var _binding: FragmentCatCardBinding? = null
-    private val binding get() = _binding!!
+    private lateinit var binding: FragmentCatCardBinding
 
     private lateinit var voteState: VoteStates
     private val viewModel: CatCardViewModel by viewModels()
@@ -44,8 +43,7 @@ class CatCardFragment : Fragment(R.layout.fragment_cat_card) {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        _binding = FragmentCatCardBinding.inflate(inflater, container, false)
-        setHasOptionsMenu(true)
+        binding = FragmentCatCardBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -72,7 +70,7 @@ class CatCardFragment : Fragment(R.layout.fragment_cat_card) {
                                 e: GlideException?,
                                 model: Any?,
                                 target: Target<Drawable>?,
-                                isFirstResource: Boolean,
+                                isFirstResource: Boolean
                             ): Boolean {
                                 binding.progressBar.isVisible = false
                                 return false
@@ -83,7 +81,7 @@ class CatCardFragment : Fragment(R.layout.fragment_cat_card) {
                                 model: Any?,
                                 target: Target<Drawable>?,
                                 dataSource: DataSource?,
-                                isFirstResource: Boolean,
+                                isFirstResource: Boolean
                             ): Boolean {
                                 binding.apply {
                                     progressBar.isVisible = false
@@ -223,10 +221,5 @@ class CatCardFragment : Fragment(R.layout.fragment_cat_card) {
                 }
             }
         }
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 }

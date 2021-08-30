@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.*
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
+import android.widget.ImageView
 import android.widget.LinearLayout
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -11,7 +12,6 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.transition.MaterialFadeThrough
 import com.molchanov.cats.R
@@ -47,12 +47,10 @@ class HomeFragment : Fragment(), ItemClickListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        postponeEnterTransition()
         exitTransition = MaterialFadeThrough().apply {
             duration = resources.getInteger(R.integer.motion_duration_large).toLong()
         }
-//        exitTransition = MaterialElevationScale(false).apply {
-//            duration = resources.getInteger(R.integer.motion_duration_large).toLong()
-//        }
         enterTransition = MaterialFadeThrough().apply {
             duration = resources.getInteger(R.integer.motion_duration_large).toLong()
         }
@@ -71,7 +69,8 @@ class HomeFragment : Fragment(), ItemClickListener {
         super.onViewCreated(view, savedInstanceState)
         manager = GridLayoutManager(context, 2, GridLayoutManager.VERTICAL, false)
         decoration = Decoration(resources.getDimensionPixelOffset(R.dimen.rv_item_margin))
-        adapter.stateRestorationPolicy = PREVENT_WHEN_EMPTY
+
+        setHasOptionsMenu(true)
 
         //Настраиваем recyclerView
         binding.apply {
@@ -166,7 +165,6 @@ class HomeFragment : Fragment(), ItemClickListener {
                     viewModel.displayCatCardComplete()
                 }
             })
-        setHasOptionsMenu(true)
     }
 
     private fun saveScroll() {
@@ -177,7 +175,7 @@ class HomeFragment : Fragment(), ItemClickListener {
     }
 
     //Прослушиватель нажатия на элемент recyclerView
-    override fun onItemClicked(selectedImage: CatItem) {
+    override fun onItemClicked(selectedImage: CatItem, imageView: ImageView) {
         viewModel.displayCatCard(selectedImage)
     }
 

@@ -4,13 +4,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
 import com.google.android.material.transition.MaterialFadeThrough
 import com.molchanov.cats.R
 import com.molchanov.cats.databinding.FragmentMainBinding
@@ -42,9 +42,6 @@ class FavoritesFragment : Fragment(), ItemClickListener {
         enterTransition = MaterialFadeThrough().apply {
             duration = resources.getInteger(R.integer.motion_duration_large).toLong()
         }
-//        exitTransition = MaterialElevationScale(false).apply {
-//            duration = resources.getInteger(R.integer.motion_duration_large).toLong()
-//        }
     }
 
     override fun onCreateView(
@@ -61,7 +58,6 @@ class FavoritesFragment : Fragment(), ItemClickListener {
 
         manager = GridLayoutManager(context, 2, GridLayoutManager.VERTICAL, false)
         decoration = Decoration(resources.getDimensionPixelOffset(R.dimen.rv_item_margin))
-        adapter.stateRestorationPolicy = PREVENT_WHEN_EMPTY
 
         binding.apply {
             rvMain.apply {
@@ -152,7 +148,7 @@ class FavoritesFragment : Fragment(), ItemClickListener {
         viewModel.saveScrollPosition(index, top)
     }
 
-    override fun onItemClicked(selectedImage: CatItem) {
+    override fun onItemClicked(selectedImage: CatItem, imageView: ImageView) {
         viewModel.displayCatCard(selectedImage)
     }
 

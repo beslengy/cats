@@ -13,7 +13,6 @@
     app:cardElevation="@dimen/item_elevation"
     app:cardMaxElevation="@dimen/item_max_elevation">
 
-
         <ImageView
             android:id="@+id/iv_image_item"
             android:layout_width="match_parent"

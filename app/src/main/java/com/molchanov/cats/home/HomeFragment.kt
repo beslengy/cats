@@ -13,6 +13,7 @@ import androidx.paging.LoadState
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.android.material.transition.MaterialFadeThrough
 import com.molchanov.cats.R
 import com.molchanov.cats.databinding.FragmentFilterBinding
 import com.molchanov.cats.databinding.FragmentMainBinding
@@ -44,6 +45,18 @@ class HomeFragment : Fragment(), ItemClickListener {
     private lateinit var itemMenuAdapter: ArrayAdapter<String>
     private lateinit var manager: GridLayoutManager
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        exitTransition = MaterialFadeThrough().apply {
+            duration = resources.getInteger(R.integer.motion_duration_large).toLong()
+        }
+//        exitTransition = MaterialElevationScale(false).apply {
+//            duration = resources.getInteger(R.integer.motion_duration_large).toLong()
+//        }
+        enterTransition = MaterialFadeThrough().apply {
+            duration = resources.getInteger(R.integer.motion_duration_large).toLong()
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,

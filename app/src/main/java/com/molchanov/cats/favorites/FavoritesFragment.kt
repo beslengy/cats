@@ -11,6 +11,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
+import com.google.android.material.transition.MaterialFadeThrough
 import com.molchanov.cats.R
 import com.molchanov.cats.databinding.FragmentMainBinding
 import com.molchanov.cats.network.networkmodels.CatItem
@@ -32,6 +33,19 @@ class FavoritesFragment : Fragment(), ItemClickListener {
     private val footerAdapter = CatsLoadStateAdapter { adapter.retry() }
     private lateinit var decoration: Decoration
     private lateinit var manager: GridLayoutManager
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        exitTransition = MaterialFadeThrough().apply {
+            duration = resources.getInteger(R.integer.motion_duration_large).toLong()
+        }
+        enterTransition = MaterialFadeThrough().apply {
+            duration = resources.getInteger(R.integer.motion_duration_large).toLong()
+        }
+//        exitTransition = MaterialElevationScale(false).apply {
+//            duration = resources.getInteger(R.integer.motion_duration_large).toLong()
+//        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,

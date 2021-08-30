@@ -41,7 +41,7 @@ class PageAdapter(private val itemClickListener: ItemClickListener) :
                     isLongClickable = itemLongClickable
                     bindImage(image.imageUrl)
                     setOnClickListener {
-                        itemClickListener.onItemClicked(image)
+                        itemClickListener.onItemClicked(image,this)
                     }
                     if (itemLongClickable) {
                         setOnLongClickListener {

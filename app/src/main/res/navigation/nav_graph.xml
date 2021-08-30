@@ -8,7 +8,7 @@
         android:id="@+id/uploadedFragment"
         android:name="com.molchanov.cats.uploaded.UploadedFragment"
         android:label="@string/uploaded_fragment_label"
-        tools:layout="@layout/fragment_uploaded" >
+        tools:layout="@layout/fragment_main" >
         <action
             android:id="@+id/action_uploadedFragment_to_catCardFragment"
             app:destination="@id/catCardFragment" />
@@ -17,7 +17,7 @@
         android:id="@+id/favoritesFragment"
         android:name="com.molchanov.cats.favorites.FavoritesFragment"
         android:label="@string/favorites_fragment_label"
-        tools:layout="@layout/fragment_favorites" >
+        tools:layout="@layout/fragment_main" >
         <action
             android:id="@+id/action_favoritesFragment_to_catCardFragment"
             app:destination="@id/catCardFragment" />
@@ -26,7 +26,7 @@
         android:id="@+id/homeFragment"
         android:name="com.molchanov.cats.home.HomeFragment"
         android:label="@string/home_fragment_label"
-        tools:layout="@layout/fragment_home" >
+        tools:layout="@layout/fragment_main" >
         <action
             android:id="@+id/action_homeFragment_to_catCardFragment"
             app:destination="@id/catCardFragment" />

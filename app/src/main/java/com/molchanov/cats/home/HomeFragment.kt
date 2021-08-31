@@ -47,7 +47,6 @@ class HomeFragment : Fragment(), ItemClickListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        postponeEnterTransition()
         exitTransition = MaterialFadeThrough().apply {
             duration = resources.getInteger(R.integer.motion_duration_large).toLong()
         }

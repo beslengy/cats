@@ -21,6 +21,8 @@ import com.bumptech.glide.request.target.Target
 import com.molchanov.cats.R
 import com.molchanov.cats.catcard.VoteStates.*
 import com.molchanov.cats.databinding.FragmentCatCardBinding
+import com.molchanov.cats.network.networkmodels.Analysis
+import com.molchanov.cats.network.networkmodels.CatDetail
 import com.molchanov.cats.utils.*
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -59,40 +61,7 @@ class CatCardFragment : Fragment() {
 
         viewModel.cat.observe(viewLifecycleOwner) { catDetail ->
             catDetail?.let {
-                val imageView = requireActivity().findViewById<ImageView>(R.id.toolbar_image)
-                imageView.apply {
-                    Glide.with(this@CatCardFragment)
-                        .load(it.url)
-                        .error(R.drawable.ic_broken_image)
-                        .transition(DrawableTransitionOptions.withCrossFade())
-                        .listener(object : RequestListener<Drawable> {
-                            override fun onLoadFailed(
-                                e: GlideException?,
-                                model: Any?,
-                                target: Target<Drawable>?,
-                                isFirstResource: Boolean
-                            ): Boolean {
-                                binding.progressBar.isVisible = false
-                                return false
-                            }
-
-                            override fun onResourceReady(
-                                resource: Drawable?,
-                                model: Any?,
-                                target: Target<Drawable>?,
-                                dataSource: DataSource?,
-                                isFirstResource: Boolean
-                            ): Boolean {
-                                binding.apply {
-                                    progressBar.isVisible = false
-                                    tvCatCardText.isVisible = true
-                                }
-                                return false
-                            }
-                        })
-                        .into(this)
-                }
-                binding.tvCatCardText.setCardText(it)
+                setViews(detail = it)
             }
         }
 
@@ -104,42 +73,59 @@ class CatCardFragment : Fragment() {
         }
 
         viewModel.analysis.observe(viewLifecycleOwner) { analysis ->
-            analysis?.let {
-                val imageView = requireActivity().findViewById<ImageView>(R.id.toolbar_image)
-                imageView.apply {
-                    Glide.with(this@CatCardFragment)
-                        .load(it.imageUrl)
-                        .error(R.drawable.ic_broken_image)
-                        .transition(DrawableTransitionOptions.withCrossFade())
-                        .listener(object : RequestListener<Drawable> {
-                            override fun onLoadFailed(
-                                e: GlideException?,
-                                model: Any?,
-                                target: Target<Drawable>?,
-                                isFirstResource: Boolean,
-                            ): Boolean {
-                                binding.progressBar.isVisible = false
-                                return false
-                            }
-
-                            override fun onResourceReady(
-                                resource: Drawable?,
-                                model: Any?,
-                                target: Target<Drawable>?,
-                                dataSource: DataSource?,
-                                isFirstResource: Boolean,
-                            ): Boolean {
-                                binding.apply {
-                                    progressBar.isVisible = false
-                                    tvCatCardText.isVisible = true
-                                }
-                                return false
-                            }
-                        })
-                        .into(this)
-                }
-                binding.tvCatCardText.setAnalysisText(it)
+            analysis?.let{
+                setViews(analysis = it)
             }
+        }
+    }
+
+    private fun setViews(detail: CatDetail? = null, analysis: Analysis? = null) {
+        val imageView = requireActivity().findViewById<ImageView>(R.id.toolbar_image)
+        imageView.apply {
+            Glide.with(this@CatCardFragment)
+                .load(detail?.url ?: analysis?.imageUrl)
+                .error(R.drawable.ic_broken_image)
+                .transition(DrawableTransitionOptions.withCrossFade())
+                .listener(object : RequestListener<Drawable> {
+                    override fun onLoadFailed(
+                        e: GlideException?,
+                        model: Any?,
+                        target: Target<Drawable>?,
+                        isFirstResource: Boolean,
+                    ): Boolean {
+                        binding.progressBar.isVisible = false
+                        return false
+                    }
+
+                    override fun onResourceReady(
+                        resource: Drawable?,
+                        model: Any?,
+                        target: Target<Drawable>?,
+                        dataSource: DataSource?,
+                        isFirstResource: Boolean,
+                    ): Boolean {
+                        binding.apply {
+                            progressBar.isVisible = false
+                            tvCatCardText.isVisible = true
+                            tvCatCardHeader.isVisible = true
+                        }
+                        return false
+                    }
+                })
+                .into(this)
+        }
+        binding.apply {
+            when(null) {
+                detail -> {
+                    tvCatCardText.setAnalysisText(analysis)
+                    tvCatCardHeader.setText(R.string.cat_analysis_header)
+                }
+                analysis -> {
+                    tvCatCardText.setCardText(detail)
+                    detail.breeds?.let { tvCatCardHeader.setText(R.string.cat_card_header) }
+                }
+            }
+
         }
     }
 

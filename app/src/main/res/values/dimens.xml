@@ -16,9 +16,12 @@
     <dimen name="spacing_tiny_4">4dp</dimen>
 
     <!-- Шрифты -->
+    <dimen name="font_huge_26">26sp</dimen>
+    <dimen name="font_x_large_24">24sp</dimen>
     <dimen name="font_large_20">20sp</dimen>
     <dimen name="font_normal_16">16sp</dimen>
     <dimen name="font_small_12">12sp</dimen>
+
     <dimen name="item_height">194dp</dimen>
     <dimen name="item_corner_radius">5dp</dimen>
     <dimen name="item_elevation">1dp</dimen>

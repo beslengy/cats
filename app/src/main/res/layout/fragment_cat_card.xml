@@ -11,21 +11,36 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:nestedScrollingEnabled="true">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tv_cat_card_header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-medium"
+            android:padding="@dimen/spacing_small_8"
+            android:gravity="center"
+            android:textSize="@dimen/font_huge_26"
+            android:visibility="gone"
+            tools:visibility="visible"
+            tools:text="HEADER"/>
 
         <TextView
             android:id="@+id/tv_cat_card_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/spacing_small_8"
-            android:layout_marginEnd="@dimen/spacing_small_8"
-            android:textAppearance="@style/TextAppearance.AppCompat.Headline"
-            android:textSize="@dimen/font_large_20"
+            android:layout_marginStart="@dimen/spacing_normal_16"
+            android:layout_marginEnd="@dimen/spacing_normal_16"
+            android:fontFamily="sans-serif-condensed-medium"
+            android:textSize="@dimen/font_x_large_24"
             android:visibility="gone"
-            app:layout_constraintVertical_weight="1"
-            tools:textAppearance="@style/TextAppearance.AppCompat.Headline"
-            tools:textSize="26sp"
+            tools:textSize="@dimen/font_x_large_24"
             tools:text="@string/card_example"
             tools:visibility="visible" />
+        </LinearLayout>
     </ScrollView>
 
     <ProgressBar

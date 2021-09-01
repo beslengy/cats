@@ -56,9 +56,9 @@ fun TextView.setCardText(data: CatDetail?) {
     data?.breeds?.get(0)?.let {
         text =
             StringBuilder().apply {
-                if (!it.name.isNullOrEmpty()) {
+                if (!it.breedName.isNullOrEmpty()) {
                     append("Name: ")
-                    appendLine("\t${it.name}\n")
+                    appendLine("\t${it.breedName}\n")
                 }
                 if (!it.altNames.isNullOrEmpty()) {
                     append("Alternative names: ")

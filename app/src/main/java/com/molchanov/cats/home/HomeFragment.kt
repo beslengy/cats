@@ -23,22 +23,20 @@ import com.molchanov.cats.home.HomeViewModel.Companion.DEFAULT_FILTER_TYPE
 import com.molchanov.cats.home.HomeViewModel.Companion.ToastRequest.*
 import com.molchanov.cats.network.networkmodels.CatItem
 import com.molchanov.cats.network.networkmodels.FilterItem
-import com.molchanov.cats.ui.CatsLoadStateAdapter
-import com.molchanov.cats.ui.Decoration
-import com.molchanov.cats.ui.ItemClickListener
-import com.molchanov.cats.ui.PageAdapter
+import com.molchanov.cats.ui.*
+import com.molchanov.cats.ui.interfaces.FavButtonClickable
 import com.molchanov.cats.utils.*
 import com.molchanov.cats.utils.Functions.setupManager
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
 
 @AndroidEntryPoint
-class HomeFragment : Fragment(), ItemClickListener {
+class HomeFragment : Fragment(), FavButtonClickable {
 
     private lateinit var binding: FragmentMainBinding
 
     private val viewModel: HomeViewModel by activityViewModels()
-    private val adapter = PageAdapter(this)
+    private val adapter = PageAdapter(favButtonClickListener = this)
     private val headerAdapter = CatsLoadStateAdapter { adapter.retry() }
     private val footerAdapter = CatsLoadStateAdapter { adapter.retry() }
     private lateinit var decoration: Decoration
@@ -96,7 +94,6 @@ class HomeFragment : Fragment(), ItemClickListener {
             }
             fab.isVisible = false
         }
-
 
         //Настраиваем видимость элементов в зависимости от состояния PagedList
         adapter.addLoadStateListener { loadState ->
@@ -177,8 +174,6 @@ class HomeFragment : Fragment(), ItemClickListener {
     override fun onItemClicked(selectedImage: CatItem, imageView: ImageView) {
         viewModel.displayCatCard(selectedImage)
     }
-
-    override fun onItemLongTap(selectedImage: CatItem) {}
 
     //Прослушиватель нажатия на кнопку "сердечко"
     override fun onFavoriteBtnClicked(selectedImage: CatItem) {

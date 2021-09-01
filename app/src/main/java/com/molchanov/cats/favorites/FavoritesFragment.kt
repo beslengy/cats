@@ -15,20 +15,18 @@ import com.google.android.material.transition.MaterialFadeThrough
 import com.molchanov.cats.R
 import com.molchanov.cats.databinding.FragmentMainBinding
 import com.molchanov.cats.network.networkmodels.CatItem
-import com.molchanov.cats.ui.CatsLoadStateAdapter
-import com.molchanov.cats.ui.Decoration
-import com.molchanov.cats.ui.ItemClickListener
-import com.molchanov.cats.ui.PageAdapter
+import com.molchanov.cats.ui.*
+import com.molchanov.cats.ui.interfaces.FavButtonClickable
 import com.molchanov.cats.utils.Functions.setupManager
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class FavoritesFragment : Fragment(), ItemClickListener {
+class FavoritesFragment : Fragment(), FavButtonClickable {
 
     private lateinit var binding: FragmentMainBinding
 
     private val viewModel: FavoritesViewModel by activityViewModels()
-    private val adapter = PageAdapter(this)
+    private val adapter = PageAdapter(favButtonClickListener = this)
     private val headerAdapter = CatsLoadStateAdapter { adapter.retry() }
     private val footerAdapter = CatsLoadStateAdapter { adapter.retry() }
     private lateinit var decoration: Decoration
@@ -151,8 +149,6 @@ class FavoritesFragment : Fragment(), ItemClickListener {
     override fun onItemClicked(selectedImage: CatItem, imageView: ImageView) {
         viewModel.displayCatCard(selectedImage)
     }
-
-    override fun onItemLongTap(selectedImage: CatItem) {}
 
     override fun onFavoriteBtnClicked(selectedImage: CatItem) {
         viewModel.deleteFromFavorites(selectedImage)

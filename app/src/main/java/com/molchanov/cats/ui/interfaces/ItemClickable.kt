@@ -1,10 +1,8 @@
-package com.molchanov.cats.ui
+package com.molchanov.cats.ui.interfaces
 
 import android.widget.ImageView
 import com.molchanov.cats.network.networkmodels.CatItem
 
-interface ItemClickListener {
+interface ItemClickable {
     fun onItemClicked(selectedImage: CatItem, imageView: ImageView)
-    fun onItemLongTap(selectedImage: CatItem)
-    fun onFavoriteBtnClicked(selectedImage: CatItem)
 }

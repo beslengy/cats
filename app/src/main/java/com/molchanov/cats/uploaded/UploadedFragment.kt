@@ -17,10 +17,8 @@ import com.google.android.material.transition.MaterialFadeThrough
 import com.molchanov.cats.R
 import com.molchanov.cats.databinding.FragmentMainBinding
 import com.molchanov.cats.network.networkmodels.CatItem
-import com.molchanov.cats.ui.CatsLoadStateAdapter
-import com.molchanov.cats.ui.Decoration
-import com.molchanov.cats.ui.ItemClickListener
-import com.molchanov.cats.ui.PageAdapter
+import com.molchanov.cats.ui.*
+import com.molchanov.cats.ui.interfaces.LongTappable
 import com.molchanov.cats.utils.*
 import com.molchanov.cats.utils.CatImagePicker.Companion.getNewImageUri
 import com.molchanov.cats.utils.Functions.setupManager
@@ -33,11 +31,11 @@ import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.File
 
 @AndroidEntryPoint
-class UploadedFragment : Fragment(), ItemClickListener {
+class UploadedFragment : Fragment(), LongTappable {
     private lateinit var binding: FragmentMainBinding
 
     private val viewModel: UploadedViewModel by activityViewModels()
-    private val adapter = PageAdapter(this)
+    private val adapter = PageAdapter(longTapClickListener = this)
     private val headerAdapter = CatsLoadStateAdapter { adapter.retry() }
     private val footerAdapter = CatsLoadStateAdapter { adapter.retry() }
     private lateinit var decoration: Decoration
@@ -142,6 +140,7 @@ class UploadedFragment : Fragment(), ItemClickListener {
             it?.let {
                 adapter.submitData(viewLifecycleOwner.lifecycle, it)
                 viewModel.getFilenames()
+                binding.progressBar.isVisible = false
             }
         }
 
@@ -153,9 +152,6 @@ class UploadedFragment : Fragment(), ItemClickListener {
                 viewModel.displayAnalysisComplete()
             }
         })
-
-        //Настраиваем долгое нажатие на итем
-        adapter.setItemLongTapAble(true)
 
         //Настраиваем видимость элементов в зависимости от состояния PagedList
         adapter.addLoadStateListener { loadState ->
@@ -238,11 +234,8 @@ class UploadedFragment : Fragment(), ItemClickListener {
         }
     }
 
-    override fun onFavoriteBtnClicked(selectedImage: CatItem) {}
-
     override fun onDestroyView() {
         super.onDestroyView()
-        adapter.setItemLongTapAble(false)
         saveScroll()
     }
 }

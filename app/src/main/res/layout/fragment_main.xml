@@ -18,7 +18,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:padding="@dimen/spacing_tiny_4"
-            tools:listitem="@layout/image_item" />
+            tools:listitem="@layout/main_item" />
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     <ProgressBar

@@ -9,10 +9,13 @@ import android.widget.LinearLayout
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.FragmentNavigator
+import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.GridLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.android.material.card.MaterialCardView
 import com.google.android.material.transition.MaterialFadeThrough
 import com.molchanov.cats.R
 import com.molchanov.cats.databinding.FragmentFilterBinding
@@ -42,6 +45,8 @@ class HomeFragment : Fragment(), FavButtonClickable {
     private lateinit var decoration: Decoration
     private lateinit var itemMenuAdapter: ArrayAdapter<String>
     private lateinit var manager: GridLayoutManager
+
+    private lateinit var extras: FragmentNavigator.Extras
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -156,8 +161,8 @@ class HomeFragment : Fragment(), FavButtonClickable {
             { catItem ->
                 catItem?.let {
                     this.findNavController().navigate(
-                        HomeFragmentDirections.actionHomeFragmentToCatCardFragment(it.id)
-                    )
+                        HomeFragmentDirections.actionHomeFragmentToCatCardFragment(it.id),
+                        extras)
                     viewModel.displayCatCardComplete()
                 }
             })
@@ -171,7 +176,10 @@ class HomeFragment : Fragment(), FavButtonClickable {
     }
 
     //Прослушиватель нажатия на элемент recyclerView
-    override fun onItemClicked(selectedImage: CatItem, imageView: ImageView) {
+    override fun onItemClicked(selectedImage: CatItem, imageView: ImageView, itemView: MaterialCardView) {
+        extras = FragmentNavigatorExtras(
+            imageView to "cat_card_image_transition_name",
+        itemView to "cat_card_fragment_transition_name")
         viewModel.displayCatCard(selectedImage)
     }
 

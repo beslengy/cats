@@ -12,4 +12,6 @@
 
     <color name="vote_view_background">#30000000</color>
 
+    <color name="card_image_background">#00000000</color>
+
 </resources>

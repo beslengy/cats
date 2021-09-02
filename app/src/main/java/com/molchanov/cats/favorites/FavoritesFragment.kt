@@ -11,6 +11,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.GridLayoutManager
+import com.google.android.material.card.MaterialCardView
 import com.google.android.material.transition.MaterialFadeThrough
 import com.molchanov.cats.R
 import com.molchanov.cats.databinding.FragmentMainBinding
@@ -146,7 +147,7 @@ class FavoritesFragment : Fragment(), FavButtonClickable {
         viewModel.saveScrollPosition(index, top)
     }
 
-    override fun onItemClicked(selectedImage: CatItem, imageView: ImageView) {
+    override fun onItemClicked(selectedImage: CatItem, imageView: ImageView, itemView: MaterialCardView) {
         viewModel.displayCatCard(selectedImage)
     }
 

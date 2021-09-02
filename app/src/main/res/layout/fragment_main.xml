@@ -5,12 +5,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:nestedScrollingEnabled="false"
+    android:layout_marginBottom="@dimen/bar_size"
     tools:context=".home.HomeFragment">
+
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/srl"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/bar_size"
+        >
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_main"

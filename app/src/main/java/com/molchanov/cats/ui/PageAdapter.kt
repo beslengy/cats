@@ -41,6 +41,8 @@ class PageAdapter(
         fun bind(image: CatItem, favButtonClickListener: FavButtonClickable?, longTapClickListener: LongTappable?) {
             binding.apply {
                 ivImageItem.bindImage(image.imageUrl)
+                imageCard.transitionName = "cat_card_transition_name_${image.id}"
+                ivImageItem.transitionName = "cat_image_transition_name_${image.url}"
                 btnFavorites.apply {
                     if (image.isUploaded) this.visibility = View.GONE
                     if (image.isFavorite) this.setImageDrawable(getDrawable(resources,
@@ -50,7 +52,7 @@ class PageAdapter(
                 favButtonClickListener?.let {
                     ivImageItem.apply {
                         setOnClickListener {
-                            favButtonClickListener.onItemClicked(image, this)
+                            favButtonClickListener.onItemClicked(image, this, binding.imageCard)
                         }
                     }
                     btnFavorites.apply {
@@ -66,7 +68,7 @@ class PageAdapter(
                 longTapClickListener?.let {
                     ivImageItem.apply {
                         setOnClickListener {
-                            longTapClickListener.onItemClicked(image,this)
+                            longTapClickListener.onItemClicked(image,this, binding.imageCard)
                         }
                         setOnLongClickListener {
                             val popup = PopupMenu(context, this)

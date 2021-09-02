@@ -12,6 +12,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.GridLayoutManager
+import com.google.android.material.card.MaterialCardView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.transition.MaterialFadeThrough
 import com.molchanov.cats.R
@@ -221,7 +222,7 @@ class UploadedFragment : Fragment(), LongTappable {
         viewModel.saveScrollPosition(index, top)
     }
 
-    override fun onItemClicked(selectedImage: CatItem, imageView: ImageView) {
+    override fun onItemClicked(selectedImage: CatItem, imageView: ImageView, itemView: MaterialCardView) {
         viewModel.displayAnalysis(selectedImage)
     }
 

@@ -41,8 +41,8 @@ class PageAdapter(
         fun bind(image: CatItem, favButtonClickListener: FavButtonClickable?, longTapClickListener: LongTappable?) {
             binding.apply {
                 ivImageItem.bindImage(image.imageUrl)
-                imageCard.transitionName = "cat_card_transition_name_${image.id}"
-                ivImageItem.transitionName = "cat_image_transition_name_${image.url}"
+                imageCard.transitionName = "cat_card_transition_name_${image.imageUrl}"
+                ivImageItem.transitionName = "cat_image_transition_name_${image.imageUrl}"
                 btnFavorites.apply {
                     if (image.isUploaded) this.visibility = View.GONE
                     if (image.isFavorite) this.setImageDrawable(getDrawable(resources,

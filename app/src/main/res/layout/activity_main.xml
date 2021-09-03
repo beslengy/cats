@@ -32,10 +32,4 @@
         android:layout_gravity="bottom"
         app:menu="@menu/bottom_navigation_menu" />
 
-    <include
-        android:id="@+id/vote_buttons_layout"
-        layout="@layout/vote_layout"
-        android:visibility="gone"
-        tools:visibility="visible" />
-
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

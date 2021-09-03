@@ -45,7 +45,6 @@
                 android:gravity="center"
                 android:padding="@dimen/spacing_small_8"
                 android:textSize="@dimen/font_huge_26"
-                android:visibility="gone"
                 tools:text="HEADER"
                 tools:visibility="visible" />
 
@@ -54,11 +53,20 @@
                 style="@style/CatCard.TextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:visibility="gone"
                 tools:text="@string/card_example"
                 tools:visibility="visible" />
         </LinearLayout>
 
     </androidx.core.widget.NestedScrollView>
+
+    <include
+        android:id="@+id/vote_buttons_layout"
+        layout="@layout/vote_layout"
+        android:layout_height="@dimen/bar_size"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:visibility="visible"
+        android:layout_width="match_parent" />
 
 </androidx.constraintlayout.motion.widget.MotionLayout>

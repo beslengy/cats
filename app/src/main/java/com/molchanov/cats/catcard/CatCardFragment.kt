@@ -7,7 +7,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.res.ResourcesCompat.getDrawable
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -21,6 +20,7 @@ import com.google.android.material.transition.MaterialContainerTransform
 import com.molchanov.cats.R
 import com.molchanov.cats.catcard.VoteStates.*
 import com.molchanov.cats.databinding.FragmentCatCardBinding
+import com.molchanov.cats.databinding.VoteLayoutBinding
 import com.molchanov.cats.network.networkmodels.Analysis
 import com.molchanov.cats.network.networkmodels.CatDetail
 import com.molchanov.cats.utils.*
@@ -37,7 +37,7 @@ class CatCardFragment : Fragment() {
 
     private lateinit var voteUpButton: ImageButton
     private lateinit var voteDownButton: ImageButton
-    private lateinit var voteLayout: ConstraintLayout
+    private lateinit var voteLayoutBinding: VoteLayoutBinding
 
 
     override fun onCreateView(
@@ -58,13 +58,14 @@ class CatCardFragment : Fragment() {
             scrimColor = Color.TRANSPARENT
             setAllContainerColors(requireContext().themeColor(R.attr.colorSurface))
         }
+        voteLayoutBinding = VoteLayoutBinding.inflate(LayoutInflater.from(context))
+        binding.voteButtonsLayout.root.isVisible = viewModel.analysis.value == null
 
-        voteUpButton = requireActivity().findViewById(R.id.btn_like)
-        voteDownButton = requireActivity().findViewById(R.id.btn_dislike)
+        voteUpButton = binding.voteButtonsLayout.btnLike
+        voteDownButton = binding.voteButtonsLayout.btnDislike
 
-        //Настраиваем видимость VoteLayout
-        voteLayout = requireActivity().findViewById(R.id.vote_buttons_layout)
-        voteLayout.isVisible = viewModel.analysis.value == null
+        //Настраиваем
+
 
         viewModel.cat.observe(viewLifecycleOwner) { catDetail ->
             catDetail?.let {
@@ -110,16 +111,16 @@ class CatCardFragment : Fragment() {
                         dataSource: DataSource?,
                         isFirstResource: Boolean,
                     ): Boolean {
-                        binding.apply {
-                            tvCatCardText.isVisible = true
-                            tvCatCardHeader.isVisible = true
-                        }
+
+
                         return false
                     }
                 })
                 .into(this)
         }
         binding.apply {
+            tvCatCardText.isVisible = true
+            tvCatCardHeader.isVisible = true
             when(null) {
                 detail -> {
                     tvCatCardText.setAnalysisText(analysis)
@@ -136,9 +137,8 @@ class CatCardFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        setVoteButtons(voteState)
+//        setVoteButtons(voteState)
     }
-
 
     private fun setVoteButtons(voteState: VoteStates) {
         val activity = requireActivity()

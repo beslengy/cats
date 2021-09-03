@@ -5,13 +5,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import androidx.core.view.doOnPreDraw
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.FragmentNavigator
+import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.GridLayoutManager
 import com.google.android.material.card.MaterialCardView
+import com.google.android.material.transition.MaterialElevationScale
 import com.google.android.material.transition.MaterialFadeThrough
 import com.molchanov.cats.R
 import com.molchanov.cats.databinding.FragmentMainBinding
@@ -32,22 +36,20 @@ class FavoritesFragment : Fragment(), FavButtonClickable {
     private val footerAdapter = CatsLoadStateAdapter { adapter.retry() }
     private lateinit var decoration: Decoration
     private lateinit var manager: GridLayoutManager
+    private lateinit var extras: FragmentNavigator.Extras
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        exitTransition = MaterialFadeThrough().apply {
-            duration = resources.getInteger(R.integer.motion_duration_large).toLong()
-        }
-        enterTransition = MaterialFadeThrough().apply {
-            duration = resources.getInteger(R.integer.motion_duration_large).toLong()
-        }
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        exitTransition = MaterialFadeThrough().apply {
+            duration = resources.getInteger(R.integer.motion_duration_large).toLong()
+        }
+        enterTransition = MaterialFadeThrough().apply {
+            duration = resources.getInteger(R.integer.motion_duration_large).toLong()
+        }
         binding = FragmentMainBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -57,6 +59,9 @@ class FavoritesFragment : Fragment(), FavButtonClickable {
 
         manager = GridLayoutManager(context, 2, GridLayoutManager.VERTICAL, false)
         decoration = Decoration(resources.getDimensionPixelOffset(R.dimen.rv_item_margin))
+
+        postponeEnterTransition()
+        view.doOnPreDraw { startPostponedEnterTransition() }
 
         binding.apply {
             rvMain.apply {
@@ -98,8 +103,15 @@ class FavoritesFragment : Fragment(), FavButtonClickable {
 
         viewModel.navigateToCard.observe(viewLifecycleOwner, { catItem ->
             catItem?.image?.let {
+                exitTransition = MaterialElevationScale(false).apply {
+                    duration = resources.getInteger(R.integer.motion_duration_large).toLong()
+                }
+                reenterTransition = MaterialElevationScale(true).apply {
+                    duration = resources.getInteger(R.integer.motion_duration_large).toLong()
+                }
                 this.findNavController().navigate(
-                    FavoritesFragmentDirections.actionFavoritesFragmentToCatCardFragment(it.id)
+                    FavoritesFragmentDirections.actionFavoritesFragmentToCatCardFragment(it.id),
+                    extras
                 )
                 viewModel.displayCatCardComplete()
             }
@@ -148,6 +160,9 @@ class FavoritesFragment : Fragment(), FavButtonClickable {
     }
 
     override fun onItemClicked(selectedImage: CatItem, imageView: ImageView, itemView: MaterialCardView) {
+        extras = FragmentNavigatorExtras(
+            imageView to "cat_card_image_transition_name",
+            itemView to "cat_card_fragment_transition_name")
         viewModel.displayCatCard(selectedImage)
     }
 

@@ -1,11 +1,13 @@
 package com.molchanov.cats.home
 
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import android.widget.ImageView
 import android.widget.LinearLayout
+import androidx.core.view.doOnPreDraw
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -16,6 +18,7 @@ import androidx.paging.LoadState
 import androidx.recyclerview.widget.GridLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.card.MaterialCardView
+import com.google.android.material.transition.MaterialElevationScale
 import com.google.android.material.transition.MaterialFadeThrough
 import com.molchanov.cats.R
 import com.molchanov.cats.databinding.FragmentFilterBinding
@@ -49,13 +52,9 @@ class HomeFragment : Fragment(), FavButtonClickable {
     private lateinit var extras: FragmentNavigator.Extras
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        Log.d("M_HomeFragment", "onCreate")
         super.onCreate(savedInstanceState)
-        exitTransition = MaterialFadeThrough().apply {
-            duration = resources.getInteger(R.integer.motion_duration_large).toLong()
-        }
-        enterTransition = MaterialFadeThrough().apply {
-            duration = resources.getInteger(R.integer.motion_duration_large).toLong()
-        }
+
     }
 
     override fun onCreateView(
@@ -63,16 +62,27 @@ class HomeFragment : Fragment(), FavButtonClickable {
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View? {
+        exitTransition = MaterialFadeThrough().apply {
+            duration = resources.getInteger(R.integer.motion_duration_large).toLong()
+        }
+        enterTransition = MaterialFadeThrough().apply {
+            duration = resources.getInteger(R.integer.motion_duration_large).toLong()
+        }
         binding = FragmentMainBinding.inflate(inflater, container, false)
+        Log.d("M_HomeFragment", "onCreateView")
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        Log.d("M_HomeFragment", "onViewCreated")
         manager = GridLayoutManager(context, 2, GridLayoutManager.VERTICAL, false)
         decoration = Decoration(resources.getDimensionPixelOffset(R.dimen.rv_item_margin))
 
         setHasOptionsMenu(true)
+
+        postponeEnterTransition()
+        view.doOnPreDraw { startPostponedEnterTransition() }
 
         //Настраиваем recyclerView
         binding.apply {
@@ -160,9 +170,16 @@ class HomeFragment : Fragment(), FavButtonClickable {
         viewModel.navigateToCard.observe(viewLifecycleOwner,
             { catItem ->
                 catItem?.let {
+                    reenterTransition = MaterialElevationScale(true).apply {
+                        duration = resources.getInteger(R.integer.motion_duration_large).toLong()
+                    }
+                    exitTransition = MaterialElevationScale(false).apply {
+                        duration = resources.getInteger(R.integer.motion_duration_large).toLong()
+                    }
                     this.findNavController().navigate(
                         HomeFragmentDirections.actionHomeFragmentToCatCardFragment(it.id),
                         extras)
+
                     viewModel.displayCatCardComplete()
                 }
             })
@@ -179,7 +196,7 @@ class HomeFragment : Fragment(), FavButtonClickable {
     override fun onItemClicked(selectedImage: CatItem, imageView: ImageView, itemView: MaterialCardView) {
         extras = FragmentNavigatorExtras(
             imageView to "cat_card_image_transition_name",
-        itemView to "cat_card_fragment_transition_name")
+            itemView to "cat_card_fragment_transition_name")
         viewModel.displayCatCard(selectedImage)
     }
 
@@ -262,6 +279,7 @@ class HomeFragment : Fragment(), FavButtonClickable {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        Log.d("M_HomeFragment", "onDestroy")
         saveScroll()
     }
 }

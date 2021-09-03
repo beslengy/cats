@@ -30,7 +30,8 @@ class FavoritesViewModel @Inject constructor(
     val favoriteImages = state.switchMap { repository.getFavoritesList().cachedIn(viewModelScope) }
 
     //Переменная для перехода на карточку котика и передачи аргумента фрагменту CatCard
-    val navigateToCard = MutableLiveData<CatItem>()
+    private val _navigateToCard = MutableLiveData<CatItem>()
+    val navigateToCard: LiveData<CatItem> = _navigateToCard
 
     private val response = MutableLiveData<String>()
 
@@ -50,11 +51,11 @@ class FavoritesViewModel @Inject constructor(
     }
 
     fun displayCatCard(currentImage: CatItem) {
-        navigateToCard.value = currentImage
+        _navigateToCard.value = currentImage
     }
 
     fun displayCatCardComplete() {
-        navigateToCard.value = null
+        _navigateToCard.value = null
     }
 
     fun saveScrollPosition(index: Int, top: Int) {

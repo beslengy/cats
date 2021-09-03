@@ -161,8 +161,8 @@ class FavoritesFragment : Fragment(), FavButtonClickable {
 
     override fun onItemClicked(selectedImage: CatItem, imageView: ImageView, itemView: MaterialCardView) {
         extras = FragmentNavigatorExtras(
-            imageView to "cat_card_image_transition_name",
-            itemView to "cat_card_fragment_transition_name")
+            imageView to getString(R.string.cat_card_image_transition_name),
+            itemView to getString(R.string.cat_card_fragment_transition_name))
         viewModel.displayCatCard(selectedImage)
     }
 

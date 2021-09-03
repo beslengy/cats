@@ -1,7 +1,6 @@
 package com.molchanov.cats.home
 
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
@@ -51,12 +50,6 @@ class HomeFragment : Fragment(), FavButtonClickable {
 
     private lateinit var extras: FragmentNavigator.Extras
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        Log.d("M_HomeFragment", "onCreate")
-        super.onCreate(savedInstanceState)
-
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -69,13 +62,11 @@ class HomeFragment : Fragment(), FavButtonClickable {
             duration = resources.getInteger(R.integer.motion_duration_large).toLong()
         }
         binding = FragmentMainBinding.inflate(inflater, container, false)
-        Log.d("M_HomeFragment", "onCreateView")
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        Log.d("M_HomeFragment", "onViewCreated")
         manager = GridLayoutManager(context, 2, GridLayoutManager.VERTICAL, false)
         decoration = Decoration(resources.getDimensionPixelOffset(R.dimen.rv_item_margin))
 
@@ -195,8 +186,8 @@ class HomeFragment : Fragment(), FavButtonClickable {
     //Прослушиватель нажатия на элемент recyclerView
     override fun onItemClicked(selectedImage: CatItem, imageView: ImageView, itemView: MaterialCardView) {
         extras = FragmentNavigatorExtras(
-            imageView to "cat_card_image_transition_name",
-            itemView to "cat_card_fragment_transition_name")
+            imageView to getString(R.string.cat_card_image_transition_name),
+            itemView to getString(R.string.cat_card_fragment_transition_name))
         viewModel.displayCatCard(selectedImage)
     }
 
@@ -279,7 +270,6 @@ class HomeFragment : Fragment(), FavButtonClickable {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        Log.d("M_HomeFragment", "onDestroy")
         saveScroll()
     }
 }

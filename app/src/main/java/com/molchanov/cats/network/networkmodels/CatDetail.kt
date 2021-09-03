@@ -10,8 +10,6 @@ data class CatDetail(
     val imageUrl: String
 ) {
     data class Breeds(
-//        @Json(name = "id")
-//        val breedId: String? = null,
         @Json(name = "alt_names")
         val altNames: String? = null,
         @Json(name = "name")

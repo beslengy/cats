@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.res.ResourcesCompat.getDrawable
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -19,8 +20,8 @@ import com.bumptech.glide.request.target.Target
 import com.google.android.material.transition.MaterialContainerTransform
 import com.molchanov.cats.R
 import com.molchanov.cats.catcard.VoteStates.*
+import com.molchanov.cats.databinding.CatCardItemBinding
 import com.molchanov.cats.databinding.FragmentCatCardBinding
-import com.molchanov.cats.databinding.VoteLayoutBinding
 import com.molchanov.cats.network.networkmodels.Analysis
 import com.molchanov.cats.network.networkmodels.CatDetail
 import com.molchanov.cats.utils.*
@@ -37,8 +38,7 @@ class CatCardFragment : Fragment() {
 
     private lateinit var voteUpButton: ImageButton
     private lateinit var voteDownButton: ImageButton
-    private lateinit var voteLayoutBinding: VoteLayoutBinding
-
+    private lateinit var voteLayout: ConstraintLayout
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -58,42 +58,42 @@ class CatCardFragment : Fragment() {
             scrimColor = Color.TRANSPARENT
             setAllContainerColors(requireContext().themeColor(R.attr.colorSurface))
         }
-        voteLayoutBinding = VoteLayoutBinding.inflate(LayoutInflater.from(context))
-        binding.voteButtonsLayout.root.isVisible = viewModel.analysis.value == null
 
-        voteUpButton = binding.voteButtonsLayout.btnLike
-        voteDownButton = binding.voteButtonsLayout.btnDislike
+        voteUpButton = requireActivity().findViewById(R.id.btn_like)
+        voteDownButton = requireActivity().findViewById(R.id.btn_dislike)
 
-        //Настраиваем
-
+        //Настраиваем видимость VoteLayout
+        voteLayout = requireActivity().findViewById(R.id.vote_buttons_layout)
+        voteLayout.isVisible = viewModel.analysis.value == null
 
         viewModel.cat.observe(viewLifecycleOwner) { catDetail ->
             catDetail?.let {
-                setViews(detail = it)
+                setDetailView(it)
             }
         }
-
+        viewModel.analysis.observe(viewLifecycleOwner) { analysis ->
+            analysis?.let{
+                setAnalysisView(it)
+            }
+        }
         viewModel.voteValue.observe(viewLifecycleOwner) { voteValue ->
             voteState = VoteStates.values().find {
                 it.voteValue == voteValue
             }!!
             setVoteButtons(voteState)
         }
-
-        viewModel.analysis.observe(viewLifecycleOwner) { analysis ->
-            analysis?.let{
-                setViews(analysis = it)
-            }
-        }
     }
 
-    private fun setViews(detail: CatDetail? = null, analysis: Analysis? = null) {
-//        val imageView = requireActivity().findViewById<ImageView>(R.id.toolbar_image)
+    override fun onResume() {
+        super.onResume()
+        setVoteButtons(voteState)
+    }
+
+    private fun setImage(detail: CatDetail? = null, analysis: Analysis? = null) {
         binding.catCardImage.apply {
             Glide.with(this@CatCardFragment)
                 .load(detail?.imageUrl ?: analysis?.imageUrl)
                 .error(R.drawable.ic_broken_image)
-//                .transition(DrawableTransitionOptions.withCrossFade())
                 .listener(object : RequestListener<Drawable> {
                     override fun onLoadFailed(
                         e: GlideException?,
@@ -111,33 +111,75 @@ class CatCardFragment : Fragment() {
                         dataSource: DataSource?,
                         isFirstResource: Boolean,
                     ): Boolean {
-
-
                         return false
                     }
                 })
                 .into(this)
         }
         binding.apply {
-            tvCatCardText.isVisible = true
-            tvCatCardHeader.isVisible = true
             when(null) {
                 detail -> {
-                    tvCatCardText.setAnalysisText(analysis)
                     tvCatCardHeader.setText(R.string.cat_analysis_header)
                 }
                 analysis -> {
-                    tvCatCardText.setCardText(detail)
                     detail.breeds?.let { tvCatCardHeader.setText(R.string.cat_card_header) }
                 }
             }
-
         }
     }
 
-    override fun onResume() {
-        super.onResume()
-//        setVoteButtons(voteState)
+
+    private fun setDetailView(detail: CatDetail) {
+        setImage(detail = detail)
+        var viewsCount = 1
+        val data = detail.breeds?.get(0)
+        data!!::class.members.forEach {
+            val value = it.call(data)
+            if (value != null || value != "") {
+                if (!it.name.contains("component")) {
+                    val itemBinding =
+                        CatCardItemBinding.inflate(LayoutInflater.from(context)).apply {
+                            tvPropertyName.text = it.name.formatVarName()
+                            when (value) {
+                                is String -> tvValue.apply {
+                                    isVisible = true
+                                    text = value
+                                }
+                                else -> ivGrade.apply {
+                                    isVisible = true
+                                    setImageDrawable(getDrawable(
+                                        resources,
+                                        when (value) {
+                                            5 -> R.drawable.grade_5_img
+                                            4 -> R.drawable.grade_4_img
+                                            3 -> R.drawable.grade_3_img
+                                            2 -> R.drawable.grade_2_img
+                                            1 -> R.drawable.grade_1_img
+                                            else -> R.drawable.grade_0_img
+                                        },
+                                        context.theme
+                                    ))
+                                }
+                            }
+                        }
+                    when (value) {
+                        is String -> {
+                            binding.llCatInfo.addView(itemBinding.root, viewsCount)
+                            viewsCount += 1
+                        }
+                        else -> binding.llCatInfo.addView(itemBinding.root)
+                    }
+                }
+            }
+        }
+    }
+
+    private fun setAnalysisView(analysis: Analysis) {
+        setImage(analysis = analysis)
+        binding.tvCatCardText.apply {
+            isVisible = true
+            setAnalysisText(analysis)
+        }
     }
 
     private fun setVoteButtons(voteState: VoteStates) {
@@ -212,5 +254,19 @@ class CatCardFragment : Fragment() {
                 }
             }
         }
+    }
+    private fun String.formatVarName() : String {
+        var result = ""
+        this.forEachIndexed { index, c ->
+            result = when (index) {
+                0 -> "$result${c.uppercase()}"
+                else -> if (c == c.uppercaseChar()) {
+                    "$result ${c.lowercase()}"
+                } else {
+                    "$result$c"
+                }
+            }
+        }
+        return "$result:"
     }
 }

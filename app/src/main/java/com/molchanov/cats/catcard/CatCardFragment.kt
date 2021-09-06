@@ -1,18 +1,22 @@
 package com.molchanov.cats.catcard
 
 import android.graphics.Color
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.res.ResourcesCompat.getDrawable
 import androidx.core.view.doOnPreDraw
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.DataSource
+import com.bumptech.glide.load.engine.GlideException
+import com.bumptech.glide.request.RequestListener
+import com.bumptech.glide.request.target.Target
 import com.google.android.material.transition.MaterialContainerTransform
 import com.molchanov.cats.R
 import com.molchanov.cats.catcard.VoteStates.*
@@ -23,7 +27,6 @@ import com.molchanov.cats.network.networkmodels.CatDetail
 import com.molchanov.cats.utils.*
 import dagger.hilt.android.AndroidEntryPoint
 
-
 @AndroidEntryPoint
 class CatCardFragment : Fragment() {
 
@@ -32,7 +35,6 @@ class CatCardFragment : Fragment() {
     private lateinit var voteState: VoteStates
     private lateinit var voteUpButton: ImageButton
     private lateinit var voteDownButton: ImageButton
-    private lateinit var voteLayout: ConstraintLayout
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -56,12 +58,11 @@ class CatCardFragment : Fragment() {
         postponeEnterTransition()
         view.doOnPreDraw { startPostponedEnterTransition() }
 
-        voteUpButton = requireActivity().findViewById(R.id.btn_like)
-        voteDownButton = requireActivity().findViewById(R.id.btn_dislike)
-
-        //Настраиваем видимость VoteLayout
-        voteLayout = requireActivity().findViewById(R.id.vote_buttons_layout)
-        voteLayout.isVisible = viewModel.analysis.value == null
+        binding.voteLayout.apply {
+            voteUpButton = btnLike
+            voteDownButton = btnDislike
+            this.root.isVisible = viewModel.analysis.value == null
+        }
 
         viewModel.cat.observe(viewLifecycleOwner) { catDetail ->
             catDetail?.let {
@@ -81,36 +82,32 @@ class CatCardFragment : Fragment() {
         }
     }
 
-    override fun onResume() {
-        super.onResume()
-        setVoteButtons(voteState)
-    }
-
-    private fun setImage(detail: CatDetail? = null, analysis: Analysis? = null) {
+    private fun setImageAndHeader(detail: CatDetail? = null, analysis: Analysis? = null) {
         binding.catCardImage.apply {
             Glide.with(this@CatCardFragment)
                 .load(detail?.imageUrl ?: analysis?.imageUrl)
                 .error(R.drawable.ic_broken_image)
-//                .listener(object : RequestListener<Drawable> {
-//                    override fun onLoadFailed(
-//                        e: GlideException?,
-//                        model: Any?,
-//                        target: Target<Drawable>?,
-//                        isFirstResource: Boolean,
-//                    ): Boolean {
-//                        return false
-//                    }
-//
-//                    override fun onResourceReady(
-//                        resource: Drawable?,
-//                        model: Any?,
-//                        target: Target<Drawable>?,
-//                        dataSource: DataSource?,
-//                        isFirstResource: Boolean,
-//                    ): Boolean {
-//                        return false
-//                    }
-//                })
+                .listener(object : RequestListener<Drawable> {
+                    override fun onLoadFailed(
+                        e: GlideException?,
+                        model: Any?,
+                        target: Target<Drawable>?,
+                        isFirstResource: Boolean,
+                    ): Boolean {
+                        return false
+                    }
+
+                    override fun onResourceReady(
+                        resource: Drawable?,
+                        model: Any?,
+                        target: Target<Drawable>?,
+                        dataSource: DataSource?,
+                        isFirstResource: Boolean,
+                    ): Boolean {
+                        binding.llCatInfo.isVisible = true
+                        return false
+                    }
+                })
                 .into(this)
         }
         binding.apply {
@@ -125,9 +122,8 @@ class CatCardFragment : Fragment() {
         }
     }
 
-
     private fun setDetailView(detail: CatDetail) {
-        setImage(detail = detail)
+        setImageAndHeader(detail = detail)
         var viewsCount = 1
         val data = detail.breeds?.get(0)
         data!!::class.members.forEach {
@@ -172,7 +168,7 @@ class CatCardFragment : Fragment() {
     }
 
     private fun setAnalysisView(analysis: Analysis) {
-        setImage(analysis = analysis)
+        setImageAndHeader(analysis = analysis)
         binding.tvCatCardText.apply {
             isVisible = true
             setAnalysisText(analysis)

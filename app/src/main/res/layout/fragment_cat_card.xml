@@ -38,6 +38,7 @@
             android:id="@+id/ll_cat_info"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:visibility="gone"
             android:paddingBottom="@dimen/bar_size"
             android:orientation="vertical">
 
@@ -62,5 +63,15 @@
         </LinearLayout>
 
     </androidx.core.widget.NestedScrollView>
+
+    <include
+        android:id="@+id/vote_layout"
+        layout="@layout/vote_layout"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/bar_size"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:visibility="visible" />
 
 </androidx.constraintlayout.motion.widget.MotionLayout>

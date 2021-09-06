@@ -2,7 +2,6 @@ package com.molchanov.cats.home
 
 
 import android.app.Application
-import android.util.Log
 import androidx.lifecycle.*
 import androidx.paging.cachedIn
 import com.molchanov.cats.data.CatsRepository
@@ -156,7 +155,6 @@ class HomeViewModel @Inject constructor(
     }
 
     fun saveScrollPosition(index: Int, top: Int) {
-        Log.d("M_HomeViewModel", "saveScroll: $index")
         handle["rv_index"] = index
         handle["rv_top"] = top
     }

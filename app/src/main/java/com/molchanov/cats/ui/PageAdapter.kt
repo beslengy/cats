@@ -12,10 +12,12 @@ import com.molchanov.cats.R
 import com.molchanov.cats.databinding.MainItemBinding
 import com.molchanov.cats.network.networkmodels.CatItem
 import com.molchanov.cats.ui.interfaces.FavButtonClickable
+import com.molchanov.cats.ui.interfaces.ItemClickable
 import com.molchanov.cats.ui.interfaces.LongTappable
 import com.molchanov.cats.utils.bindImage
 
 class PageAdapter(
+    private val itemClickListener : ItemClickable,
     private val favButtonClickListener: FavButtonClickable? = null,
     private val longTapClickListener: LongTappable? = null
 ) : PagingDataAdapter<CatItem, PageAdapter.ViewHolder>(
@@ -31,31 +33,26 @@ class PageAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         getItem(position)?.let {
-            holder.bind(it, favButtonClickListener, longTapClickListener)
+            holder.bind(it, favButtonClickListener, longTapClickListener, itemClickListener)
         }
     }
 
     inner class ViewHolder(private val binding: MainItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(image: CatItem, favButtonClickListener: FavButtonClickable?, longTapClickListener: LongTappable?) {
+        fun bind(
+            image: CatItem,
+            favButtonClickListener: FavButtonClickable?,
+            longTapClickListener: LongTappable?,
+            itemClickListener : ItemClickable) {
             binding.apply {
-                ivImageItem.bindImage(image.imageUrl)
                 imageCard.transitionName = "cat_card_transition_name_${image.imageUrl}"
-                ivImageItem.transitionName = "cat_image_transition_name_${image.imageUrl}"
                 btnFavorites.apply {
                     if (image.isUploaded) this.visibility = View.GONE
                     if (image.isFavorite) this.setImageDrawable(getDrawable(resources,
                         R.drawable.ic_heart,
                         context.theme))
-                }
-                favButtonClickListener?.let {
-                    ivImageItem.apply {
-                        setOnClickListener {
-                            favButtonClickListener.onItemClicked(image, this, binding.imageCard)
-                        }
-                    }
-                    btnFavorites.apply {
+                    favButtonClickListener?.let {
                         setOnClickListener {
                             favButtonClickListener.onFavoriteBtnClicked(image)
                             val favIcon =
@@ -65,11 +62,13 @@ class PageAdapter(
                         }
                     }
                 }
-                longTapClickListener?.let {
-                    ivImageItem.apply {
-                        setOnClickListener {
-                            longTapClickListener.onItemClicked(image,this, binding.imageCard)
-                        }
+                ivImageItem.apply {
+                    transitionName = "cat_image_transition_name_${image.imageUrl}"
+                    bindImage(image.imageUrl)
+                    setOnClickListener {
+                        itemClickListener.onItemClicked(image, this, binding.imageCard)
+                    }
+                    longTapClickListener?.let {
                         setOnLongClickListener {
                             val popup = PopupMenu(context, this)
                             popup.apply {
@@ -89,9 +88,7 @@ class PageAdapter(
     }
 
     companion object {
-        //чтобы создать экземпляр абстрактного класса добавляем "object :"
         private val COMPARATOR = object : DiffUtil.ItemCallback<CatItem>() {
-
             override fun areItemsTheSame(oldItem: CatItem, newItem: CatItem) =
                 oldItem.id == newItem.id
 

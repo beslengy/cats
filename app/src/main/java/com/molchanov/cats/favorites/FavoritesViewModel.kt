@@ -52,9 +52,6 @@ class FavoritesViewModel @Inject constructor(
 
     fun displayCatCard(currentImage: CatItem) {
         _navigateToCard.value = currentImage
-    }
-
-    fun displayCatCardComplete() {
         _navigateToCard.value = null
     }
 

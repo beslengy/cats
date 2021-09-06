@@ -23,6 +23,7 @@ import com.molchanov.cats.R
 import com.molchanov.cats.databinding.FragmentMainBinding
 import com.molchanov.cats.network.networkmodels.CatItem
 import com.molchanov.cats.ui.*
+import com.molchanov.cats.ui.interfaces.ItemClickable
 import com.molchanov.cats.ui.interfaces.LongTappable
 import com.molchanov.cats.utils.*
 import com.molchanov.cats.utils.CatImagePicker.Companion.getNewImageUri
@@ -36,11 +37,11 @@ import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.File
 
 @AndroidEntryPoint
-class UploadedFragment : Fragment(), LongTappable {
+class UploadedFragment : Fragment(), ItemClickable, LongTappable {
     private lateinit var binding: FragmentMainBinding
 
     private val viewModel: UploadedViewModel by activityViewModels()
-    private val adapter = PageAdapter(longTapClickListener = this)
+    private val adapter = PageAdapter(itemClickListener = this, longTapClickListener = this)
     private val headerAdapter = CatsLoadStateAdapter { adapter.retry() }
     private val footerAdapter = CatsLoadStateAdapter { adapter.retry() }
     private lateinit var decoration: Decoration
@@ -76,8 +77,6 @@ class UploadedFragment : Fragment(), LongTappable {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-
 
         manager = GridLayoutManager(context, 2, GridLayoutManager.VERTICAL, false)
         decoration = Decoration(resources.getDimensionPixelOffset(R.dimen.rv_item_margin))
@@ -131,7 +130,6 @@ class UploadedFragment : Fragment(), LongTappable {
                         viewModel.uploadFile(part)
                     }
                 }
-                viewModel.fileExistCheckingComplete()
             }
         }
 
@@ -164,7 +162,6 @@ class UploadedFragment : Fragment(), LongTappable {
                     UploadedFragmentDirections.actionUploadedFragmentToCatCardFragment(analysis = it),
                     extras
                 )
-                viewModel.displayAnalysisComplete()
             }
         })
 
@@ -238,7 +235,6 @@ class UploadedFragment : Fragment(), LongTappable {
 
     override fun onItemClicked(selectedImage: CatItem, imageView: ImageView, itemView: MaterialCardView) {
         extras = FragmentNavigatorExtras(
-            imageView to getString(R.string.cat_card_image_transition_name),
             itemView to getString(R.string.cat_card_fragment_transition_name))
         viewModel.displayAnalysis(selectedImage)
     }

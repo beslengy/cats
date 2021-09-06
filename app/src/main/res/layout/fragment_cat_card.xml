@@ -12,7 +12,7 @@
     <ImageView
         android:id="@+id/cat_card_image"
         android:layout_width="match_parent"
-        android:layout_height="280dp"
+        android:layout_height="@dimen/cat_card_image_height"
         android:transitionName="@string/cat_card_image_transition_name"
         android:background="@color/card_image_background"
         android:scaleType="centerCrop"

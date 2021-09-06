@@ -22,16 +22,17 @@ import com.molchanov.cats.databinding.FragmentMainBinding
 import com.molchanov.cats.network.networkmodels.CatItem
 import com.molchanov.cats.ui.*
 import com.molchanov.cats.ui.interfaces.FavButtonClickable
+import com.molchanov.cats.ui.interfaces.ItemClickable
 import com.molchanov.cats.utils.Functions.setupManager
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class FavoritesFragment : Fragment(), FavButtonClickable {
+class FavoritesFragment : Fragment(), ItemClickable, FavButtonClickable {
 
     private lateinit var binding: FragmentMainBinding
 
     private val viewModel: FavoritesViewModel by activityViewModels()
-    private val adapter = PageAdapter(favButtonClickListener = this)
+    private val adapter = PageAdapter(itemClickListener = this, favButtonClickListener = this)
     private val headerAdapter = CatsLoadStateAdapter { adapter.retry() }
     private val footerAdapter = CatsLoadStateAdapter { adapter.retry() }
     private lateinit var decoration: Decoration
@@ -113,7 +114,6 @@ class FavoritesFragment : Fragment(), FavButtonClickable {
                     FavoritesFragmentDirections.actionFavoritesFragmentToCatCardFragment(it.id),
                     extras
                 )
-                viewModel.displayCatCardComplete()
             }
         })
 
@@ -140,18 +140,6 @@ class FavoritesFragment : Fragment(), FavButtonClickable {
         }
     }
 
-    //Переопределяем метод и добавляем обновление списка для реализации кейса:
-    //прокручиваем избранные до конца -> переходим на главную -> добавляем картинку в избранное ->
-    //-> возвращаемся на вкладку избранное -> новая картинка должна появиться в конце списка
-    override fun onResume() {
-        super.onResume()
-        binding.apply {
-            adapter.refresh()
-            progressBar.isVisible = false
-            rvMain.isVisible = true
-        }
-    }
-
     private fun saveScroll() {
         val index = manager.findFirstVisibleItemPosition()
         val v: View? = binding.rvMain.getChildAt(0)
@@ -161,7 +149,6 @@ class FavoritesFragment : Fragment(), FavButtonClickable {
 
     override fun onItemClicked(selectedImage: CatItem, imageView: ImageView, itemView: MaterialCardView) {
         extras = FragmentNavigatorExtras(
-            imageView to getString(R.string.cat_card_image_transition_name),
             itemView to getString(R.string.cat_card_fragment_transition_name))
         viewModel.displayCatCard(selectedImage)
     }

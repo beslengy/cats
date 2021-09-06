@@ -30,24 +30,23 @@ import com.molchanov.cats.network.networkmodels.CatItem
 import com.molchanov.cats.network.networkmodels.FilterItem
 import com.molchanov.cats.ui.*
 import com.molchanov.cats.ui.interfaces.FavButtonClickable
+import com.molchanov.cats.ui.interfaces.ItemClickable
 import com.molchanov.cats.utils.*
 import com.molchanov.cats.utils.Functions.setupManager
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
 
 @AndroidEntryPoint
-class HomeFragment : Fragment(), FavButtonClickable {
+class HomeFragment : Fragment(), ItemClickable, FavButtonClickable {
 
     private lateinit var binding: FragmentMainBinding
-
     private val viewModel: HomeViewModel by activityViewModels()
-    private val adapter = PageAdapter(favButtonClickListener = this)
+    private val adapter = PageAdapter(itemClickListener = this, favButtonClickListener = this)
     private val headerAdapter = CatsLoadStateAdapter { adapter.retry() }
     private val footerAdapter = CatsLoadStateAdapter { adapter.retry() }
     private lateinit var decoration: Decoration
     private lateinit var itemMenuAdapter: ArrayAdapter<String>
     private lateinit var manager: GridLayoutManager
-
     private lateinit var extras: FragmentNavigator.Extras
 
     override fun onCreateView(
@@ -69,9 +68,7 @@ class HomeFragment : Fragment(), FavButtonClickable {
         super.onViewCreated(view, savedInstanceState)
         manager = GridLayoutManager(context, 2, GridLayoutManager.VERTICAL, false)
         decoration = Decoration(resources.getDimensionPixelOffset(R.dimen.rv_item_margin))
-
         setHasOptionsMenu(true)
-
         postponeEnterTransition()
         view.doOnPreDraw { startPostponedEnterTransition() }
 
@@ -147,7 +144,6 @@ class HomeFragment : Fragment(), FavButtonClickable {
                         DELETE_FAV_FAIL -> R.string.already_deleted_from_favorites_toast_text
                     }
                 )
-                viewModel.toastShowComplete()
             }
         }
 
@@ -170,8 +166,6 @@ class HomeFragment : Fragment(), FavButtonClickable {
                     this.findNavController().navigate(
                         HomeFragmentDirections.actionHomeFragmentToCatCardFragment(it.id),
                         extras)
-
-                    viewModel.displayCatCardComplete()
                 }
             })
     }
@@ -186,7 +180,6 @@ class HomeFragment : Fragment(), FavButtonClickable {
     //Прослушиватель нажатия на элемент recyclerView
     override fun onItemClicked(selectedImage: CatItem, imageView: ImageView, itemView: MaterialCardView) {
         extras = FragmentNavigatorExtras(
-            imageView to getString(R.string.cat_card_image_transition_name),
             itemView to getString(R.string.cat_card_fragment_transition_name))
         viewModel.displayCatCard(selectedImage)
     }

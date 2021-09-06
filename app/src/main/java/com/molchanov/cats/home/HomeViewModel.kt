@@ -66,6 +66,7 @@ class HomeViewModel @Inject constructor(
             } catch (e: Exception) {
                 _toast.value = ToastRequest.ADD_FAV_FAIL
             }
+            _toast.value = null
         }
     }
 
@@ -88,16 +89,12 @@ class HomeViewModel @Inject constructor(
     }
 
     fun displayCatCard(currentImage: CatItem) {
-        _navigateToCard.value = currentImage
+        _navigateToCard.apply {
+            value = currentImage
+            value = null
+        }
     }
 
-    fun displayCatCardComplete() {
-        _navigateToCard.value = null
-    }
-
-    fun toastShowComplete() {
-        _toast.value = null
-    }
 
     private fun getBreeds() {
         viewModelScope.launch {

@@ -8,7 +8,8 @@ data class CatItem(
     val id: String,
     val url: String? = null,
     val image: Image? = null,
-    @Json(name = "original_filename") val filename: String? = null,
+    @Json(name = "original_filename")
+    val filename: String? = null,
     var favourite: Favourite? = null
 ) {
     data class Favourite(

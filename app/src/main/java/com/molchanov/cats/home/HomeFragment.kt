@@ -6,13 +6,18 @@ import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import android.widget.ImageView
 import android.widget.LinearLayout
+import androidx.core.view.doOnPreDraw
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.FragmentNavigator
+import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.GridLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.android.material.card.MaterialCardView
+import com.google.android.material.transition.MaterialElevationScale
 import com.google.android.material.transition.MaterialFadeThrough
 import com.molchanov.cats.R
 import com.molchanov.cats.databinding.FragmentFilterBinding
@@ -25,39 +30,35 @@ import com.molchanov.cats.network.networkmodels.CatItem
 import com.molchanov.cats.network.networkmodels.FilterItem
 import com.molchanov.cats.ui.*
 import com.molchanov.cats.ui.interfaces.FavButtonClickable
+import com.molchanov.cats.ui.interfaces.ItemClickable
 import com.molchanov.cats.utils.*
 import com.molchanov.cats.utils.Functions.setupManager
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
 
 @AndroidEntryPoint
-class HomeFragment : Fragment(), FavButtonClickable {
-
+class HomeFragment : Fragment(), ItemClickable, FavButtonClickable {
     private lateinit var binding: FragmentMainBinding
-
     private val viewModel: HomeViewModel by activityViewModels()
-    private val adapter = PageAdapter(favButtonClickListener = this)
+    private val adapter = PageAdapter(itemClickListener = this, favButtonClickListener = this)
     private val headerAdapter = CatsLoadStateAdapter { adapter.retry() }
     private val footerAdapter = CatsLoadStateAdapter { adapter.retry() }
     private lateinit var decoration: Decoration
     private lateinit var itemMenuAdapter: ArrayAdapter<String>
     private lateinit var manager: GridLayoutManager
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        exitTransition = MaterialFadeThrough().apply {
-            duration = resources.getInteger(R.integer.motion_duration_large).toLong()
-        }
-        enterTransition = MaterialFadeThrough().apply {
-            duration = resources.getInteger(R.integer.motion_duration_large).toLong()
-        }
-    }
+    private lateinit var extras: FragmentNavigator.Extras
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View? {
+        exitTransition = MaterialFadeThrough().apply {
+            duration = resources.getInteger(R.integer.motion_duration_large).toLong()
+        }
+        enterTransition = MaterialFadeThrough().apply {
+            duration = resources.getInteger(R.integer.motion_duration_large).toLong()
+        }
         binding = FragmentMainBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -66,8 +67,9 @@ class HomeFragment : Fragment(), FavButtonClickable {
         super.onViewCreated(view, savedInstanceState)
         manager = GridLayoutManager(context, 2, GridLayoutManager.VERTICAL, false)
         decoration = Decoration(resources.getDimensionPixelOffset(R.dimen.rv_item_margin))
-
         setHasOptionsMenu(true)
+        postponeEnterTransition()
+        view.doOnPreDraw { startPostponedEnterTransition() }
 
         //Настраиваем recyclerView
         binding.apply {
@@ -78,10 +80,12 @@ class HomeFragment : Fragment(), FavButtonClickable {
                 )
                 addItemDecoration(decoration)
                 setHasFixedSize(true)
-                layoutManager = setupManager(manager,
+                layoutManager = setupManager(
+                    manager,
                     this@HomeFragment.adapter,
                     footerAdapter,
-                    headerAdapter)
+                    headerAdapter
+                )
             }
             srl.apply {
                 setOnRefreshListener {
@@ -94,7 +98,6 @@ class HomeFragment : Fragment(), FavButtonClickable {
             }
             fab.isVisible = false
         }
-
         //Настраиваем видимость элементов в зависимости от состояния PagedList
         adapter.addLoadStateListener { loadState ->
             binding.apply {
@@ -120,7 +123,6 @@ class HomeFragment : Fragment(), FavButtonClickable {
                 }
             }
         }
-
         viewModel.rvIndex.observe(viewLifecycleOwner) {
             it?.let { index ->
                 val top = viewModel.rvTop.value
@@ -129,7 +131,6 @@ class HomeFragment : Fragment(), FavButtonClickable {
                 }
             }
         }
-
         //Наблюдатель для показа тоста
         viewModel.toast.observe(viewLifecycleOwner) {
             it?.let { request ->
@@ -141,24 +142,27 @@ class HomeFragment : Fragment(), FavButtonClickable {
                         DELETE_FAV_FAIL -> R.string.already_deleted_from_favorites_toast_text
                     }
                 )
-                viewModel.toastShowComplete()
             }
         }
-
         //Наблюдатель списка картинок. Обновляет адаптер при изменении
         viewModel.homeImages.observe(viewLifecycleOwner)
         {
             it?.let { adapter.submitData(viewLifecycleOwner.lifecycle, it) }
         }
-
         //Наблюдатель переменной навигации.
         viewModel.navigateToCard.observe(viewLifecycleOwner,
             { catItem ->
                 catItem?.let {
+                    reenterTransition = MaterialElevationScale(true).apply {
+                        duration = resources.getInteger(R.integer.motion_duration_large).toLong()
+                    }
+                    exitTransition = MaterialElevationScale(false).apply {
+                        duration = resources.getInteger(R.integer.motion_duration_large).toLong()
+                    }
                     this.findNavController().navigate(
-                        HomeFragmentDirections.actionHomeFragmentToCatCardFragment(it.id)
+                        HomeFragmentDirections.actionHomeFragmentToCatCardFragment(it.id),
+                        extras
                     )
-                    viewModel.displayCatCardComplete()
                 }
             })
     }
@@ -171,7 +175,14 @@ class HomeFragment : Fragment(), FavButtonClickable {
     }
 
     //Прослушиватель нажатия на элемент recyclerView
-    override fun onItemClicked(selectedImage: CatItem, imageView: ImageView) {
+    override fun onItemClicked(
+        selectedImage: CatItem,
+        imageView: ImageView,
+        itemView: MaterialCardView
+    ) {
+        extras = FragmentNavigatorExtras(
+            itemView to getString(R.string.cat_card_fragment_transition_name)
+        )
         viewModel.displayCatCard(selectedImage)
     }
 
@@ -192,8 +203,10 @@ class HomeFragment : Fragment(), FavButtonClickable {
         val filterItem = menu.findItem(R.id.action_filter)
         filterItem.setOnMenuItemClickListener {
             val dialog = BottomSheetDialog(requireContext())
-            val view = LayoutInflater.from(context).inflate(R.layout.fragment_filter,
-                requireActivity().findViewById(R.id.ll_filter) as LinearLayout?)
+            val view = LayoutInflater.from(context).inflate(
+                R.layout.fragment_filter,
+                requireActivity().findViewById(R.id.ll_filter) as LinearLayout?
+            )
             val dialogBinding = FragmentFilterBinding.bind(view)
             val typeMenu = dialogBinding.menuFilterType.editText as? AutoCompleteTextView
             val itemsMenu = dialogBinding.menuFilterItem.editText as? AutoCompleteTextView
@@ -217,9 +230,11 @@ class HomeFragment : Fragment(), FavButtonClickable {
                     else -> listOf()
                 }
 
-                itemMenuAdapter = ArrayAdapter(requireContext(),
+                itemMenuAdapter = ArrayAdapter(
+                    requireContext(),
                     R.layout.dropdown_menu_item,
-                    (items.map { it.name }))
+                    (items.map { it.name })
+                )
                 itemsMenu?.apply {
                     setAdapter(itemMenuAdapter)
                     setOnItemClickListener { _, _, position, _ ->

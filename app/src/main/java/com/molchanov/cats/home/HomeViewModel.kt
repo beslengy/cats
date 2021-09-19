@@ -2,7 +2,6 @@ package com.molchanov.cats.home
 
 
 import android.app.Application
-import android.util.Log
 import androidx.lifecycle.*
 import androidx.paging.cachedIn
 import com.molchanov.cats.data.CatsRepository
@@ -66,6 +65,7 @@ class HomeViewModel @Inject constructor(
             } catch (e: Exception) {
                 _toast.value = ToastRequest.ADD_FAV_FAIL
             }
+            _toast.value = null
         }
     }
 
@@ -88,16 +88,12 @@ class HomeViewModel @Inject constructor(
     }
 
     fun displayCatCard(currentImage: CatItem) {
-        _navigateToCard.value = currentImage
+        _navigateToCard.apply {
+            value = currentImage
+            value = null
+        }
     }
 
-    fun displayCatCardComplete() {
-        _navigateToCard.value = null
-    }
-
-    fun toastShowComplete() {
-        _toast.value = null
-    }
 
     private fun getBreeds() {
         viewModelScope.launch {
@@ -148,7 +144,8 @@ class HomeViewModel @Inject constructor(
         private val DEFAULT_QUERY = mapOf(
             "breed_ids" to "",
             "category_ids" to "",
-            "order" to "RANDOM")
+            "order" to "RANDOM"
+        )
 
         enum class ToastRequest {
             ADD_FAV,
@@ -159,7 +156,6 @@ class HomeViewModel @Inject constructor(
     }
 
     fun saveScrollPosition(index: Int, top: Int) {
-        Log.d("M_HomeViewModel", "saveScroll: $index")
         handle["rv_index"] = index
         handle["rv_top"] = top
     }

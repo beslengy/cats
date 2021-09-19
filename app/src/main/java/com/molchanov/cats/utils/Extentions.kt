@@ -1,9 +1,14 @@
 package com.molchanov.cats.utils
 
+import android.annotation.SuppressLint
 import android.content.Context
+import android.graphics.Color
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.annotation.AttrRes
+import androidx.annotation.ColorInt
+import androidx.core.content.res.use
 import androidx.core.net.toUri
 import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 import com.bumptech.glide.Glide
@@ -52,27 +57,18 @@ fun TextView.setAnalysisText(data: Analysis?) {
     }
 }
 
-fun TextView.setCardText(data: CatDetail?) {
-    data?.breeds?.get(0)?.let {
-        text =
-            StringBuilder().apply {
-                if (!it.breedName.isNullOrEmpty()) {
-                    append("Name: ")
-                    appendLine("\t${it.breedName}\n")
-                }
-                if (!it.altNames.isNullOrEmpty()) {
-                    append("Alternative names: ")
-                    appendLine("\t${it.altNames}\n")
-                }
-                if (!it.temperament.isNullOrEmpty()) {
-                    append("Temperament: ")
-                    appendLine("${it.temperament}\n")
-                }
-                if (!it.description.isNullOrEmpty()) {
-                    appendLine("Description:")
-                    appendLine("${it.description}\n")
-                }
-            }
+/**
+ * Retrieve a color from the current [android.content.res.Resources.Theme].
+ */
+@ColorInt
+@SuppressLint("Recycle")
+fun Context.themeColor(
+    @AttrRes themeAttrId: Int
+): Int {
+    return obtainStyledAttributes(
+        intArrayOf(themeAttrId)
+    ).use {
+        it.getColor(0, Color.MAGENTA)
     }
 }
 

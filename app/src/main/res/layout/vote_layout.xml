@@ -5,8 +5,7 @@
     android:id="@+id/vote_buttons_layout"
     android:layout_width="match_parent"
     android:layout_height="@dimen/bar_size"
-    android:layout_gravity="bottom"
-    android:background="@color/vote_view_background">
+    android:layout_gravity="bottom">
 
     <ImageButton
         android:id="@+id/btn_like"

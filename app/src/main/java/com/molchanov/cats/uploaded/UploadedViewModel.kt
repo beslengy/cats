@@ -27,9 +27,8 @@ class UploadedViewModel @Inject constructor(
     //Переменные для сохранения состояния прокрутки
     val rvIndex = handle.getLiveData<Int?>("rv_index", null) as LiveData<Int?>
     val rvTop = handle.getLiveData("rv_top", 0) as LiveData<Int>
-
     val uploadedImages = repository.getUploadedList().cachedIn(viewModelScope)
-
+    private val filenames = MutableLiveData<List<CatItem>>()
     private val resources = app.resources
 
     private val _response = MutableLiveData<NetworkResponse>()
@@ -41,40 +40,35 @@ class UploadedViewModel @Inject constructor(
     private val _isFileExist = MutableLiveData<Boolean>()
     val isFileExist: LiveData<Boolean> = _isFileExist
 
-    private val filenames = MutableLiveData<List<CatItem>>()
-
     fun displayAnalysis(currentImage: CatItem) {
         var analysis: Analysis?
         viewModelScope.launch {
             analysis = repository.getAnalysis(currentImage.id)
             analysis?.imageUrl = currentImage.imageUrl
-            _navigateToAnalysis.value = analysis
+            _navigateToAnalysis.apply {
+                value = analysis
+                value = null
+            }
         }
     }
 
-    fun displayAnalysisComplete() {
-        _navigateToAnalysis.value = null
-    }
-
     fun uploadFile(filePart: MultipartBody.Part?) {
-        viewModelScope.launch {
-            app.showToast(resources.getString(R.string.upload_start_toast_text))
-            filePart?.let {
-                viewModelScope.launch {
-                    try {
-                        _response.value = repository.uploadImage(it)
-                        val file = File(CURRENT_PHOTO_PATH)
-                        if (CURRENT_PHOTO_PATH.isNotEmpty())
-                            if (file.exists())
-                                file.delete()
-                        app.showToast(
-                            resources.getString(R.string.upload_end_toast_text)
-                        )
-                    } catch (e: Exception) {
-                        app.showToast(
-                            resources.getString(R.string.upload_fail_toast_text)
-                        )
-                    }
+        app.showToast(resources.getString(R.string.upload_start_toast_text))
+        filePart?.let {
+            viewModelScope.launch {
+                try {
+                    _response.value = repository.uploadImage(it)
+                    val file = File(CURRENT_PHOTO_PATH)
+                    if (CURRENT_PHOTO_PATH.isNotEmpty())
+                        if (file.exists())
+                            file.delete()
+                    app.showToast(
+                        resources.getString(R.string.upload_end_toast_text)
+                    )
+                } catch (e: Exception) {
+                    app.showToast(
+                        resources.getString(R.string.upload_fail_toast_text)
+                    )
                 }
             }
         }
@@ -109,9 +103,6 @@ class UploadedViewModel @Inject constructor(
                 }
             }
         }
-    }
-
-    fun fileExistCheckingComplete() {
         _isFileExist.value = null
     }
 

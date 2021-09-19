@@ -27,15 +27,12 @@ class CatCardViewModel @Inject constructor(
     private val _analysis = MutableLiveData<Analysis?>(handle.get("analysis"))
     val analysis: LiveData<Analysis?> get() = _analysis
 
-    private val votes = MutableLiveData<List<Vote>>()
-
-    private val imageId: String? = handle.get("imageId")
-
     private val _voteValue = MutableLiveData(NOT_VOTED_VALUE)
     val voteValue: LiveData<Int> get() = _voteValue
 
+    private val votes = MutableLiveData<List<Vote>>()
+    private val imageId: String? = handle.get("imageId")
     private var voteId: String = ""
-
     private var response: String = ""
 
     init {

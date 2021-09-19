@@ -27,4 +27,5 @@
     <dimen name="item_elevation">1dp</dimen>
     <dimen name="item_max_elevation">8dp</dimen>
     <dimen name="min_bottom_sheet_height">56dp</dimen>
+    <dimen name="cat_card_image_height">420dp</dimen>
 </resources>

@@ -48,6 +48,10 @@
     <string name="breeds_filter_type">Порода</string>
     <string name="categories_filter_type">Категория</string>
     <string name="upload_image_file_exist_toast">Файл с таким именем уже существует</string>
+    <string name="property_name_example">Property:</string>
+    <string name="cat_card_image_transition_name">cat_card_image_transition_name</string>
+    <string name="cat_card_fragment_transition_name">cat_card_fragment_transition_name</string>
+    <string name="filter_apply_button_text">Применить</string>
 
     <string-array name="filter_types">
         <item>Порода</item>

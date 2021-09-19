@@ -57,30 +57,6 @@ fun TextView.setAnalysisText(data: Analysis?) {
     }
 }
 
-fun TextView.setCardText(data: CatDetail?) {
-    data?.breeds?.get(0)?.let {
-        text =
-            StringBuilder().apply {
-                if (!it.breedName.isNullOrEmpty()) {
-                    append("Name: ")
-                    appendLine("\t${it.breedName}\n")
-                }
-                if (!it.altNames.isNullOrEmpty()) {
-                    append("Alternative names: ")
-                    appendLine("\t${it.altNames}\n")
-                }
-                if (!it.temperament.isNullOrEmpty()) {
-                    append("Temperament: ")
-                    appendLine("${it.temperament}\n")
-                }
-                if (!it.description.isNullOrEmpty()) {
-                    appendLine("Description:")
-                    appendLine("${it.description}\n")
-                }
-            }
-    }
-}
-
 /**
  * Retrieve a color from the current [android.content.res.Resources.Theme].
  */

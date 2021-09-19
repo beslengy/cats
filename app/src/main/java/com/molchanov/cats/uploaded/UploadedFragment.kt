@@ -39,7 +39,6 @@ import java.io.File
 @AndroidEntryPoint
 class UploadedFragment : Fragment(), ItemClickable, LongTappable {
     private lateinit var binding: FragmentMainBinding
-
     private val viewModel: UploadedViewModel by activityViewModels()
     private val adapter = PageAdapter(itemClickListener = this, longTapClickListener = this)
     private val headerAdapter = CatsLoadStateAdapter { adapter.retry() }
@@ -58,7 +57,6 @@ class UploadedFragment : Fragment(), ItemClickable, LongTappable {
             viewModel.checkFileIsExist(CURRENT_IMAGE_URI)
         }
     }
-
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -92,10 +90,12 @@ class UploadedFragment : Fragment(), ItemClickable, LongTappable {
                 )
                 setHasFixedSize(true)
                 addItemDecoration(decoration)
-                layoutManager = setupManager(manager,
+                layoutManager = setupManager(
+                    manager,
                     this@UploadedFragment.adapter,
                     footerAdapter,
-                    headerAdapter)
+                    headerAdapter
+                )
             }
             srl.apply {
                 setOnRefreshListener {
@@ -110,7 +110,6 @@ class UploadedFragment : Fragment(), ItemClickable, LongTappable {
                 }
             }
         }
-
         viewModel.response.observe(viewLifecycleOwner) {
             it?.let {
                 binding.apply {
@@ -120,7 +119,6 @@ class UploadedFragment : Fragment(), ItemClickable, LongTappable {
                 }
             }
         }
-
         viewModel.isFileExist.observe(viewLifecycleOwner) {
             it?.let { isExist ->
                 if (isExist) {
@@ -209,8 +207,10 @@ class UploadedFragment : Fragment(), ItemClickable, LongTappable {
      * соответствующие контракты - [PhotoContract] или [GalleryContract]
      */
     private fun selectImage() {
-        val items = arrayOf(resources.getString(R.string.dialog_btn_camera),
-            resources.getString(R.string.dialog_btn_gallery))
+        val items = arrayOf(
+            resources.getString(R.string.dialog_btn_camera),
+            resources.getString(R.string.dialog_btn_gallery)
+        )
         MaterialAlertDialogBuilder(requireContext())
             .setTitle(resources.getString(R.string.dialog_label))
             .setNeutralButton(resources.getString(R.string.dialog_btn_cancel)) { dialog, _ ->
@@ -219,7 +219,8 @@ class UploadedFragment : Fragment(), ItemClickable, LongTappable {
             .setItems(items) { _, which ->
                 when (items[which]) {
                     resources.getString(R.string.dialog_btn_camera) -> cameraContract.launch(
-                        getNewImageUri(requireContext()))
+                        getNewImageUri(requireContext())
+                    )
                     resources.getString(R.string.dialog_btn_gallery) -> galleryContract.launch("image/*")
                 }
             }
@@ -233,9 +234,14 @@ class UploadedFragment : Fragment(), ItemClickable, LongTappable {
         viewModel.saveScrollPosition(index, top)
     }
 
-    override fun onItemClicked(selectedImage: CatItem, imageView: ImageView, itemView: MaterialCardView) {
+    override fun onItemClicked(
+        selectedImage: CatItem,
+        imageView: ImageView,
+        itemView: MaterialCardView
+    ) {
         extras = FragmentNavigatorExtras(
-            itemView to getString(R.string.cat_card_fragment_transition_name))
+            itemView to getString(R.string.cat_card_fragment_transition_name)
+        )
         viewModel.displayAnalysis(selectedImage)
     }
 

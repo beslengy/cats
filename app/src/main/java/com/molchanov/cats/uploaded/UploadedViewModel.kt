@@ -27,7 +27,6 @@ class UploadedViewModel @Inject constructor(
     //Переменные для сохранения состояния прокрутки
     val rvIndex = handle.getLiveData<Int?>("rv_index", null) as LiveData<Int?>
     val rvTop = handle.getLiveData("rv_top", 0) as LiveData<Int>
-
     val uploadedImages = repository.getUploadedList().cachedIn(viewModelScope)
     private val filenames = MutableLiveData<List<CatItem>>()
     private val resources = app.resources

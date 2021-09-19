@@ -70,7 +70,7 @@ class CatCardFragment : Fragment() {
             }
         }
         viewModel.analysis.observe(viewLifecycleOwner) { analysis ->
-            analysis?.let{
+            analysis?.let {
                 setAnalysisView(it)
             }
         }
@@ -111,7 +111,7 @@ class CatCardFragment : Fragment() {
                 .into(this)
         }
         binding.apply {
-            when(null) {
+            when (null) {
                 detail -> {
                     tvCatCardHeader.setText(R.string.cat_analysis_header)
                 }
@@ -140,18 +140,20 @@ class CatCardFragment : Fragment() {
                                 }
                                 else -> ivGrade.apply {
                                     isVisible = true
-                                    setImageDrawable(getDrawable(
-                                        resources,
-                                        when (value) {
-                                            5 -> R.drawable.grade_5_img
-                                            4 -> R.drawable.grade_4_img
-                                            3 -> R.drawable.grade_3_img
-                                            2 -> R.drawable.grade_2_img
-                                            1 -> R.drawable.grade_1_img
-                                            else -> R.drawable.grade_0_img
-                                        },
-                                        context.theme
-                                    ))
+                                    setImageDrawable(
+                                        getDrawable(
+                                            resources,
+                                            when (value) {
+                                                5 -> R.drawable.grade_5_img
+                                                4 -> R.drawable.grade_4_img
+                                                3 -> R.drawable.grade_3_img
+                                                2 -> R.drawable.grade_2_img
+                                                1 -> R.drawable.grade_1_img
+                                                else -> R.drawable.grade_0_img
+                                            },
+                                            context.theme
+                                        )
+                                    )
                                 }
                             }
                         }
@@ -202,53 +204,78 @@ class CatCardFragment : Fragment() {
                 voteUpButton.apply {
                     background =
                         getDrawable(resources, R.drawable.btn_vote_checked, activity.theme)
-                    setImageDrawable(getDrawable(resources,
-                        R.drawable.thumb_up_filled,
-                        activity.theme))
+                    setImageDrawable(
+                        getDrawable(
+                            resources,
+                            R.drawable.thumb_up_filled,
+                            activity.theme
+                        )
+                    )
                 }
                 voteDownButton.apply {
                     background =
                         getDrawable(resources, R.drawable.btn_vote_unchecked, activity.theme)
-                    setImageDrawable(getDrawable(resources,
-                        R.drawable.thumb_down,
-                        activity.theme))
+                    setImageDrawable(
+                        getDrawable(
+                            resources,
+                            R.drawable.thumb_down,
+                            activity.theme
+                        )
+                    )
                 }
             }
             VOTE_DOWN -> {
                 voteUpButton.apply {
                     background =
                         getDrawable(resources, R.drawable.btn_vote_unchecked, activity.theme)
-                    setImageDrawable(getDrawable(resources,
-                        R.drawable.thumb_up,
-                        activity.theme))
+                    setImageDrawable(
+                        getDrawable(
+                            resources,
+                            R.drawable.thumb_up,
+                            activity.theme
+                        )
+                    )
                 }
                 voteDownButton.apply {
                     background =
                         getDrawable(resources, R.drawable.btn_vote_checked, activity.theme)
-                    setImageDrawable(getDrawable(resources,
-                        R.drawable.thumb_down_filled,
-                        activity.theme))
+                    setImageDrawable(
+                        getDrawable(
+                            resources,
+                            R.drawable.thumb_down_filled,
+                            activity.theme
+                        )
+                    )
                 }
             }
             NOT_VOTED -> {
                 voteUpButton.apply {
                     background =
                         getDrawable(resources, R.drawable.btn_vote_unchecked, activity.theme)
-                    setImageDrawable(getDrawable(resources,
-                        R.drawable.thumb_up,
-                        activity.theme))
+                    setImageDrawable(
+                        getDrawable(
+                            resources,
+                            R.drawable.thumb_up,
+                            activity.theme
+                        )
+                    )
                 }
                 voteDownButton.apply {
                     background =
                         getDrawable(resources, R.drawable.btn_vote_unchecked, activity.theme)
-                    setImageDrawable(getDrawable(resources,
-                        R.drawable.thumb_down,
-                        activity.theme))
+                    setImageDrawable(
+                        getDrawable(
+                            resources,
+                            R.drawable.thumb_down,
+                            activity.theme
+                        )
+                    )
                 }
             }
         }
     }
-    private fun String.formatVarName() : String {
+
+    private fun String.formatVarName(): String {
         var result = ""
         this.forEachIndexed { index, c ->
             result = when (index) {

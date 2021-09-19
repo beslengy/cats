@@ -33,12 +33,13 @@ class FavoritesViewModel @Inject constructor(
     private val _navigateToCard = MutableLiveData<CatItem>()
     val navigateToCard: LiveData<CatItem> = _navigateToCard
 
-    private val response = MutableLiveData<String>()
+    private val _response = MutableLiveData<String?>(null)
+    val response: LiveData<String?> get() = _response
 
     fun deleteFromFavorites(cat: CatItem) {
         try {
             viewModelScope.launch {
-                response.value = repository.removeFavoriteByFavId(cat.id)
+                _response.value = repository.removeFavoriteByFavId(cat.id)
             }
             app.showToast(
                 resources.getString(R.string.deleted_from_favorites_toast_text)
@@ -48,6 +49,7 @@ class FavoritesViewModel @Inject constructor(
                 resources.getString(R.string.already_deleted_from_favorites_toast_text)
             )
         }
+        _response.value = null
     }
 
     fun displayCatCard(currentImage: CatItem) {

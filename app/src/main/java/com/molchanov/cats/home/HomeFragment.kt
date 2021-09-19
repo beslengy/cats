@@ -38,7 +38,6 @@ import java.util.*
 
 @AndroidEntryPoint
 class HomeFragment : Fragment(), ItemClickable, FavButtonClickable {
-
     private lateinit var binding: FragmentMainBinding
     private val viewModel: HomeViewModel by activityViewModels()
     private val adapter = PageAdapter(itemClickListener = this, favButtonClickListener = this)
@@ -81,10 +80,12 @@ class HomeFragment : Fragment(), ItemClickable, FavButtonClickable {
                 )
                 addItemDecoration(decoration)
                 setHasFixedSize(true)
-                layoutManager = setupManager(manager,
+                layoutManager = setupManager(
+                    manager,
                     this@HomeFragment.adapter,
                     footerAdapter,
-                    headerAdapter)
+                    headerAdapter
+                )
             }
             srl.apply {
                 setOnRefreshListener {
@@ -97,7 +98,6 @@ class HomeFragment : Fragment(), ItemClickable, FavButtonClickable {
             }
             fab.isVisible = false
         }
-
         //Настраиваем видимость элементов в зависимости от состояния PagedList
         adapter.addLoadStateListener { loadState ->
             binding.apply {
@@ -123,7 +123,6 @@ class HomeFragment : Fragment(), ItemClickable, FavButtonClickable {
                 }
             }
         }
-
         viewModel.rvIndex.observe(viewLifecycleOwner) {
             it?.let { index ->
                 val top = viewModel.rvTop.value
@@ -132,7 +131,6 @@ class HomeFragment : Fragment(), ItemClickable, FavButtonClickable {
                 }
             }
         }
-
         //Наблюдатель для показа тоста
         viewModel.toast.observe(viewLifecycleOwner) {
             it?.let { request ->
@@ -146,13 +144,11 @@ class HomeFragment : Fragment(), ItemClickable, FavButtonClickable {
                 )
             }
         }
-
         //Наблюдатель списка картинок. Обновляет адаптер при изменении
         viewModel.homeImages.observe(viewLifecycleOwner)
         {
             it?.let { adapter.submitData(viewLifecycleOwner.lifecycle, it) }
         }
-
         //Наблюдатель переменной навигации.
         viewModel.navigateToCard.observe(viewLifecycleOwner,
             { catItem ->
@@ -165,7 +161,8 @@ class HomeFragment : Fragment(), ItemClickable, FavButtonClickable {
                     }
                     this.findNavController().navigate(
                         HomeFragmentDirections.actionHomeFragmentToCatCardFragment(it.id),
-                        extras)
+                        extras
+                    )
                 }
             })
     }
@@ -178,9 +175,14 @@ class HomeFragment : Fragment(), ItemClickable, FavButtonClickable {
     }
 
     //Прослушиватель нажатия на элемент recyclerView
-    override fun onItemClicked(selectedImage: CatItem, imageView: ImageView, itemView: MaterialCardView) {
+    override fun onItemClicked(
+        selectedImage: CatItem,
+        imageView: ImageView,
+        itemView: MaterialCardView
+    ) {
         extras = FragmentNavigatorExtras(
-            itemView to getString(R.string.cat_card_fragment_transition_name))
+            itemView to getString(R.string.cat_card_fragment_transition_name)
+        )
         viewModel.displayCatCard(selectedImage)
     }
 
@@ -201,8 +203,10 @@ class HomeFragment : Fragment(), ItemClickable, FavButtonClickable {
         val filterItem = menu.findItem(R.id.action_filter)
         filterItem.setOnMenuItemClickListener {
             val dialog = BottomSheetDialog(requireContext())
-            val view = LayoutInflater.from(context).inflate(R.layout.fragment_filter,
-                requireActivity().findViewById(R.id.ll_filter) as LinearLayout?)
+            val view = LayoutInflater.from(context).inflate(
+                R.layout.fragment_filter,
+                requireActivity().findViewById(R.id.ll_filter) as LinearLayout?
+            )
             val dialogBinding = FragmentFilterBinding.bind(view)
             val typeMenu = dialogBinding.menuFilterType.editText as? AutoCompleteTextView
             val itemsMenu = dialogBinding.menuFilterItem.editText as? AutoCompleteTextView
@@ -226,9 +230,11 @@ class HomeFragment : Fragment(), ItemClickable, FavButtonClickable {
                     else -> listOf()
                 }
 
-                itemMenuAdapter = ArrayAdapter(requireContext(),
+                itemMenuAdapter = ArrayAdapter(
+                    requireContext(),
                     R.layout.dropdown_menu_item,
-                    (items.map { it.name }))
+                    (items.map { it.name })
+                )
                 itemsMenu?.apply {
                     setAdapter(itemMenuAdapter)
                     setOnItemClickListener { _, _, position, _ ->

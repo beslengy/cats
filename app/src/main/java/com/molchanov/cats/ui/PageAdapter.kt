@@ -17,12 +17,12 @@ import com.molchanov.cats.ui.interfaces.LongTappable
 import com.molchanov.cats.utils.bindImage
 
 class PageAdapter(
-    private val itemClickListener : ItemClickable,
+    private val itemClickListener: ItemClickable,
     private val favButtonClickListener: FavButtonClickable? = null,
     private val longTapClickListener: LongTappable? = null
 ) : PagingDataAdapter<CatItem, PageAdapter.ViewHolder>(
-        COMPARATOR
-    ) {
+    COMPARATOR
+) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
             MainItemBinding.inflate(
@@ -44,14 +44,19 @@ class PageAdapter(
             image: CatItem,
             favButtonClickListener: FavButtonClickable?,
             longTapClickListener: LongTappable?,
-            itemClickListener : ItemClickable) {
+            itemClickListener: ItemClickable
+        ) {
             binding.apply {
                 imageCard.transitionName = "cat_card_transition_name_${image.imageUrl}"
                 btnFavorites.apply {
                     if (image.isUploaded) this.visibility = View.GONE
-                    if (image.isFavorite) this.setImageDrawable(getDrawable(resources,
-                        R.drawable.ic_heart,
-                        context.theme))
+                    if (image.isFavorite) this.setImageDrawable(
+                        getDrawable(
+                            resources,
+                            R.drawable.ic_heart,
+                            context.theme
+                        )
+                    )
                     favButtonClickListener?.let {
                         setOnClickListener {
                             favButtonClickListener.onFavoriteBtnClicked(image)

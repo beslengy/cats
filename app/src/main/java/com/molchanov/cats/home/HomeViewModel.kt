@@ -144,7 +144,8 @@ class HomeViewModel @Inject constructor(
         private val DEFAULT_QUERY = mapOf(
             "breed_ids" to "",
             "category_ids" to "",
-            "order" to "RANDOM")
+            "order" to "RANDOM"
+        )
 
         enum class ToastRequest {
             ADD_FAV,

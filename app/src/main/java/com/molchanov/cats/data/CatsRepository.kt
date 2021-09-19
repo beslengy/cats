@@ -23,7 +23,7 @@ class CatsRepository @Inject constructor(private val catsApi: CatsApiService) {
         private const val USER_ID = "user-17"
     }
 
-    var votes: List<Vote> = listOf()
+    private var votes: List<Vote> = listOf()
     private lateinit var cat: CatDetail
     private lateinit var filenames: List<CatItem>
     private var analysis: Analysis? = null

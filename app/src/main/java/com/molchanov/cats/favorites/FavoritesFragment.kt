@@ -28,9 +28,7 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class FavoritesFragment : Fragment(), ItemClickable, FavButtonClickable {
-
     private lateinit var binding: FragmentMainBinding
-
     private val viewModel: FavoritesViewModel by activityViewModels()
     private val adapter = PageAdapter(itemClickListener = this, favButtonClickListener = this)
     private val headerAdapter = CatsLoadStateAdapter { adapter.retry() }
@@ -39,11 +37,10 @@ class FavoritesFragment : Fragment(), ItemClickable, FavButtonClickable {
     private lateinit var manager: GridLayoutManager
     private lateinit var extras: FragmentNavigator.Extras
 
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View? {
         exitTransition = MaterialFadeThrough().apply {
             duration = resources.getInteger(R.integer.motion_duration_large).toLong()
@@ -88,7 +85,11 @@ class FavoritesFragment : Fragment(), ItemClickable, FavButtonClickable {
             }
             fab.isVisible = false
         }
-
+        viewModel.response.observe(viewLifecycleOwner) {
+            it?.let {
+                refreshList()
+            }
+        }
         viewModel.rvIndex.observe(viewLifecycleOwner) {
             it?.let { index ->
                 val top = viewModel.rvTop.value
@@ -97,11 +98,9 @@ class FavoritesFragment : Fragment(), ItemClickable, FavButtonClickable {
                 }
             }
         }
-
         viewModel.favoriteImages.observe(viewLifecycleOwner) {
             it?.let { adapter.submitData(viewLifecycleOwner.lifecycle, it) }
         }
-
         viewModel.navigateToCard.observe(viewLifecycleOwner, { catItem ->
             catItem?.image?.let {
                 exitTransition = MaterialElevationScale(false).apply {
@@ -116,7 +115,6 @@ class FavoritesFragment : Fragment(), ItemClickable, FavButtonClickable {
                 )
             }
         })
-
         adapter.addLoadStateListener { loadState ->
             binding.apply {
                 progressBar.isVisible = loadState.refresh is LoadState.Loading
@@ -147,19 +145,32 @@ class FavoritesFragment : Fragment(), ItemClickable, FavButtonClickable {
         viewModel.saveScrollPosition(index, top)
     }
 
-    override fun onItemClicked(selectedImage: CatItem, imageView: ImageView, itemView: MaterialCardView) {
+    private fun refreshList() {
+        adapter.refresh()
+        binding.apply {
+            progressBar.isVisible = false
+            rvMain.isVisible = true
+        }
+    }
+
+    override fun onItemClicked(
+        selectedImage: CatItem,
+        imageView: ImageView,
+        itemView: MaterialCardView,
+    ) {
         extras = FragmentNavigatorExtras(
-            itemView to getString(R.string.cat_card_fragment_transition_name))
+            itemView to getString(R.string.cat_card_fragment_transition_name)
+        )
         viewModel.displayCatCard(selectedImage)
     }
 
     override fun onFavoriteBtnClicked(selectedImage: CatItem) {
         viewModel.deleteFromFavorites(selectedImage)
-        binding.apply {
-            adapter.refresh()
-            progressBar.isVisible = false
-            rvMain.isVisible = true
-        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        refreshList()
     }
 
     override fun onDestroyView() {

@@ -19,10 +19,12 @@ class MainActivityTest {
     fun test_isBottomNavBarOnView() {
         onView(withId(R.id.bottom_navigation)).check(matches(isDisplayed()))
     }
+
     @Test
-    fun test_isNavHostOnView(){
+    fun test_isNavHostOnView() {
         onView(withId(R.id.nav_host_fragment)).check(matches(isDisplayed()))
     }
+
     @Test
     fun test_filterAction_visibility() {
         onView(withId(R.id.action_filter)).check(matches(isDisplayed()))
@@ -33,6 +35,7 @@ class MainActivityTest {
         onView(withId(R.id.homeFragment)).perform(click())
         onView(withId(R.id.action_filter)).check(matches(isDisplayed()))
     }
+
     @Test
     fun test_filterDialogOnView() {
         onView(withId(R.id.action_filter)).perform(click())

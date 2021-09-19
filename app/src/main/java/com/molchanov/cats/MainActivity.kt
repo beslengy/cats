@@ -36,8 +36,11 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(findViewById(R.id.toolbar))
 
         navController = findNavController(R.id.nav_host_fragment)
-        appBarConfiguration = AppBarConfiguration(setOf(
-            R.id.homeFragment, R.id.favoritesFragment, R.id.uploadedFragment))
+        appBarConfiguration = AppBarConfiguration(
+            setOf(
+                R.id.homeFragment, R.id.favoritesFragment, R.id.uploadedFragment
+            )
+        )
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration)
         NavigationUI.setupWithNavController(bottomNavBar, navController)
 
@@ -45,7 +48,8 @@ class MainActivity : AppCompatActivity() {
             when (destination.id) {
                 R.id.homeFragment, R.id.favoritesFragment, R.id.uploadedFragment -> {
                     bottomNavBar.isVisible = true
-                    appBar.background = ColorDrawable(MaterialColors.getColor(appBar, R.attr.colorPrimary))
+                    appBar.background =
+                        ColorDrawable(MaterialColors.getColor(appBar, R.attr.colorPrimary))
                 }
                 else -> {
                     appBar.background = ColorDrawable(Color.TRANSPARENT)
@@ -56,7 +60,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onSupportNavigateUp(): Boolean {
-        return NavigationUI.navigateUp(navController,
-            appBarConfiguration) || super.onSupportNavigateUp()
+        return NavigationUI.navigateUp(
+            navController,
+            appBarConfiguration
+        ) || super.onSupportNavigateUp()
     }
 }

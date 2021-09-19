@@ -51,6 +51,7 @@
     <string name="property_name_example">Property:</string>
     <string name="cat_card_image_transition_name">cat_card_image_transition_name</string>
     <string name="cat_card_fragment_transition_name">cat_card_fragment_transition_name</string>
+    <string name="filter_apply_button_text">Применить</string>
 
     <string-array name="filter_types">
         <item>Порода</item>

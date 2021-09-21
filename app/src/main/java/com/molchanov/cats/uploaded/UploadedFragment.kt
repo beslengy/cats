@@ -128,6 +128,7 @@ class UploadedFragment : Fragment(), ItemClickable, LongTappable {
                         viewModel.uploadFile(part)
                     }
                 }
+                viewModel.fileExistCheckingComplete()
             }
         }
 

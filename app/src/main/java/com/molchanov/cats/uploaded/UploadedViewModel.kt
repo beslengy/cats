@@ -93,8 +93,10 @@ class UploadedViewModel @Inject constructor(
 
     fun checkFileIsExist(uri: Uri) {
         val filename = File(uri.path!!).name
-        filenames.value?.let {
-            for (item in it) {
+        if (filenames.value!!.isEmpty()) {
+            _isFileExist.value = false
+        } else {
+            for (item in filenames.value!!) {
                 if (item.filename == filename) {
                     _isFileExist.value = true
                     break
@@ -103,12 +105,15 @@ class UploadedViewModel @Inject constructor(
                 }
             }
         }
-        _isFileExist.value = null
     }
 
     fun getFilenames() {
         viewModelScope.launch {
             filenames.value = repository.getFilenames()
         }
+    }
+
+    fun fileExistCheckingComplete() {
+        _isFileExist.value = null
     }
 }

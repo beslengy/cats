@@ -1,1 +1,1 @@
-# cats ![Cats logo](https://disk.yandex.ru/i/t263zmu2FOSwdA)
+# cats ![Cats logo](/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png)

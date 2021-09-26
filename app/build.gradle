@@ -71,9 +71,6 @@ dependencies {
     implementation 'org.jetbrains.kotlin:kotlin-android-extensions-runtime:1.3.72'
     implementation 'androidx.recyclerview:recyclerview:1.2.1'
 
-    //Reflect
-    implementation "org.jetbrains.kotlin:kotlin-reflect:1.5.30"
-
     //Fragment
     implementation "androidx.fragment:fragment-ktx:$fragment_version"
 

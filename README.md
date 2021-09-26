@@ -1,1 +1,1 @@
-# cats ![Cats logo](https://3.downloader.disk.yandex.ru/preview/dd6f08284792fea65b66204f59ebf417cffe444273acd9f522b4a3164b37923f/inf/OJs2_NDKl6AXIA7vA2-RH1eAY0OvTb4waOp-s_ZVBag12moWxK3iNuZ3FQq7K2w12TE9nf1r5BEQHfX0fDJrZw%3D%3D?uid=20287172&filename=untitled%20%288%29.svg&disposition=inline&hash=&limit=0&content_type=image%2Fjpeg&owner_uid=20287172&tknv=v2&size=1247x762)
+# cats ![Cats logo](https://disk.yandex.ru/i/t263zmu2FOSwdA)

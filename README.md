@@ -1,5 +1,5 @@
 ![Cats logo](/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png)
-# Сats - приложение для просмотра картинок котиков посредством сервиса ![The Cat API](https://thecatapi.com).
+# Сats - приложение для просмотра картинок котиков посредством сервиса [The Cat API](https://thecatapi.com).
 ## Возможности
 
 - Просмотр случайных изображений котиков.

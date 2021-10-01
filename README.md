@@ -26,7 +26,7 @@
 
 - Фильрация по породе и по категории - Modal bottom sheet
 ---
-![Порода](https://media.giphy.com/media/Zd2v6ATEtX5J3zT62a/giphy.gif)
+![Порода](https://media.giphy.com/media/ZhUpc664y6vgNCriel/giphy.gif)
 ![Категория](https://media.giphy.com/media/OZZ090usyYzcBE4IJy/giphy.gif)
 
 - Добавления и удаление из избранного

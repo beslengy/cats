@@ -52,10 +52,6 @@
 ![Нормальная скорость](https://media.giphy.com/media/3guIrwrDdLDSDw3loE/giphy.gif)
 ![Замедленно](https://media.giphy.com/media/EfaBDiWQCyO6V65qRX/giphy.gif)
 
-- Сохранение состояние при смене фрагмента через LiveData и SavedStateHandle во ViewModel
----
-![Сохранение состояния](https://media.giphy.com/media/cDRdOZBWU2G7TcqgjT/giphy.gif)
-
 - Обработка состояний: пустой список, отсутствие сети, медленное соединение.
 ---
 ![Отсутствие сети](https://media.giphy.com/media/dZDBBYan2tAvxWBSQP/giphy.gif)

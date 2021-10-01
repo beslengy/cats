@@ -41,7 +41,6 @@
 ![Загрузка через камеру](https://media.giphy.com/media/mbd7cX36RgU5KNSxwo/giphy.gif)
 
 - Удаление изображений из загруженных по долгому нажатию
----
 ![Удаление загруженных](https://media.giphy.com/media/837VDluMOTnvTvNEXQ/giphy.gif)
 
 - Анимация перехода между основными фрагментами - MaterialFadeThrough
@@ -54,7 +53,7 @@
 ---
 ![Нормальная скорость](https://media.giphy.com/media/yiAMoOoSYALbmWta1N/giphy.gif)
 ---
-![Замедленно](https://media.giphy.com/media/u6KKUUCl7IDjcbvwjF/giphy.gif)
+![Замедленно](https://media.giphy.com/media/S2edju0vSYv9UjFmpL/giphy-downsized-large.gif)
 
 - Сохранение состояние при смене фрагмента через LiveData и SavedStateHandle во ViewModel
 ---
@@ -67,3 +66,5 @@
 ![Пустой список](https://media.giphy.com/media/nCs3K0zQsfQumJqt5B/giphy.gif)
 ---
 ![Плохое соединение](https://media.giphy.com/media/a1L9nRIn5M1J34aMXq/giphy.gif)
+
+

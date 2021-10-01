@@ -36,8 +36,7 @@
 
 - Загрузка изображения на сервер
 ---
-[![upload_image_0_COMPRESSED.th.gif](https://s9.gifyu.com/images/upload_image_0_COMPRESSED.th.gif)](https://gifyu.com/image/Xdop)
-![Загрузка через камеру](https://s9.gifyu.com/images/upload_image_0_COMPRESSED.gif)
+![Загрузка через камеру](https://media.giphy.com/media/XyqthJojzF69dBnHN9/giphy.gif)
 
 - Удаление изображений из загруженных по долгому нажатию
 ---
@@ -46,16 +45,16 @@
 - Анимация перехода между основными фрагментами - MaterialFadeThrough
 ---
 ![Нормальная скорость](https://media.giphy.com/media/m7OSpEkUd2trirENp2/giphy.gif)
-![Замедленно](https://media.giphy.com/media/94sT5fkybDYhTh8sJV/giphy.gif)
+![Замедленно](https://media.giphy.com/media/TXqBExBWLxN0V27lED/giphy.gif)
 
 - Анимация перехода на карточку котика - MaterialContainerTransform
 ---
 ![Нормальная скорость](https://media.giphy.com/media/3guIrwrDdLDSDw3loE/giphy.gif)
-![Замедленно](https://gifyu.com/image/Xdox)
+![Замедленно](https://media.giphy.com/media/EfaBDiWQCyO6V65qRX/giphy.gif)
 
 - Сохранение состояние при смене фрагмента через LiveData и SavedStateHandle во ViewModel
 ---
-![Сохранение состояния](https://media.giphy.com/media/chHiWJb6Q7eBu11gm4/giphy.gif)
+![Сохранение состояния](https://media.giphy.com/media/cDRdOZBWU2G7TcqgjT/giphy.gif)
 
 - Обработка состояний: пустой список, отсутствие сети, медленное соединение.
 ---

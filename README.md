@@ -21,4 +21,4 @@
 
 ## Реализация элементов
 
-![Gif](https://psv4.userapi.com/c536436/u22843863/docs/d34/66ce5a5c266a/filter_breed.gif?extra=CLmDUqOt2DSm2EdGHFZgUVRqpo3p4TD6HqACjA9DaKV3ZBlrilbJPXc2oumLt1BdblcbxI-qrT9-BOFvR0Lb0hLp0Qaby-BPeIKpY_uwTNrDjxuRHnbUWEnOBweCXLz7K2iVKomcppwLc10ZR8C-8w)
+![Gif](https://vk.com/doc22843863_613767381)

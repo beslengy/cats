@@ -21,49 +21,35 @@
 
 ## Реализация элементов
 - Карточка котика и голосование
----
 ![Детализация](https://media.giphy.com/media/5H1k28L5025eyH7CQl/giphy.gif)
 
 - Фильрация по породе и по категории - Modal bottom sheet
----
 ![Порода](https://media.giphy.com/media/jPEg55a9ltPb0tmI7v/giphy.gif)
----
 ![Категория](https://media.giphy.com/media/OZZ090usyYzcBE4IJy/giphy.gif)
 
 - Добавления и удаление из избранного
----
 ![Добавление избранного](https://media.giphy.com/media/ft9Vla3pksH0mtk4gW/giphy.gif)
----
 ![Удаление избранного](https://media.giphy.com/media/8sqs3E3TBBye6VB4DV/giphy.gif)
 
 - Загрузка изображения на сервер
----
 ![Загрузка через камеру](https://media.giphy.com/media/mbd7cX36RgU5KNSxwo/giphy.gif)
 
 - Удаление изображений из загруженных по долгому нажатию
 ![Удаление загруженных](https://media.giphy.com/media/837VDluMOTnvTvNEXQ/giphy.gif)
 
 - Анимация перехода между основными фрагментами - MaterialFadeThrough
----
 ![Нормальная скорость](https://media.giphy.com/media/CjGMy3ql8D1Dhr0VF8/giphy.gif)
----
 ![Замедленно](https://media.giphy.com/media/upqh1T0HgpIcHXf7GO/giphy.gif)
 
 - Анимация перехода на карточку котика - MaterialContainerTransform
----
 ![Нормальная скорость](https://media.giphy.com/media/yiAMoOoSYALbmWta1N/giphy.gif)
----
 ![Замедленно](https://media.giphy.com/media/u6KKUUCl7IDjcbvwjF/giphy.gif)
 
 - Сохранение состояние при смене фрагмента через LiveData и SavedStateHandle во ViewModel
----
 ![Сохранение состояния](https://media.giphy.com/media/chHiWJb6Q7eBu11gm4/giphy.gif)
 
 - Обработка состояний: пустой список, отсутствие сети, медленное соединение.
----
 ![Отсутствие сети](https://media.giphy.com/media/mxzUHRqoEoXqJEfCIP/giphy.gif)
----
 ![Пустой список](https://media.giphy.com/media/nCs3K0zQsfQumJqt5B/giphy.gif)
----
 ![Плохое соединение](https://media.giphy.com/media/a1L9nRIn5M1J34aMXq/giphy.gif)
 

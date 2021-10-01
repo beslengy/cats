@@ -37,7 +37,7 @@
 - Загрузка изображения на сервер
 ---
 [![upload_image_0_COMPRESSED.th.gif](https://s9.gifyu.com/images/upload_image_0_COMPRESSED.th.gif)](https://gifyu.com/image/Xdop)
-![Загрузка через камеру](https://gifyu.com/image/Xdop)
+![Загрузка через камеру](https://s9.gifyu.com/images/upload_image_0_COMPRESSED.gif)
 
 - Удаление изображений из загруженных по долгому нажатию
 ---

@@ -21,4 +21,4 @@
 
 ## Реализация элементов
 
-![Gif](https://vk.com/doc22843863_613767381)
+![Gif](https://media.giphy.com/media/837VDluMOTnvTvNEXQ/giphy.gif)

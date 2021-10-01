@@ -27,11 +27,13 @@
 - Фильрация по породе и по категории - Modal bottom sheet
 ---
 ![Порода](https://media.giphy.com/media/Zd2v6ATEtX5J3zT62a/giphy.gif)
+
 ![Категория](https://media.giphy.com/media/OZZ090usyYzcBE4IJy/giphy.gif)
 
 - Добавления и удаление из избранного
 ---
 ![Добавление избранного](https://media.giphy.com/media/ft9Vla3pksH0mtk4gW/giphy.gif)
+
 ![Удаление избранного](https://media.giphy.com/media/8sqs3E3TBBye6VB4DV/giphy.gif)
 
 - Загрузка изображения на сервер
@@ -45,11 +47,13 @@
 - Анимация перехода между основными фрагментами - MaterialFadeThrough
 ---
 ![Нормальная скорость](https://media.giphy.com/media/m7OSpEkUd2trirENp2/giphy.gif)
+
 ![Замедленно](https://media.giphy.com/media/94sT5fkybDYhTh8sJV/giphy.gif)
 
 - Анимация перехода на карточку котика - MaterialContainerTransform
 ---
 ![Нормальная скорость](https://media.giphy.com/media/3guIrwrDdLDSDw3loE/giphy.gif)
+
 ![Замедленно](https://media.giphy.com/media/6c88p8SVsLBGuzAd29/giphy.gif)
 
 - Сохранение состояние при смене фрагмента через LiveData и SavedStateHandle во ViewModel
@@ -58,7 +62,7 @@
 
 - Обработка состояний: пустой список, отсутствие сети, медленное соединение.
 ---
-![Отсутствие сети](https://media.giphy.com/media/Q95x10tWecRrdeD9OU/giphy.gif)
+![Отсутствие сети](https://media.giphy.com/media/5amI4DbKjwceGrb51I/giphy.gif)
 ![Пустой список](https://media.giphy.com/media/nCs3K0zQsfQumJqt5B/giphy.gif)
 ![Плохое соединение](https://media.giphy.com/media/a1L9nRIn5M1J34aMXq/giphy.gif)
 

@@ -41,6 +41,7 @@
 ![Загрузка через камеру](https://media.giphy.com/media/mbd7cX36RgU5KNSxwo/giphy.gif)
 
 - Удаление изображений из загруженных по долгому нажатию
+---
 ![Удаление загруженных](https://media.giphy.com/media/837VDluMOTnvTvNEXQ/giphy.gif)
 
 - Анимация перехода между основными фрагментами - MaterialFadeThrough

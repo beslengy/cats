@@ -59,7 +59,7 @@
 
 - Обработка состояний: пустой список, отсутствие сети, медленное соединение.
 ---
-![Отсутствие сети](https://media.giphy.com/media/5amI4DbKjwceGrb51I/source.gif)
+![Отсутствие сети](https://media.giphy.com/media/dZDBBYan2tAvxWBSQP/giphy.gif)
 ![Пустой список](https://media.giphy.com/media/nCs3K0zQsfQumJqt5B/giphy.gif)
 ![Плохое соединение](https://media.giphy.com/media/a1L9nRIn5M1J34aMXq/giphy.gif)
 

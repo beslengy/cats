@@ -50,7 +50,7 @@
 - Анимация перехода на карточку котика - MaterialContainerTransform
 ---
 ![Нормальная скорость](https://media.giphy.com/media/3guIrwrDdLDSDw3loE/giphy.gif)
-![Замедленно](https://media.giphy.com/media/6c88p8SVsLBGuzAd29/giphy.gif)
+![Замедленно](https://gifyu.com/image/Xdox)
 
 - Сохранение состояние при смене фрагмента через LiveData и SavedStateHandle во ViewModel
 ---

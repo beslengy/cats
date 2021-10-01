@@ -26,7 +26,7 @@
 
 - Фильрация по породе и по категории - Modal bottom sheet
 ---
-![Порода](https://media.giphy.com/media/IaqozjZxFzgSXO5daY/giphy.gif)
+![Порода](https://media.giphy.com/media/Zd2v6ATEtX5J3zT62a/giphy.gif)
 ![Категория](https://media.giphy.com/media/OZZ090usyYzcBE4IJy/giphy.gif)
 
 - Добавления и удаление из избранного
@@ -36,7 +36,7 @@
 
 - Загрузка изображения на сервер
 ---
-![Загрузка через камеру](https://media.giphy.com/media/DFJ5vNe0bpDzB2NhKO/giphy.gif)
+![Загрузка через камеру](https://media.giphy.com/media/gtpisFxyvTmFYJrD1c/giphy.gif)
 
 - Удаление изображений из загруженных по долгому нажатию
 ---
@@ -44,13 +44,13 @@
 
 - Анимация перехода между основными фрагментами - MaterialFadeThrough
 ---
-![Нормальная скорость](https://media.giphy.com/media/uh4VVe8lDPa5cHieQz/giphy.gif)
-![Замедленно](https://media.giphy.com/media/1F5xS17pqLzTt17Om7/giphy.gif)
+![Нормальная скорость](https://media.giphy.com/media/m7OSpEkUd2trirENp2/giphy.gif)
+![Замедленно](https://media.giphy.com/media/94sT5fkybDYhTh8sJV/giphy.gif)
 
 - Анимация перехода на карточку котика - MaterialContainerTransform
 ---
-![Нормальная скорость](https://media.giphy.com/media/dZUK9bvIn3LmmEKLza/giphy.gif)
-![Замедленно](https://media.giphy.com/media/S2edju0vSYv9UjFmpL/giphy.gif)
+![Нормальная скорость](https://media.giphy.com/media/3guIrwrDdLDSDw3loE/giphy.gif)
+![Замедленно](https://media.giphy.com/media/6c88p8SVsLBGuzAd29/giphy.gif)
 
 - Сохранение состояние при смене фрагмента через LiveData и SavedStateHandle во ViewModel
 ---

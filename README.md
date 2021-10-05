@@ -1,5 +1,7 @@
 ![Cats logo](/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png)
 # Сats - приложение для просмотра картинок котиков посредством сервиса [The Cat API](https://thecatapi.com).
+
+Ссылка на скачивание [APK](https://drive.google.com/file/d/1gzamgYP8Nnn8_OfG2Jv8vOvfLkRVita_/view?usp=sharing)
 ## Возможности
 
 - Просмотр случайных изображений котиков.
